@@ -26,6 +26,7 @@
       <div class="fsl-box-body">
         <div class="fsl-region-element"
          v-for="(item,index) in chooseGridListFull" 
+         :ref="`env_production_grid_${item.itemNo}`"
          :class="{
            'layout-mode-common':layoutMode==1,
            //当在实际的运行环境中边框和底色都不要显示的env=='production'
@@ -53,6 +54,7 @@
       <div class="fsl-box-body">
         <div class="fsl-region-element"
          v-for="(item,index) in chooseGridListFull" 
+         :ref="`env_develop_grid_${item.itemNo}`"
          :class="{
            'layout-mode-common':layoutMode==1,
            //当在实际的运行环境中边框和底色都不要显示的env=='production'
@@ -183,20 +185,21 @@ export default {
   mounted() {
     const that = this;
     this.$nextTick(function (params) {
-      if(this.moduleObject.env=='production'){
-        //监测元素改变事件
-        const ro = new ResizeObserver((entries, observer) => {
-          // console.log("🚀 ~ file: IFullScreenLayout.vue ~ line 120 ~ ro ~ entries, observer", entries, observer)
-          for (const entry of entries) {
-              // const {left, top, width, height} = entry.contentRect;
-              // console.log('Element:', entry.target);
-              // console.log(`Element's size: ${ width }px x ${ height }px`);
-              // console.log(`Element's paddings: ${ top }px ; ${ left }px`);
-              that.autoLayout();
-          }
-        });
-        ro.observe(document.querySelector("#"+this.moduleObject.id));
-      }
+      // if(this.moduleObject.env=='production'){
+      // }
+      that.autoLayout();
+      //监测元素改变事件
+      const ro = new ResizeObserver((entries, observer) => {
+        // console.log("🚀 ~ file: IFullScreenLayout.vue ~ line 120 ~ ro ~ entries, observer", entries, observer)
+        for (const entry of entries) {
+            // const {left, top, width, height} = entry.contentRect;
+            // console.log('Element:', entry.target);
+            // console.log(`Element's size: ${ width }px x ${ height }px`);
+            // console.log(`Element's paddings: ${ top }px ; ${ left }px`);
+            that.autoLayout();
+        }
+      });
+      ro.observe(document.querySelector("#"+this.moduleObject.id));
     });
   },
   destroyed() {},
@@ -334,9 +337,9 @@ export default {
      */
     autoLayout(){
       //非预览模式下不实现自动布局
-      if(this.moduleObject.env!='production'){
-        return;
-      }
+      // if(this.moduleObject.env!='production'){
+      //   return;
+      // }
       const autoLayoutType = this.propData.autoLayoutType||"close";
       if(autoLayoutType=="close"){
         this.autoLayoutSendLayoutInfoToChildrenMsg(this.chooseGridListFull);
@@ -362,9 +365,11 @@ export default {
         const outBoxPos = this.$refs.refFslBgGrid.getBoundingClientRect();
         //单元格的宽与高
         // const grid_width=outBoxPos.width/this.gridNumber,grid_height=outBoxPos.height/this.gridNumber;
+        const refName = this.moduleObject.env=="production"?"env_production_grid_":"env_develop_grid_"
         gridList&&gridList.forEach(item=>{
           IDM.broadcast.sendChildren({"type":"regionResize","message":{
             regionObject:_.cloneDeep(item),
+            gridEleTarget:this.$refs[refName+item.itemNo] instanceof Array?this.$refs[refName+item.itemNo][0]:this.$refs[refName+item.itemNo],
             eleTarget:this.$refs["region_element_"+item.itemNo] instanceof Array?this.$refs["region_element_"+item.itemNo][0]:this.$refs["region_element_"+item.itemNo],
             outBoundingClientRect:_.cloneDeep(outBoxPos)
           },module:{"packageid":this.moduleObject.packageid,"containerIndex":item.itemNo}});
@@ -391,7 +396,7 @@ export default {
         item.x = (item.xRatio/100)*outBoxPos.width;
         item.y = (item.yRatio/100)*outBoxPos.height;
       })
-      console.log("🚀 ~ file: IFullScreenLayout.vue ~ line 392 ~ gridAnchorMousedownHandle ~ this.chooseGridList", this.chooseGridList)
+      // console.log("🚀 ~ file: IFullScreenLayout.vue ~ line 392 ~ gridAnchorMousedownHandle ~ this.chooseGridList", this.chooseGridList)
 
       //鼠标按下时的坐标
       let mouseStartPosObject = {
@@ -763,7 +768,7 @@ export default {
       this.setPropDataToDevelopAttrData({chooseGridList:this.chooseGridList});
     },
     gridElementClickHandle(e,item){
-      console.log(e,item)
+      // console.log(e,item)
     },
     /**
      * 背景格子点击事件,绘制的开始
