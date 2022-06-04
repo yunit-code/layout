@@ -29,6 +29,7 @@
       idm-ctrl-inner
       :idm-ctrl-id="moduleObject.id"
       :idm-container-index="index + 1"
+      :idm-refresh-container="`flex-${item}`"
     ></div>
   </div>
 </template>
