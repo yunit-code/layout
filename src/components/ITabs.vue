@@ -5,7 +5,7 @@
     id：使用moduleObject.id，如果id不使用这个将会被idm-ctrl-id属性替换
     idm-ctrl-id：组件的id，这个必须不能为空
   -->
-  <div idm-ctrl="idm_module" :id="moduleObject.id" :idm-ctrl-id="moduleObject.id" class="idm_itabs_box">
+  <div idm-ctrl="idm_module" :id="moduleObject.id" :idm-ctrl-id="moduleObject.id" :idm-refresh-container="activeTab" class="idm_itabs_box">
     <!--
       组件内部容器
       增加class="drag_container" 代表内部可存放组件容器 必选
