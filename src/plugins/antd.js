@@ -11,9 +11,16 @@ import {
   Icon,
   Tabs
 } from 'ant-design-vue';
+import Base from 'ant-design-vue/lib/base/index.js'
 
 /* v1.1.3+ registration methods */
 Vue.use(Button);
+Tabs.install = function(){
+  Vue.use(Base);
+  Vue.component("layout"+Tabs.name,Tabs);
+  Vue.component("layout"+Tabs.TabPane.name,Tabs.TabPane);
+  Vue.component("layout"+Tabs.TabContent.name,Tabs.TabContent);
+}
 Vue.use(Tabs);
 Vue.use(Tooltip);
 Vue.use(Icon);

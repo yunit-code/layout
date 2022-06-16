@@ -13,7 +13,7 @@
       idm-ctrl-id：组件的id，这个必须不能为空
       idm-container-index  组件的内部容器索引，不重复唯一且不变，必选，建议从1开始
     -->
-    <a-tabs
+    <layout-a-tabs
      :activeKey="activeTab" 
      :animated="propData.animated!==false?true:false" 
      :size="propData.size||'default'"
@@ -25,7 +25,7 @@
      @nextClick="nextClickCallback"
      @prevClick="prevClickCallback"
      @tabClick="tabClickCallback">
-      <a-tab-pane forceRender v-for="item in tabList" :key="item.key">
+      <layout-a-tab-pane forceRender v-for="item in tabList" :key="item.key">
         <div class="drag_container" v-if="item.opened" :class="`idm-tab-inner-${item.key}`" idm-ctrl-inner :idm-ctrl-id="moduleObject.id" :idm-container-index="item.key">
           
         </div>
@@ -33,11 +33,11 @@
           <div v-if="item.tabSlotFunction&&item.tabSlotFunction.length>0" v-html="getTabCustomRender(item)"></div>
           <template v-else>{{ item.tab }}</template>
         </span>
-      </a-tab-pane>
+      </layout-a-tab-pane>
       <div v-if="propData.tabBarExtraContentFunction&&propData.tabBarExtraContentFunction.length>0"  :slot="`tabBarExtraContent${propData.tabBarExtraContentFunction&&propData.tabBarExtraContentFunction.length>0?'':'close'}`">
         <div v-if="propData.tabBarExtraContentFunction&&propData.tabBarExtraContentFunction.length>0" v-html="getTabBarExtraContentCustomRender()"></div>
       </div>
-    </a-tabs>
+    </layout-a-tabs>
   </div>
 </template>
 
