@@ -204,7 +204,6 @@ export default {
   },
   destroyed() {},
   methods:{
-    
     existsChooseGridList(item){
       if(this.layoutFooterMode==-1){
         return true;
@@ -328,7 +327,7 @@ export default {
      * 追加布局
      */
     addMediaObjectToList(){
-      this.chooseGridMediaList.push({w:1600,h:800,gridList:_.cloneDeep(this.chooseGridListFull),isEdit:false});
+      this.chooseGridMediaList.push({w:1600,h:800,gridList:_.cloneDeep(this.chooseGridListFull),isEdit:false, powerActive: true});
       this.footerLayoutSwitch(this.chooseGridMediaList[this.chooseGridMediaList.length-1],this.chooseGridMediaList.length-1)
       this.setPropDataToDevelopAttrData({chooseGridMediaList:_.cloneDeep(this.chooseGridMediaList)});
     },
@@ -1118,6 +1117,13 @@ export default {
       this.propData = propData.compositeAttr||{};
       this.innerAttr = propData.innerAttr||[];
       this.convertAttrToStyleObject();
+      this.converAttrToTable();
+    },
+    /**
+     * 属性 适配布局 绑定页面
+     */
+    converAttrToTable () {
+      this.chooseGridMediaList = this.propData.chooseGridMediaList;
     },
     /**
      * 把属性转换成样式对象

@@ -54,6 +54,55 @@
                         }
                     ],
                     "default": "close"
+                },
+                {
+                    "type": "table",
+                    "text": "适配布局",
+                    "desc": "点击？查看主题设置用法指南",
+                    "bindKey": "chooseGridMediaList",
+                    "tabText": "页签[index]",
+                    "default": [],
+                    "children": [
+                        {
+                            "type": "inputNumber",
+                            "layoutType": "inline",
+                            "text": "宽",
+                            "desc": "单位为px，默认为1600*800",
+                            "bindKey": "w",
+                            "default": 1600
+                        },
+                        {
+                            "type": "inputNumber",
+                            "layoutType": "inline",
+                            "text": "高",
+                            "desc": "单位为px，默认为1600*800",
+                            "bindKey": "h",
+                            "default": 800
+                        },
+                        {
+                            "type": "switch",
+                            "layoutType": "inline",
+                            "text": "权限过滤",
+                            "bindKey": "powerActive",
+                            "default": true
+                        },
+                        {
+                            "type": "treeSelect",
+                            "layoutType": "inline",
+                            "text": "权限选择",
+                            "bindKey": "powerList",
+                            "dataSourceUrl": "",
+                            "display": "@[powerActive]"
+                        },
+                        {
+                            "type": "actionSelect",
+                            "layoutType": "block",
+                            "text": "显示隐藏该页面自定义函数",
+                            "bindKey": "isShowFunction",
+                            "desc": "显示隐藏该页面自定义函数",
+                            "multiple": false
+                        }
+                    ]
                 }
             ]
         },
