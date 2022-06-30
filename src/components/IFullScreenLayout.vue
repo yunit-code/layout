@@ -5,7 +5,7 @@
     id：使用moduleObject.id，如果id不使用这个将会被idm-ctrl-id属性替换
     idm-ctrl-id：组件的id，这个必须不能为空
   -->
-  <div idm-ctrl="idm_module" :id="moduleObject.id" :idm-ctrl-id="moduleObject.id" class="idm-full-screen-layout">
+  <div idm-ctrl="idm_module" :id="moduleObject.id" :idm-ctrl-id="moduleObject.id" class="idm-full-screen-layout" :style="computedWidth">
     <!--
       组件内部容器
       增加class="drag_container" 代表内部可存放组件容器 必选
@@ -162,7 +162,8 @@ export default {
       //已选择的响应式布局{w:1600,h:800,grid:chooseGridList}
       chooseGridMediaList:[],
       //当前适配确定后的响应式布局
-      productionMediaGridList:[]
+      productionMediaGridList:[],
+      computedWidth: {width: 'calc(100vw)'}
     }
   },
   props: {
@@ -1124,6 +1125,29 @@ export default {
      */
     converAttrToTable () {
       this.chooseGridMediaList = this.propData.chooseGridMediaList;
+      console.log(this.moduleObject, '获取moduleObject');
+      // if (this.moduleObject.env === 'develop') {
+
+      // }
+    },
+    /**
+     * 组件通信：接收消息的方法
+     * @param {
+     *  type:"发送消息的时候定义的类型，这里可以自己用来要具体做什么，统一规定的type：linkageResult（组件联动传结果值）、linkageDemand（组件联动传需求值）、linkageReload（联动组件重新加载）
+     * 、linkageOpenDialog（打开弹窗）、linkageCloseDialog（关闭弹窗）、linkageShowModule（显示组件）、linkageHideModule（隐藏组件）、linkageResetDefaultValue（重置默认值）"
+     *  message:{发送的时候传输的消息对象数据}
+     *  messageKey:"消息数据的key值，代表数据类型是什么，常用于表单交互上，比如通过这个key判断是什么数据"
+     *  isAcross:如果为true则代表发送来源是其他页面的组件，默认为false
+     * } object
+     */
+    receiveBroadcastMessage (object) {
+      console.log(object, '全屏布局获取消息');
+      switch (object.type) {
+        // 刷新菜单收缩 menuCollapse true：收缩 false：展开
+        case 'changeMenuCollapse':
+          this.computedWidth = (object.message || {}).menuCollapse ? {width: `calc(100vw - ${this.propData.widthSmall})`} : {width: `calc(100vw - ${this.propData.widthBig})`};
+          break;
+      }
     },
     /**
      * 把属性转换成样式对象
@@ -1435,6 +1459,7 @@ export default {
   width: 100%;
   height: 100vh;
   padding: 0px;
+  transition: width 0.2s linear;
   .idm-full-screen-layout-box{
     position: relative;
     height: 100%;
