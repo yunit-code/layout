@@ -56,20 +56,6 @@
                     "default": "close"
                 },
                 {
-                    "type": "input",
-                    "layoutType": "inline",
-                    "text": "展开宽度",
-                    "desc": "用于设置组件配合菜单伸缩宽度，这个宽度是要减去最大的宽度",
-                    "bindKey": "widthBig"
-                },
-                {
-                    "type": "input",
-                    "layoutType": "inline",
-                    "text": "收缩宽度",
-                    "desc": "用于设置组件配合菜单伸缩宽度，这个宽度是减去最小的宽度",
-                    "bindKey": "widthSmall"
-                },
-                {
                     "type": "table",
                     "text": "适配布局",
                     "desc": "点击？查看主题设置用法指南",
