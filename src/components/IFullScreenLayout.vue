@@ -1714,10 +1714,12 @@ export default {
     }
   }
   .fsl-layout-switch-tool{
-    top: -26px;
+    z-index: 999;
+    top: 0px;
   }
   .fsl-layout-footer-switch-tool{
-    bottom: -26px;
+    bottom: 0;
+    z-index: 999;
     >div{
       border-right: 1px solid #1890ff;
       font-size: 12px;
