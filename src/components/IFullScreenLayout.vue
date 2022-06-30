@@ -1160,7 +1160,8 @@ export default {
         // 刷新菜单收缩 menuWidthChange从菜单发起 true：收缩 false：展开
         case 'menuWidthChange':
           console.log(object, '全屏布局获取消息');
-          this.computedWidth = this.moduleObject.env === 'develop' ? {width: `calc(${(IDM.develop.getDragWorkspaceInfo() || {}).width} - ${object.message.menuWidth})`} : {width: `calc(100vw - ${object.message.menuWidth})`};
+          this.computedWidth = this.moduleObject.env === 'develop' ? {width: `calc(${(IDM.develop.getDragWorkspaceInfo() || {}).width}px - ${object.message.menuWidth})`} : {width: `calc(100vw - ${object.message.menuWidth})`};
+          console.log(this.computedWidth, 888);
           break;
       }
     },
