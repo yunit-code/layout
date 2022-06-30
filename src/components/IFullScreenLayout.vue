@@ -171,7 +171,6 @@ export default {
   created() {
     this.moduleObject = this.$root.moduleObject
     this.layoutMode = this.moduleObject.env!='production'?this.layoutMode:1
-    // console.log(this.moduleObject)
     this.chooseGridList = this.propData.chooseGridList||[];
     this.chooseGridMediaList = this.propData.chooseGridMediaList||[];
     this.chooseGridListFull = _.cloneDeep(this.chooseGridList);
@@ -1155,13 +1154,10 @@ export default {
      * } object
      */
     receiveBroadcastMessage (object) {
-      console.log(123232, object)
       switch (object.type) {
         // 刷新菜单收缩 menuWidthChange从菜单发起 true：收缩 false：展开
         case 'menuWidthChange':
-          console.log(object, '全屏布局获取消息');
           this.computedWidth = this.moduleObject.env === 'develop' ? {width: `calc(${(IDM.develop.getDragWorkspaceInfo() || {}).width}px - ${object.message.menuWidth})`} : {width: `calc(100vw - ${object.message.menuWidth})`};
-          console.log(this.computedWidth, 888);
           break;
       }
     },
