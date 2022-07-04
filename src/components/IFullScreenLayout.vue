@@ -265,6 +265,9 @@ export default {
      */
     footerLayoutSwitch(item,index){
       this.layoutFooterMode = index;
+      if (this.chooseGridMediaList.length === index) {
+        this.layoutFooterMode = this.layoutFooterMode-1
+      }
       if(index==-1){
         this.chooseGridList = this.chooseGridListFull;
       }else{
@@ -1124,6 +1127,11 @@ export default {
      * 属性 适配布局 绑定页面
      */
     converAttrToTable () {
+      console.log(this.propData, '获取propsData')
+      this.propData.chooseGridMediaList.forEach(item => {
+        !item.gridList && (item.gridList = _.cloneDeep(this.chooseGridListFull));
+        item.isEdit = false;
+      })
       this.chooseGridMediaList = this.propData.chooseGridMediaList;
     },
     convertAttrCompontedWidth () {
