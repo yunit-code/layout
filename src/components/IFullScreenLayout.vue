@@ -166,21 +166,13 @@ export default {
       computedWidth: {}
     }
   },
-  props: {
-  },
   created() {
     this.moduleObject = this.$root.moduleObject
     this.layoutMode = this.moduleObject.env!='production'?this.layoutMode:1
     this.chooseGridList = this.propData.chooseGridList||[];
-    this.chooseGridMediaList = this.propData.chooseGridMediaList||[];
     this.chooseGridListFull = _.cloneDeep(this.chooseGridList);
     this.convertAttrToStyleObject();
-  },
-  computed: {
-    //当前适配确定后的响应式布局
-    // productionMediaGridList(){
-
-    // }
+    console.log(this.propData, 'created初始化');
   },
   mounted() {
     const that = this;
@@ -201,10 +193,18 @@ export default {
       });
       ro.observe(document.querySelector("#"+this.moduleObject.id));
     });
-    this.convertAttrCompontedWidth();
+    this.initHandle();
   },
   destroyed() {},
   methods:{
+    /**
+     * 初始化事件
+    */
+    initHandle () {
+      if (this.propData.fitMenu) {
+        this.computedWidth = {width: `calc(${this.propData.width} - ${this.propData.menuWidthMax})`};
+      }
+    },
     existsChooseGridList(item){
       if(this.layoutFooterMode==-1){
         return true;
@@ -578,6 +578,7 @@ export default {
             }
             break;
         }
+        console.log(that.chooseGridMediaList, '获取');
         that._stopPropagation(e);
       };
       var moveUpEvent = function(e) {
@@ -1127,15 +1128,18 @@ export default {
      * 属性 适配布局 绑定页面
      */
     converAttrToTable () {
-      console.log(this.propData, '获取propsData')
-      this.propData.chooseGridMediaList.forEach(item => {
-        !item.gridList && (item.gridList = _.cloneDeep(this.chooseGridListFull));
-        item.isEdit = false;
-      })
-      this.chooseGridMediaList = this.propData.chooseGridMediaList;
-    },
-    convertAttrCompontedWidth () {
-      this.sendBroadcastMessage({ type: 'getMenuWidth', globalSend: true });
+      if (this.moduleObject.env === 'develop') {
+        const developEditInfo = IDM.develop.getDragWorkspaceInfo() || {};
+        this.propData.fitMenu && (this.computedWidth = {width: `calc(${developEditInfo.width}px - ${this.propData.menuWidthMax})`});
+      } else {
+        this.propData.fitMenu && (this.propData.fitMenu = '100vw');
+      }
+      // console.log(this.propData, '获取propsData', this.chooseGridList);
+      // this.propData.chooseGridMediaList.forEach(item => {
+      //   item.gridList = _.cloneDeep(this.propData.chooseGridList);
+      //   item.isEdit = false;
+      // })
+      // this.chooseGridMediaList = this.propData.chooseGridMediaList;
     },
     /**
      * 组件通信：发送消息的方法
@@ -1163,9 +1167,11 @@ export default {
      */
     receiveBroadcastMessage (object) {
       switch (object.type) {
-        // 刷新菜单收缩 menuWidthChange从菜单发起 true：收缩 false：展开
-        case 'menuWidthChange':
-          this.computedWidth = this.moduleObject.env === 'develop' ? {width: `calc(${(IDM.develop.getDragWorkspaceInfo() || {}).width}px - ${object.message.menuWidth})`} : {width: `calc(100vw - ${object.message.menuWidth})`};
+        // 刷新菜单收缩 menuCollapse从菜单发起 true：收缩 false：展开
+        case 'changeMenuCollapse':
+          if (this.propData.fitMenu) {
+            this.computedWidth = (object.message || {}).menuCollapse ? {width: `calc(${this.propData.width} - ${this.propData.menuWidthMin})`} : {width: `calc(${this.propData.width} - ${this.propData.menuWidthMax})`};
+          }
           break;
       }
     },
