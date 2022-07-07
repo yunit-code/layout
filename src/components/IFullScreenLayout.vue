@@ -204,6 +204,7 @@ export default {
       if (this.propData.fitMenu) {
         this.computedWidth = {width: `calc(${this.propData.width} - ${this.propData.menuWidthMax})`};
       }
+      this.propData.chooseGridMediaList = this.chooseGridMediaList;
     },
     existsChooseGridList(item){
       if(this.layoutFooterMode==-1){
@@ -1130,11 +1131,10 @@ export default {
     converAttrToTable () {
       if (this.moduleObject.env === 'develop') {
         const developEditInfo = IDM.develop.getDragWorkspaceInfo() || {};
-        this.propData.fitMenu && (this.computedWidth = {width: `calc(${developEditInfo.width}px - ${this.propData.menuWidthMax})`});
-      } else {
-        this.propData.fitMenu && (this.propData.fitMenu = '100vw');
+        this.propData.fitMenu ? (this.computedWidth = {width: `calc(${developEditInfo.width}px - ${this.propData.menuWidthMax})`}) : (this.computedWidth = {});
       }
-      // console.log(this.propData, '获取propsData', this.chooseGridList);
+      console.log(this.propData, '获取propsData', this.chooseGridList);
+
       // this.propData.chooseGridMediaList.forEach(item => {
       //   item.gridList = _.cloneDeep(this.propData.chooseGridList);
       //   item.isEdit = false;
