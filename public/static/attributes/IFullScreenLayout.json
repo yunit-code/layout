@@ -56,6 +56,32 @@
                     "default": "close"
                 },
                 {
+                    "type": "switch",
+                    "layoutType": "inline",
+                    "text": "适配菜单",
+                    "bindKey": "fitMenu",
+                    "desc": "设置是否适配菜单",
+                    "default": false
+                },
+                {
+                    "type": "input",
+                    "layoutType": "inline",
+                    "text": "展开宽度",
+                    "bindKey": "menuWidthMax",
+                    "desc":"菜单展开的宽度，用于适配菜单展开收缩效果",
+                    "display": "@[fitMenu]",
+                    "default": "230px"
+                },
+                {
+                    "type": "input",
+                    "layoutType": "inline",
+                    "text": "收缩宽度",
+                    "bindKey": "menuWidthMin",
+                    "desc":"菜单收缩的宽度，用于适配菜单展开收缩效果",
+                    "display": "@[fitMenu]",
+                    "default": "64px"
+                },
+                {
                     "type": "table",
                     "text": "适配布局",
                     "desc": "点击？查看主题设置用法指南",
