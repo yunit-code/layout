@@ -172,7 +172,6 @@ export default {
     this.chooseGridList = this.propData.chooseGridList||[];
     this.chooseGridListFull = _.cloneDeep(this.chooseGridList);
     this.convertAttrToStyleObject();
-    console.log(this.propData, 'created初始化');
   },
   mounted() {
     const that = this;
@@ -204,7 +203,7 @@ export default {
       if (this.propData.fitMenu) {
         this.computedWidth = {width: `calc(${this.propData.width} - ${this.propData.menuWidthMax})`};
       }
-      this.propData.chooseGridMediaList = this.chooseGridMediaList;
+      this.propData.chooseGridMediaList = (this.propData.chooseGridMediaList || []).length > 0 ? this.propData.chooseGridMediaList : this.chooseGridMediaList;
     },
     existsChooseGridList(item){
       if(this.layoutFooterMode==-1){
@@ -332,7 +331,7 @@ export default {
      * 追加布局
      */
     addMediaObjectToList(){
-      this.chooseGridMediaList.push({w:1600,h:800,gridList:_.cloneDeep(this.chooseGridListFull),isEdit:false, powerActive: true});
+      this.chooseGridMediaList.push({w:1600,h:800,gridList:_.cloneDeep(this.chooseGridListFull),isEdit:false, powerActive: true, powerList: [], isShowFunction: []});
       this.footerLayoutSwitch(this.chooseGridMediaList[this.chooseGridMediaList.length-1],this.chooseGridMediaList.length-1)
       this.setPropDataToDevelopAttrData({chooseGridMediaList:_.cloneDeep(this.chooseGridMediaList)});
     },
@@ -351,7 +350,7 @@ export default {
       }
       const whObject = IDM.getClientWH();//{width: 1159, height: 829}
       let maxMediaObject = {w:0,h:0,gridList:this.chooseGridListFull};
-      this.chooseGridMediaList.forEach(item=>{
+      this.propData.chooseGridMediaList.forEach(item=>{
         if((whObject.width>=item.w||!item.w)&&(whObject.height>=item.h||!item.h)){
           if(item.w>=maxMediaObject.w&&item.h>=maxMediaObject.h){
             //如果宽度大于还不够，必须要高度也是大于才能将其替换
@@ -359,6 +358,7 @@ export default {
           }
         }
       })
+      console.log(maxMediaObject, '结果')
       this.productionMediaGridList = maxMediaObject.gridList;
       this.autoLayoutSendLayoutInfoToChildrenMsg(this.productionMediaGridList);
 
@@ -579,7 +579,6 @@ export default {
             }
             break;
         }
-        console.log(that.chooseGridMediaList, '获取');
         that._stopPropagation(e);
       };
       var moveUpEvent = function(e) {
@@ -1133,13 +1132,23 @@ export default {
         const developEditInfo = IDM.develop.getDragWorkspaceInfo() || {};
         this.propData.fitMenu ? (this.computedWidth = {width: `calc(${developEditInfo.width}px - ${this.propData.menuWidthMax})`}) : (this.computedWidth = {});
       }
-      console.log(this.propData, '获取propsData', this.chooseGridList);
-
-      // this.propData.chooseGridMediaList.forEach(item => {
-      //   item.gridList = _.cloneDeep(this.propData.chooseGridList);
-      //   item.isEdit = false;
-      // })
-      // this.chooseGridMediaList = this.propData.chooseGridMediaList;
+      if (this.propData.chooseGridMediaList.length > this.chooseGridMediaList.length) {
+        this.addMediaObjectToList();
+      }
+      if (this.propData.chooseGridMediaList.length === this.chooseGridMediaList.length) {
+        this.chooseGridMediaList.forEach((item, index) => {
+          item.w = this.propData.chooseGridMediaList[index].w;
+          item.h = this.propData.chooseGridMediaList[index].h;
+          item.powerActive = this.propData.chooseGridMediaList[index].powerActive;
+          item.isEdit = this.propData.chooseGridMediaList[index].isEdit;
+          item.powerList = this.propData.chooseGridMediaList[index].powerList;
+          item.isShowFunction = this.propData.chooseGridMediaList[index].isShowFunction;
+        })
+      }
+      if (this.propData.chooseGridMediaList.length < this.chooseGridMediaList.length) {
+        this.removeMediaObject({}, this.propData.chooseGridMediaList.length);
+      }
+      console.log(this.propData, '获取');
     },
     /**
      * 组件通信：发送消息的方法
