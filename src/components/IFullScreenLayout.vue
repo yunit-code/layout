@@ -193,6 +193,7 @@ export default {
       ro.observe(document.querySelector("#"+this.moduleObject.id));
     });
     this.initHandle();
+    console.log(this.propData, '初始化');
   },
   destroyed() {},
   methods:{
@@ -350,15 +351,23 @@ export default {
       }
       const whObject = IDM.getClientWH();//{width: 1159, height: 829}
       let maxMediaObject = {w:0,h:0,gridList:this.chooseGridListFull};
-      this.propData.chooseGridMediaList.forEach(item=>{
+      for (let i=0; i<this.propData.chooseGridMediaList.length; i++) {
+        let item = this.propData.chooseGridMediaList[i];
         if((whObject.width>=item.w||!item.w)&&(whObject.height>=item.h||!item.h)){
           if(item.w>=maxMediaObject.w&&item.h>=maxMediaObject.h){
             //如果宽度大于还不够，必须要高度也是大于才能将其替换
-            maxMediaObject = item;
+            if (item.isShowFunction && item.isShowFunction.length > 0) { // 判断如果页签有自定义函数 返回true 则替换
+              if (window[item.isShowFunction[0].name]&&window[item.isShowFunction[0].name].call(this,{ customParam: item.isShowFunction[0].param, _this:this })) {
+                maxMediaObject = item;
+              } else {
+                continue;
+              }
+            } else {
+              maxMediaObject = item;
+            }
           }
         }
-      })
-      console.log(maxMediaObject, '结果')
+      }
       this.productionMediaGridList = maxMediaObject.gridList;
       this.autoLayoutSendLayoutInfoToChildrenMsg(this.productionMediaGridList);
 
