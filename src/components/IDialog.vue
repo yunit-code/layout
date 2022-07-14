@@ -636,6 +636,7 @@ export default {
       let that = this;
       that.okLoading = false;
       window.IdmBuiltin_CloseDialog({
+        routerId:this.moduleObject.routerId,
         targetModule:[{moduleId:this.moduleObject.packageid,moduleName:this.moduleObject.asName}],
         isOkEvent:isOk
       })
@@ -645,22 +646,22 @@ export default {
       if(this.propData.animationKey=="md-effect-19"||this.propData.animationKey=="md-effect-18"||this.propData.animationKey=="md-effect-17"){
         $("html").addClass("idm-md-perspective")
       }
-      $(".idm_page_root").addClass(this.propData.animationKey.replace("md-effect","idm-md-container"));
-      $("#"+this.moduleObject.packageid).addClass(this.propData.openPosition||"center");
+      $((this.moduleObject.routerId?"#router_page_"+this.moduleObject.routerId+" ":"")+".idm_page_root").addClass(this.propData.animationKey.replace("md-effect","idm-md-container"));
+      $((this.moduleObject.routerId?"#router_page_"+this.moduleObject.routerId+" ":"")+"#"+this.moduleObject.packageid).addClass(this.propData.openPosition||"center");
       if(this.propData.lockScroll){
         $("body").addClass("idm-body-scroll-disabled").attr("idm-idialog-number",parseInt($("body").attr("idm-idialog-number")||0)+1)
       }
     },
     closeThisDialogHandle(){
       this.dialogVisible = false;
-      $(".idm_page_root").removeClass(this.propData.animationKey.replace("md-effect","idm-md-container"));
+      $((this.moduleObject.routerId?"#router_page_"+this.moduleObject.routerId+" ":"")+".idm_page_root").removeClass(this.propData.animationKey.replace("md-effect","idm-md-container"));
 
       if(this.propData.animationKey=="md-effect-19"||this.propData.animationKey=="md-effect-18"||this.propData.animationKey=="md-effect-17"){
         $("html").removeClass("idm-md-perspective")
       }
       let that = this;
       setTimeout(() => {
-        $("#"+that.moduleObject.packageid).removeClass(that.propData.openPosition||"center");
+        $((this.moduleObject.routerId?"#router_page_"+this.moduleObject.routerId+" ":"")+"#"+that.moduleObject.packageid).removeClass(that.propData.openPosition||"center");
       }, 400);
       
       if(this.propData.lockScroll){
