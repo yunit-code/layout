@@ -1191,6 +1191,9 @@ export default {
             this.computedWidth = (object.message || {}).menuCollapse ? {width: `calc(${this.propData.width} - ${this.propData.menuWidthMin})`} : {width: `calc(${this.propData.width} - ${this.propData.menuWidthMax})`};
           }
           break;
+        case 'resendAutoLayout':
+          this.autoLayout();
+          break;
       }
     },
     /**
