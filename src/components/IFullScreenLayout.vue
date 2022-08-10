@@ -51,7 +51,7 @@
         <div class="vertical-line" v-for="(item,index) in (gridNumber+1)" :key="index" :style="{left:(index*(100/gridNumber))+'%'}"></div>
       </div>
       <!--容器层（已选中的）-->
-      <div class="fsl-box-body">
+      <div v-show="!propData.displayContainer" class="fsl-box-body">
         <div class="fsl-region-element"
          v-for="(item,index) in chooseGridListFull" 
          :ref="`env_develop_grid_${item.itemNo}`"
@@ -90,7 +90,7 @@
         </div>
       </div>
       <!--框选层-->
-      <div class="fsl-mouse-region-element" v-if="movePosObject.width>0&&movePosObject.height>0" :style="{'left':movePosObject.xRatio+'%','top':movePosObject.yRatio+'%','width':movePosObject.width+'%','height':movePosObject.height+'%'}">
+      <div v-show="!propData.displayContainer" class="fsl-mouse-region-element" v-if="movePosObject.width>0&&movePosObject.height>0" :style="{'left':movePosObject.xRatio+'%','top':movePosObject.yRatio+'%','width':movePosObject.width+'%','height':movePosObject.height+'%'}">
 
       </div>
       <!--布局模式切换按钮，只用于设计时候展示-->
@@ -98,6 +98,13 @@
         <div :class="{'active':layoutMode===0}" @click="layoutMode=0">布局模式</div>
         <div :class="{'active':layoutMode===1}" @click="layoutMode=1">排版模式</div>
       </div>
+      <!--隐藏域：作用是能配置隐藏的组件，在当用户要个性化定制的时候可以使用这里隐藏域配置的组件进行切换显示-->
+      <div v-show="propData.displayContainer" class="fsl-region-element-inner-display drag_container"
+          idm-ctrl-inner
+          :idm-ctrl-id="moduleObject.id"
+          :idm-container-index="999999999">
+
+         </div>
       <!--布局分辨率切换-->
       <div class="fsl-layout-footer-switch-tool" v-if="moduleObject.env!='production'">
         <div :class="{'active':layoutFooterMode===-1}"  @click="footerLayoutSwitch(null,-1)">完整布局&nbsp;
@@ -1730,6 +1737,16 @@ export default {
           }
         }
       }
+    }
+    .fsl-region-element-inner-display{
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      top: 0;
+      overflow: auto;
+      z-index: 988;
+      background-color: #FFFFFF;
     }
   }
   .fsl-layout-switch-tool,.fsl-layout-footer-switch-tool{

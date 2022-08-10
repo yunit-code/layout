@@ -64,6 +64,14 @@
                     "default": false
                 },
                 {
+                    "type": "switch",
+                    "layoutType": "inline",
+                    "text": "隐藏容器",
+                    "bindKey": "displayContainer",
+                    "desc": "设置是否显示隐藏的布局容器，此属性只作用与页面配置的，在预览时候无效。作用是能配置隐藏的组件，在当用户要个性化定制的时候可以使用这里隐藏域配置的组件进行切换显示",
+                    "default": false
+                },
+                {
                     "type": "input",
                     "layoutType": "inline",
                     "text": "展开宽度",
