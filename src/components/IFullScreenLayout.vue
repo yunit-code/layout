@@ -343,6 +343,16 @@ export default {
       this.footerLayoutSwitch(this.chooseGridMediaList[this.chooseGridMediaList.length-1],this.chooseGridMediaList.length-1)
       this.setPropDataToDevelopAttrData({chooseGridMediaList:_.cloneDeep(this.chooseGridMediaList)});
     },
+    getCurrentUserRoleIds(){
+      if(this.propData.userRoleFunction&&this.propData.userRoleFunction.length>0){
+        try{
+          return window[this.propData.userRoleFunction[0].name].call(this,{customParam: this.propData.userRoleFunction[0].param, _this:this})
+        }catch(error){
+          return "";
+        }
+      }
+      return ""
+    },
     /**
      * 自动布局
      */
@@ -356,6 +366,7 @@ export default {
         this.autoLayoutSendLayoutInfoToChildrenMsg(this.chooseGridListFull);
         return;
       }
+      const currentRoleIds = this.getCurrentUserRoleIds();
       const whObject = IDM.getClientWH();//{width: 1159, height: 829}
       let maxMediaObject = {w:0,h:0,gridList:this.chooseGridListFull};
       for (let i=0; i<this.propData.chooseGridMediaList.length; i++) {
@@ -364,10 +375,19 @@ export default {
           if(item.w>=maxMediaObject.w&&item.h>=maxMediaObject.h){
             //如果宽度大于还不够，必须要高度也是大于才能将其替换
             if (item.isShowFunction && item.isShowFunction.length > 0) { // 判断如果页签有自定义函数 返回true 则替换
-              if (window[item.isShowFunction[0].name]&&window[item.isShowFunction[0].name].call(this,{ customParam: item.isShowFunction[0].param, _this:this })) {
+              if (window[item.isShowFunction[0].name]&&window[item.isShowFunction[0].name].call(this,{ customParam: item.isShowFunction[0].param,item:item, _this:this })) {
                 maxMediaObject = item;
-              } else {
-                continue;
+              }
+            }else if(item.powerActive&&item.powerList.length>0&&currentRoleIds){
+              let hasExists = false;
+              for(let ii=0;ii<item.powerList.length;ii++){
+                if(currentRoleIds.indexOf(item.powerList[ii].value)>0){
+                  //已经匹配到满足了
+                  hasExists = true;
+                }
+              }
+              if(hasExists){
+                maxMediaObject = item;
               }
             } else {
               maxMediaObject = item;

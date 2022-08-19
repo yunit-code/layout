@@ -125,8 +125,10 @@
                             "layoutType": "inline",
                             "text": "权限选择",
                             "bindKey": "powerList",
-                            "dataSourceUrl": "",
-                            "display": "@[powerActive]"
+                            "dataSourceUrl": "/ctrl/idm/console/getRoleList",
+                            "display": "@[powerActive]",
+                            "desc":"请选择要显示该布局的权限，如果要使改权限生效，请在“用户权限自定义函数”属性返回当前人的权限ID集合",
+                            "multiple": true
                         },
                         {
                             "type": "actionSelect",
@@ -137,6 +139,14 @@
                             "multiple": false
                         }
                     ]
+                },
+                {
+                    "type": "actionSelect",
+                    "layoutType": "block",
+                    "text": "用户权限自定义函数",
+                    "bindKey": "userRoleFunction",
+                    "desc": "用于设置返回当前人的权限ID集合，如果适配布局中设置了权限则此处是必选，否则权限设置无效",
+                    "multiple": false
                 }
             ]
         },
