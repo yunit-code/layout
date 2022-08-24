@@ -211,6 +211,10 @@ export default {
       if (this.propData.fitMenu) {
         this.computedWidth = {width: `calc(${this.propData.width} - ${this.propData.menuWidthMax})`};
       }
+      if (this.moduleObject.env === 'develop') {
+        const developEditInfo = IDM.develop.getDragWorkspaceInfo() || {};
+        this.propData.fitMenu ? (this.computedWidth = {width: `calc(${developEditInfo.width}px - ${this.propData.menuWidthMax})`}) : (this.computedWidth = {});
+      }
       this.propData.chooseGridMediaList = (this.propData.chooseGridMediaList || []).length > 0 ? this.propData.chooseGridMediaList : this.chooseGridMediaList;
     },
     existsChooseGridList(item){

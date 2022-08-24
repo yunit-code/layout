@@ -170,7 +170,7 @@
                             "type": "input",
                             "layoutType": "block",
                             "text": "宽",
-                            "desc": "填写auto则为自适应，或者使用px、%、vw等单位，比如100%、100px、100vw等等",
+                            "desc": "填写auto则为自适应，或者使用px、%、vw等单位，比如100%、100px、100vw等等，开启适配菜单后禁止使用calc计算属性。",
                             "bindKey": "width",
                             "width": "60px",
                             "default": "100%"
