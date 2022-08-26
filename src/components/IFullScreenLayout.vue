@@ -860,14 +860,20 @@ export default {
       //获取到结束节点的坐标，用结束的进行计算，看跨过了几个节点，节点*宽度(高度)
       that.movePosObject.width=resChooseWH.width;
       that.movePosObject.height=resChooseWH.height;
+      let moveStart = false;
 
       var moveEvent = function(e){
+        moveStart = true;
         that.switchAddGridList(e);
         that._stopPropagation(e);
       };
       var moveUpEvent = function(e) {
         document.removeEventListener("mousemove",moveEvent);
         document.removeEventListener("mouseup",moveUpEvent);
+        if(!moveStart){
+          that.movePosObject={x:0,y:0,width:0,height:0,moveActive:false,minWidthShow:0,minHeightShow:0}
+          return;
+        }
         if(!that.switchAddGridList(e,true)){
           //初始化移动坐标(清空)
           that.movePosObject={x:0,y:0,width:0,height:0,moveActive:false,minWidthShow:0,minHeightShow:0}
