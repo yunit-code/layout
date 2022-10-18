@@ -3,7 +3,7 @@ import Main from './Main.vue'
 import './core/regModule';
 import config from '../public/static/config.json';
 //引入图标
-import '@/icons' // icon
+// import '@/icons' // icon
 //按需的ant组件注册，没有用到antd最好删除
 import "@/plugins/antd"
 
@@ -41,6 +41,7 @@ requireComponent.keys().forEach(fileName => {
 })
 Vue.prototype.IDM = window.IDM;
 Vue.config.productionTip = false
+Vue.config.devtools = true
 //这里每次打包都会生成一个随机的变量，唯一，保证能加载到对应的对象
 window[`${process.env.CodeVar}`] = Main;
 // //每次打包都会生成不同的CodeVar
