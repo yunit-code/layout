@@ -28,6 +28,12 @@
             "helpUrl": "",
             "children": [
                 {
+                    "type": "layout",
+                    "layoutType": "inline",
+                    "text": "栅格布局",
+                    "bindKey": "layout"
+                },
+                {
                     "type": "box",
                     "layoutType": "block",
                     "text": "内外边距",
@@ -240,6 +246,13 @@
                     "layoutType": "block",
                     "text": "边框",
                     "bindKey": "border"
+                },
+                {
+                    "type": "input",
+                    "layoutType": "inline",
+                    "text": "边框阴影",
+                    "bindKey": "boxShadow",
+                    "default": ""
                 },
                 {
                     "type": "font",

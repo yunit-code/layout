@@ -40,13 +40,13 @@
     },
     "rules": {
       "no-unused-vars": 0,
-      "no-empty":0,
+      "no-empty": 0,
       "no-debugger": "off"
     },
-    "globals":{
+    "globals": {
       "IDM": true,
       "$": true,
-      "_":true
+      "_": true
     }
   },
   "browserslist": [

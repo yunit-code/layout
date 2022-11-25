@@ -174,6 +174,23 @@ export default {
               styleObject["text-align"]=element.fontTextAlign;
               styleObject["text-decoration"]=element.fontDecoration;
               break;
+            case "boxShadow":
+              styleObject["box-shadow"] = element;
+              break;
+            case "layout":
+              styleObject["display"]=element.display;
+              if(element.display&&element.display=="flex"){
+                if(element.direction){
+                  styleObject["flex-direction"]=element.direction;
+                }
+                if(element.direction){
+                  styleObject["align-items"]=element.align;
+                }
+                if(element.direction){
+                  styleObject["justify-content"]=element.justify;
+                }
+              }
+              break;
           }
         }
       }

@@ -292,6 +292,9 @@ export default {
                 styleObject["display"]=element.display;
               }
               break;
+            case "boxShadow":
+              styleObject["box-shadow"] =  element;
+              break;
           }
         }
       }
@@ -439,6 +442,9 @@ export default {
                   styleObject["justify-content"]=element.justify;
                 }
               }
+              break;
+            case "boxShadow":
+              styleObject["box-shadow"] = element;
               break;
           }
         }
