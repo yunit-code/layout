@@ -43,11 +43,11 @@ export default {
      */
     getIframeSrc(){
       let that = this;
+      this.iframeSrc = that.propData.iframeSrc? IDM.url.getWebPath(that.propData.iframeSrc):"";
       //所有地址的url参数转换
       var params = that.commonParam();
       switch (this.propData.dataSourceType) {
         case "fixed":
-          this.iframeSrc = that.propData.iframeSrc ? IDM.url.getWebPath(that.propData.iframeSrc):"";
           break;
         case "customInterface":
           this.propData.customInterfaceUrl&&window.IDM.http.get(this.propData.customInterfaceUrl,params)
