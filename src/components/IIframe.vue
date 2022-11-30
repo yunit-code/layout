@@ -62,15 +62,43 @@ export default {
           //使用通用接口直接跳过，在setContextValue执行
           break;
         case "customFunction":
-          if(this.propData.iframeSrcFunction&&this.propData.iframeSrcFunction.length>0){
+          if(this.propData.customFunction&&this.propData.customFunction.length>0){
             var resValue = "";
             try {
-              resValue = window[this.propData.iframeSrcFunction[0].name]&&window[this.propData.iframeSrcFunction[0].name].call(this,{...params,...this.propData.iframeSrcFunction[0].param,moduleObject:this.moduleObject});
+              resValue = window[this.propData.customFunction[0].name]&&window[this.propData.customFunction[0].name].call(this,{...params,...this.propData.customFunction[0].param,moduleObject:this.moduleObject});
             } catch (error) {
             }
             that.iframeSrc = IDM.url.getWebPath(resValue)
           }
           break;
+      }
+    },
+    /**
+     * 组件通信：接收消息的方法
+     * @param {
+     *  type:"发送消息的时候定义的类型，这里可以自己用来要具体做什么，统一规定的type：linkageResult（组件联动传结果值）、linkageDemand（组件联动传需求值）、linkageReload（联动组件重新加载）
+     * 、linkageOpenDialog（打开弹窗）、linkageCloseDialog（关闭弹窗）、linkageShowModule（显示组件）、linkageHideModule（隐藏组件）、linkageResetDefaultValue（重置默认值）"
+     *  message:{发送的时候传输的消息对象数据}
+     *  messageKey:"消息数据的key值，代表数据类型是什么，常用于表单交互上，比如通过这个key判断是什么数据"
+     *  isAcross:如果为true则代表发送来源是其他页面的组件，默认为false
+     * } object 
+     */
+    receiveBroadcastMessage(object){
+      console.log("组件收到消息",object)
+      if(object&&object.type=="linkageResult" && this.propData.dataSourceType === "receiveMessage"){
+        //结果格式化
+        if(this.propData.customFunction&&this.propData.customFunction.length>0){
+          //所有地址的url参数转换
+          var params = this.commonParam();
+          var resValue = "";
+          try {
+            resValue = window[this.propData.customFunction[0].name]&&window[this.propData.customFunction[0].name].call(this,{...params,...this.propData.customFunction[0].param,moduleObject:this.moduleObject,receiveData:object.message});
+          } catch (error) {
+          }
+          this.propData.label = resValue;
+        }else{
+          this.propData.label = object.message;
+        }
       }
     },
     /**

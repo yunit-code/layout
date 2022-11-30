@@ -323,7 +323,7 @@
                     "type": "actionSelect",
                     "layoutType": "block",
                     "text": "URL动态地址自定义函数",
-                    "bindKey": "iframeSrcFunction",
+                    "bindKey": "customFunction",
                     "desc": "当静态地址不满足时候会调用此处设置的自定义函数，接收参数{...自定义的,urlData,pageId}",
                     "multiple": false,
                     "display": "@[dataSourceType=='customFunction']"
