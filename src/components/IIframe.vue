@@ -43,9 +43,19 @@ export default {
      */
     getIframeSrc(){
       let that = this;
-      this.iframeSrc = that.propData.iframeSrc? IDM.url.getWebPath(that.propData.iframeSrc):"";
-      //所有地址的url参数转换
-      var params = that.commonParam();
+      let result = that.propData.iframeSrc? IDM.url.getWebPath(that.propData.iframeSrc):"";
+      var customHandle = that.propData.iframeSrcFunction;
+      customHandle &&
+        customHandle.forEach((item) => {
+          result = IDM.url.getWebPath(window[item.name] &&
+            window[item.name].call(this, {
+              ...that.commonParam(),
+              customParam: item.param,
+              _this: that
+            }));
+        });
+      this.iframeSrc = result;
+
       switch (this.propData.dataSourceType) {
         case "fixed":
           break;
@@ -62,14 +72,6 @@ export default {
           //使用通用接口直接跳过，在setContextValue执行
           break;
         case "customFunction":
-          if(this.propData.customFunction&&this.propData.customFunction.length>0){
-            var resValue = "";
-            try {
-              resValue = window[this.propData.customFunction[0].name]&&window[this.propData.customFunction[0].name].call(this,{...params,...this.propData.customFunction[0].param,moduleObject:this.moduleObject});
-            } catch (error) {
-            }
-            that.iframeSrc = IDM.url.getWebPath(resValue)
-          }
           break;
       }
     },
