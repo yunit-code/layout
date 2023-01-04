@@ -89,17 +89,17 @@ export default {
       console.log("组件收到消息",object)
       if(object&&object.type=="linkageResult" && this.propData.dataSourceType === "receiveMessage"){
         //结果格式化
-        if(this.propData.customFunction&&this.propData.customFunction.length>0){
+        if(this.propData.iframeSrcFunction&&this.propData.iframeSrcFunction.length>0){
           //所有地址的url参数转换
           var params = this.commonParam();
           var resValue = "";
           try {
-            resValue = window[this.propData.customFunction[0].name]&&window[this.propData.customFunction[0].name].call(this,{...params,...this.propData.customFunction[0].param,moduleObject:this.moduleObject,receiveData:object.message});
+            resValue = window[this.propData.iframeSrcFunction[0].name]&&window[this.propData.iframeSrcFunction[0].name].call(this,{...params,...this.propData.iframeSrcFunction[0].param,moduleObject:this.moduleObject,receiveData:object.message});
           } catch (error) {
           }
-          this.propData.label = resValue;
+          this.iframeSrc = resValue;
         }else{
-          this.propData.label = object.message;
+          this.iframeSrc = object.message;
         }
       }
     },
