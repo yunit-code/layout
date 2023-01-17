@@ -38,6 +38,18 @@
         <div v-if="propData.tabBarExtraContentFunction&&propData.tabBarExtraContentFunction.length>0" v-html="getTabBarExtraContentCustomRender()"></div>
       </div>
     </layout-a-tabs>
+    <div
+      v-show="propData.showDragContainer && showDragContainer"
+      class="idm_itabs_drag_container"
+      :style="{ left: propData.dragContainerX, top: propData.dragContainerY }"
+    >
+      <div
+        class="drag_container"
+        idm-ctrl-inner
+        :idm-ctrl-id="moduleObject.id"
+        idm-container-index="1"
+      ></div>
+    </div>
   </div>
 </template>
 
@@ -47,10 +59,15 @@ export default {
   data(){
     return {
       moduleObject:{},
-      propData:this.$root.propData.compositeAttr||{},
+      propData:this.$root.propData.compositeAttr||{
+        dragContainerY: '8px',
+        dragContainerX: '60%',
+        showDragContainer: false,
+      },
       innerAttr:this.$root.propData.innerAttr||[],
       activeTab:"",
-      tabList:[]
+      tabList:[],
+      showDragContainer:false
     }
   },
   props: {
@@ -82,7 +99,7 @@ export default {
           // item.opened = true;
         }
       })
-
+      this.dragContainerShowStatusHandle('changeTab');
       this.changeEventFunHandle("changeFunction");
     },
     /**
@@ -502,6 +519,8 @@ export default {
           }
         }
       }
+      this.showDragContainer = this.propData.dragContainerShowType == 'default';
+      this.dragContainerShowStatusHandle('changeTab');
     },
     /**
      * 加载属性到组件中
@@ -514,7 +533,63 @@ export default {
         });
       }
       this.initBaseAttrToModule();
-    }
+    },
+    /**
+     * 悬浮容器显示处理事件
+     */
+    dragContainerShowStatusHandle(actionType) {
+      if (this.propData.dragContainerShowType == 'default') {
+        return;
+      }
+      switch (this.propData.dragContainerShowType) {
+        case 'toggle':
+          //用当前选中的页签对象去执行表达式
+          if (
+            this.getExpressData(
+              'data',
+              this.propData.dragContainerDataFiled,
+              this.tabList.find(item => item.key === this.activeTab) || {}
+            )
+          ) {
+            this.showDragContainer = true;
+          } else {
+            this.showDragContainer = false;
+          }
+          break;
+        case 'dynamic':
+          break;
+        case 'custom':
+          this.showDragContainer =
+            window[this.propData.dragContainerDataFunction[0].name] &&
+            window[this.propData.dragContainerDataFunction[0].name].call(this, {
+              ...this.commonParam(),
+              customParam: this.propData.dragContainerDataFunction[0].param,
+              _this: this,
+              activeKey: this.activeTab,
+              allKey: this.tabList,
+              actionType
+            });
+          break;
+      }
+    },
+    /**
+     * 根据结果集来执行表达式的结果
+     * dataName：结果集名，建议直接data即可
+     * dataFiled：表达式
+     * resultData：要查下的结果集
+     */
+    getExpressData(dataName, dataFiled, resultData) {
+      //给defaultValue设置dataFiled的值
+      var _defaultVal = undefined;
+      if (dataFiled) {
+        var filedExp = dataFiled;
+        filedExp = dataName + (filedExp.startsWiths('[') ? '' : '.') + filedExp;
+        var dataObject = { IDM: window.IDM };
+        dataObject[dataName] = resultData;
+        _defaultVal = window.IDM.express.replace.call(this, '@[' + filedExp + ']', dataObject);
+      }
+      return _defaultVal;
+    },
   }
 }
 </script>
@@ -523,5 +598,10 @@ export default {
   .ant-tabs-bar{
     margin: 0 0 0 0;
   }
+}
+.idm_itabs_drag_container {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 </style>
