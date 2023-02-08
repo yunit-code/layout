@@ -39,7 +39,7 @@
       </div>
     </layout-a-tabs>
     <div
-      v-show="propData.showDragContainer && showDragContainer"
+      v-show="propData.showDragContainer && (this.moduleObject.env != 'production' || showDragContainer)"
       class="idm_itabs_drag_container"
       :style="{ left: propData.dragContainerX, top: propData.dragContainerY }"
     >
