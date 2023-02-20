@@ -34,6 +34,27 @@
                     "bindKey": "layout"
                 },
                 {
+                    "type": "select",
+                    "layoutType": "inline",
+                    "text": "overflow",
+                    "bindKey": "overflow",
+                    "dictionary": [
+                        {
+                            "label": "auto",
+                            "value": "auto"
+                        },
+                        {
+                            "label": "scroll",
+                            "value": "scroll"
+                        },
+                        {
+                            "label": "hidden",
+                            "value": "hidden"
+                        }
+                    ],
+                    "default": ""
+                },
+                {
                     "type": "box",
                     "layoutType": "block",
                     "text": "内外边距",

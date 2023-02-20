@@ -5,7 +5,7 @@
     id：使用moduleObject.id，如果id不使用这个将会被idm-ctrl-id属性替换
     idm-ctrl-id：组件的id，这个必须不能为空
   -->
-  <div @click="containerClickHandle" idm-ctrl="drag_container" :id="moduleObject.id" :idm-ctrl-id="moduleObject.id">
+  <div @click="containerClickHandle" idm-ctrl="drag_container" class="container-scrollbar-thumb" :id="moduleObject.id" :idm-ctrl-id="moduleObject.id">
     <!--
       组件内部容器
       增加class="drag_container" 必选
@@ -191,10 +191,13 @@ export default {
                 }
               }
               break;
+            case 'overflow':
+              styleObject['overflow'] = element
+              break
           }
         }
       }
-      IDM.setStyleToPageHead(this.moduleObject.id,styleObject);
+      IDM.setStyleToPageHead(this.moduleObject.id, styleObject);
     },
     /**
      * 内部点击事件
@@ -227,3 +230,23 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.container-scrollbar-thumb{
+    &::-webkit-scrollbar-track-piece {
+      background-color: #ffffff;
+    }
+
+    &::-webkit-scrollbar {
+      width: 8px;
+      height: 9px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: #ebebeb;
+      background-clip: padding-box;
+      min-height: 28px;
+      border-radius: 4px;
+    }
+}
+</style>
