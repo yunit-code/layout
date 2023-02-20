@@ -1522,6 +1522,9 @@ export default {
                 }
               }
               break;
+            case 'overflow':
+              styleObject["overflow"]=element;
+              break
           }
         }
       }
@@ -1718,6 +1721,21 @@ export default {
         }
         .fsl-region-element-inner-preview{
           z-index: 1;
+          &::-webkit-scrollbar-track-piece {
+            background-color: #ffffff;
+          }
+
+          &::-webkit-scrollbar {
+            width: 8px;
+            height: 9px;
+          }
+
+          &::-webkit-scrollbar-thumb {
+            background-color: #ebebeb;
+            background-clip: padding-box;
+            min-height: 28px;
+            border-radius: 4px;
+          }
         }
         &:not(.layout-mode-common,.module_env_production){
           &:hover,&.active{
