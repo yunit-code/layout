@@ -132,6 +132,9 @@ export default {
      */
     getColStyle(item,index){
       let styleObject = {};
+      if(this.propData.widthRatioFixed){
+        styleObject["min-width"] = 0;
+      }
       var colArray = (this.propData.grid || '12:12').split(':');
       if(this.propData.colPadding&&this.propData.colPadding.inputVal&&this.propData.colPadding.selectVal){
         if(index!=1){

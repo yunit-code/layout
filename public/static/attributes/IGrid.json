@@ -53,6 +53,14 @@
                             "value": "em"
                         }
                     ]
+                },
+                {
+                    "type": "switch",
+                    "layoutType": "inline",
+                    "text": "强制宽比",
+                    "bindKey": "widthRatioFixed",
+                    "desc":"如果设置开启强制宽比则会给格子增加minWidth:0样式，也就是说设置了这个比例则只会这个比例大小，不会因为里面的内容撑大而变得比例不一样。",
+                    "default": false
                 }
             ]
         },
