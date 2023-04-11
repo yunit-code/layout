@@ -58,11 +58,11 @@ layout@1.0.0
 
 - 默认值：空
 
-:::tip
+📢**_温馨提示_**：
 - flex布局参考： [flex](https://developer.mozilla.org/zh-CN/docs/Web/CSS/flex)
 - flex布局示例： [Flex布局示例](http://static.vgee.cn/static/index.html)
 - flex深度理解： [Flex布局教程](http://www.ruanyifeng.com/blog/2015/07/flex-grammar.html)
-:::
+
 
 #### overflow【overflow】
 
