@@ -53,7 +53,32 @@ export default {
     /**
      * 把属性转换成样式对象
      */
+    convertThemeListAttrToStyleObject() {
+        const themeList = this.propData.themeList;
+        if ( (!themeList) || !themeList.length ) {
+            return
+        }
+        const themeNamePrefix = IDM.setting && IDM.setting.applications && IDM.setting.applications.themeNamePrefix ? IDM.setting.applications.themeNamePrefix : "idm-theme-";
+        for (var i = 0; i < themeList.length; i++) {
+          var item = themeList[i];
+          
+          if(item.key!=IDM.theme.getCurrentThemeInfo()){
+              //此处比对是不渲染输出不用的样式，如果页面会刷新就可以把此处放开
+              continue;
+          }
+          let fontStyleObject = {
+              "color": item.mainColor ? item.mainColor.hex8 : "",
+          }
+          let backgroundObject = {
+              'background-color': item.mainColor ? item.mainColor.hex8 : "",
+          }
+          if ( this.propData.bgColorType == '1' ) {
+              IDM.setStyleToPageHead( "." + themeNamePrefix + item.key + " #" + (this.moduleObject.packageid || "module_demo"), backgroundObject );
+          }
+        }
+    },
     convertAttrToStyleObject(){
+      this.convertThemeListAttrToStyleObject()
       var styleObject = {};
       if(this.propData.bgSize&&this.propData.bgSize=="custom"){
         styleObject["background-size"]=(this.propData.bgSizeWidth?this.propData.bgSizeWidth.inputVal+this.propData.bgSizeWidth.selectVal:"auto")+" "+(this.propData.bgSizeHeight?this.propData.bgSizeHeight.inputVal+this.propData.bgSizeHeight.selectVal:"auto")
@@ -78,7 +103,7 @@ export default {
               styleObject[key]=element;
               break;
             case "bgColor":
-              if(element&&element.hex8){
+              if(element&&element.hex8 && this.propData.bgColorType != '1'){
                 styleObject["background-color"]=element.hex8;
               }
               break;

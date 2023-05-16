@@ -91,11 +91,29 @@
                     "helpUrl": "",
                     "children": [
                         {
+                            "type": "select",
+                            "layoutType": "inline",
+                            "text": "背景方式",
+                            "bindKey": "bgColorType",
+                            "dictionary": [
+                                {
+                                    "label": "跟随主题变化",
+                                    "value": "1"
+                                },
+                                {
+                                    "label": "自定义",
+                                    "value": "2"
+                                }
+                            ],
+                            "default": "2"
+                        },
+                        {
                             "type": "colorPicker",
                             "layoutType": "inline",
                             "text": "背景色",
                             "bindKey": "bgColor",
                             "placeholder": "请选择颜色",
+                            "display":"@[bgColorType=='2']",
                             "default": {}
                         },
                         {
@@ -280,6 +298,94 @@
                     "layoutType": "block",
                     "text": "文字",
                     "bindKey": "font"
+                }
+            ]
+        },
+        {
+            "type": "table",
+            "text": "主题设置",
+            "desc": "点击？查看主题设置用法指南",
+            "bindKey": "themeList",
+            "tabText": "主题[index]",
+            "default":[
+                {
+                    "key": "blue",
+                    "mainColor": {
+                        "hex": "#0073CA",
+                        "hex8": "#0073CAFF"
+                    },
+                    "minorColor": {
+                        "hex": "#329cec",
+                        "hex8": "#329cecFF"
+                    }
+                },
+                {
+                    "key": "red",
+                    "mainColor": {
+                        "hex": "#E21A1A",
+                        "hex8": "#E21A1AFF"
+                    },
+                    "minorColor": {
+                        "hex": "#f87373",
+                        "hex8": "#f87373FF"
+                    }
+                },
+                {
+                    "key": "green",
+                    "mainColor": {
+                        "hex": "#0EAF64",
+                        "hex8": "#0EAF64FF"
+                    },
+                    "minorColor": {
+                        "hex": "#38e996",
+                        "hex8": "#38e996FF"
+                    }
+                }
+            ],
+            "children": [
+                {
+                    "type": "select",
+                    "layoutType": "inline",
+                    "text": "主题标识",
+                    "bindKey": "key",
+                    "desc":"用于设置主题的标识，此项需要搭配自定义开发切换主题的功能，例如：蓝色标识为blue，用户切换主题的时候存储到数据库中的标识为blue，则这里选择blue",
+                    "default":"",
+                    "placeholder":"例如：blue",
+                    "ctrlAttrObject": {
+                        "mode": "combobox"
+                    },
+                    "dictionary": [
+                        {
+                            "label": "red",
+                            "value": "red"
+                        },
+                        {
+                            "label": "green",
+                            "value": "green"
+                        },
+                        {
+                            "label": "blue",
+                            "value": "blue"
+                        }
+                    ]
+                },
+                {
+                    "type": "colorPicker",
+                    "layoutType": "inline",
+                    "text": "主要颜色",
+                    "bindKey": "mainColor",
+                    "desc":"主题的主要颜色",
+                    "placeholder": "请选择颜色",
+                    "display":"@[key]"
+                },
+                {
+                    "type": "colorPicker",
+                    "layoutType": "inline",
+                    "text": "次要颜色",
+                    "bindKey": "minorColor",
+                    "desc": "主题的次要颜色，作用于菜单鼠标悬浮色、选中菜单颜色",
+                    "placeholder": "请选择颜色",
+                    "display": "@[key]"
                 }
             ]
         },
