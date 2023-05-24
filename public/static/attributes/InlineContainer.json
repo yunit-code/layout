@@ -30,6 +30,88 @@
                 {
                     "type": "switch",
                     "layoutType": "inline",
+                    "text": "固定定位",
+                    "bindKey": "fixed",
+                    "default": false
+                },
+                {
+                    "type": "inputNumber",
+                    "layoutType": "inline",
+                    "text": "定位层级",
+                    "bindKey": "fixedzIndex",
+                    "display": "@[fixed]"
+                },
+                {
+                    "type": "inputNumberUnit",
+                    "layoutType": "inline",
+                    "text": "顶部边距",
+                    "bindKey": "fixedTop",
+                    "dictionary": [
+                        {
+                            "label": "px",
+                            "value": "px"
+                        },
+                        {
+                            "label": "%",
+                            "value": "%"
+                        }
+                    ],
+                    "display": "@[fixed]"
+                },
+                {
+                    "type": "inputNumberUnit",
+                    "layoutType": "inline",
+                    "text": "底部边距",
+                    "bindKey": "fixedBottom",
+                    "dictionary": [
+                        {
+                            "label": "px",
+                            "value": "px"
+                        },
+                        {
+                            "label": "%",
+                            "value": "%"
+                        }
+                    ],
+                    "display": "@[fixed]"
+                },
+                {
+                    "type": "inputNumberUnit",
+                    "layoutType": "inline",
+                    "text": "左侧边距",
+                    "bindKey": "fixedLeft",
+                    "dictionary": [
+                        {
+                            "label": "px",
+                            "value": "px"
+                        },
+                        {
+                            "label": "%",
+                            "value": "%"
+                        }
+                    ],
+                    "display": "@[fixed]"
+                },
+                {
+                    "type": "inputNumberUnit",
+                    "layoutType": "inline",
+                    "text": "右侧边距",
+                    "bindKey": "fixedRight",
+                    "dictionary": [
+                        {
+                            "label": "px",
+                            "value": "px"
+                        },
+                        {
+                            "label": "%",
+                            "value": "%"
+                        }
+                    ],
+                    "display": "@[fixed]"
+                },
+                {
+                    "type": "switch",
+                    "layoutType": "inline",
                     "text": "自动换行",
                     "bindKey": "autoWrap",
                     "default": true

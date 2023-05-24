@@ -5,7 +5,21 @@
     id：使用moduleObject.id，如果id不使用这个将会被idm-ctrl-id属性替换
     idm-ctrl-id：组件的id，这个必须不能为空
   -->
-  <div @click="containerClickHandle" idm-ctrl="drag_container_inlineblock" :id="moduleObject.id" :idm-ctrl-id="moduleObject.id" class="idm-inlineblock-container-layout">
+  <div
+    @click="containerClickHandle"
+    idm-ctrl="drag_container_inlineblock"
+    :id="moduleObject.id"
+    :idm-ctrl-id="moduleObject.id"
+    class="idm-inlineblock-container-layout"
+    :style="{
+      position: propData.fixed ? 'fixed' : '',
+      left: propData.fixedLeft && propData.fixedLeft.selectVal ? propData.fixedLeft.inputVal + propData.fixedLeft.selectVal : '',
+      right: propData.fixedRight && propData.fixedRight.selectVal ? propData.fixedRight.inputVal + propData.fixedRight.selectVal : '',
+      top: propData.fixedTop && propData.fixedTop.selectVal ? propData.fixedTop.inputVal + propData.fixedTop.selectVal : '',
+      bottom: propData.fixedBottom && propData.fixedBottom.selectVal ? propData.fixedBottom.inputVal + propData.fixedBottom.selectVal : '',
+      zIndex: propData.fixedzIndex
+    }"
+  >
     <!--
       组件内部容器
       增加class="drag_container" 必选
