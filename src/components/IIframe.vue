@@ -12,7 +12,7 @@
       idm-ctrl-id：组件的id，这个必须不能为空
       idm-container-index  组件的内部容器索引，不重复唯一且不变，必选
     -->
-    <iframe class="idm_iframe_basestyle" :src="iframeSrc" :name="propData.iframeName||propData.ctrlId"/>
+    <iframe ref="iframeBox" class="idm_iframe_basestyle" :src="iframeSrc" :name="propData.iframeName||propData.ctrlId"/>
     <div v-if="moduleObject.env=='develop'" style="position:absolute;top:0px;left:0px;right:0px;bottom:0px;z-index:99;"></div>
   </div>
 </template>
@@ -101,6 +101,10 @@ export default {
         }else{
           this.iframeSrc = object.message;
         }
+        // 发现url参数值变化  页面不会刷新的问题 $nextTick不好使 故加此代码
+        setTimeout(()=>{
+          this.$refs.iframeBox.contentWindow.location.reload();
+        },100)
       }
     },
     /**
