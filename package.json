@@ -1,6 +1,6 @@
 {
   "name": "layout",
-  "version": "0.1.0",
+  "version": "1.1.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -41,7 +41,8 @@
     "rules": {
       "no-unused-vars": 0,
       "no-empty": 0,
-      "no-debugger": "off"
+      "no-debugger": "off",
+      "no-undef":0
     },
     "globals": {
       "IDM": true,

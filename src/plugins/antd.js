@@ -5,10 +5,14 @@ import 'ant-design-vue/lib/button/style/css';
 import 'ant-design-vue/lib/tabs/style/css';
 import 'ant-design-vue/lib/icon/style/css';
 import 'ant-design-vue/lib/tooltip/style/css';
+import 'ant-design-vue/lib/dropdown/style/css';
+import 'ant-design-vue/lib/menu/style/css';
 import {
   Button,
   Tooltip,
   Icon,
+  Dropdown,
+  Menu,
   Tabs
 } from 'ant-design-vue';
 import Base from 'ant-design-vue/lib/base/index.js'
@@ -24,3 +28,5 @@ Tabs.install = function(){
 Vue.use(Tabs);
 Vue.use(Tooltip);
 Vue.use(Icon);
+Vue.use(Dropdown);
+Vue.use(Menu);
