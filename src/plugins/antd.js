@@ -21,9 +21,9 @@ import Base from 'ant-design-vue/lib/base/index.js'
 Vue.use(Button);
 Tabs.install = function(){
   Vue.use(Base);
-  Vue.component("layout"+Tabs.name,Tabs);
-  Vue.component("layout"+Tabs.TabPane.name,Tabs.TabPane);
-  Vue.component("layout"+Tabs.TabContent.name,Tabs.TabContent);
+  Vue.component("layout110"+Tabs.name,Tabs);
+  Vue.component("layout110"+Tabs.TabPane.name,Tabs.TabPane);
+  Vue.component("layout110"+Tabs.TabContent.name,Tabs.TabContent);
 }
 Vue.use(Tabs);
 Vue.use(Tooltip);
