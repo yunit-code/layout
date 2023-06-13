@@ -1797,7 +1797,7 @@
                     "type": "input",
                     "layoutType": "block",
                     "text": "错误提示边框阴影",
-                    "bindKey": "errorRoxShadow",
+                    "bindKey": "errorBoxShadow",
                     "default": "0px 0px 5px red"
                 }
             ]

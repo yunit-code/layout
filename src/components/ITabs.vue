@@ -249,7 +249,9 @@ export default {
      */
     convertAttrToStyleObject() {
       var styleObject = {};
-      for (const key in this.propData) {
+      const keyList=["width","height","minWidth","minHeight","box","border","font"];
+      for (const iKey in keyList) {
+        const key = keyList[iKey];
         if (this.propData.hasOwnProperty.call(this.propData, key)) {
           const element = this.propData[key];
           if (!element && element !== false && element != 0) {

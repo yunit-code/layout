@@ -87,7 +87,9 @@ export default {
      */
     convertAttrToDialogOutStyleObject(){
        var styleObject = {};
-      for (const key in this.propData) {
+      const keyList=["width","height","minWidth","maxWidth","minHeight","maxHeight","border","box"];
+      for (const iKey in keyList) {
+        const key = keyList[iKey];
         if (this.propData.hasOwnProperty.call(this.propData, key)) {
           const element = this.propData[key];
           if(!element&&element!==false&&element!=0){
@@ -111,65 +113,10 @@ export default {
               styleObject["max-height"]=element;
               break;
             case "box":
-              if(element.marginTopVal){
-                styleObject["margin-top"]=`${element.marginTopVal}`;
-              }
-              if(element.marginRightVal){
-                styleObject["margin-right"]=`${element.marginRightVal}`;
-              }
-              if(element.marginBottomVal){
-                styleObject["margin-bottom"]=`${element.marginBottomVal}`;
-              }
-              if(element.marginLeftVal){
-                styleObject["margin-left"]=`${element.marginLeftVal}`;
-              }
-              if(element.paddingTopVal){
-                styleObject["padding-top"]=`${element.paddingTopVal}`;
-              }
-              if(element.paddingRightVal){
-                styleObject["padding-right"]=`${element.paddingRightVal}`;
-              }
-              if(element.paddingBottomVal){
-                styleObject["padding-bottom"]=`${element.paddingBottomVal}`;
-              }
-              if(element.paddingLeftVal){
-                styleObject["padding-left"]=`${element.paddingLeftVal}`;
-              }
+              IDM.style.setBoxStyle(styleObject, element);
               break;
             case "border":
-              if(element.border.top.width>0){
-                styleObject["border-top-width"]=element.border.top.width+element.border.top.widthUnit;
-                styleObject["border-top-style"]=element.border.top.style;
-                if(element.border.top.colors.hex8){
-                  styleObject["border-top-color"]=element.border.top.colors.hex8;
-                }
-              }
-              if(element.border.right.width>0){
-                styleObject["border-right-width"]=element.border.right.width+element.border.right.widthUnit;
-                styleObject["border-right-style"]=element.border.right.style;
-                if(element.border.right.colors.hex8){
-                  styleObject["border-right-color"]=element.border.right.colors.hex8;
-                }
-              }
-              if(element.border.bottom.width>0){
-                styleObject["border-bottom-width"]=element.border.bottom.width+element.border.bottom.widthUnit;
-                styleObject["border-bottom-style"]=element.border.bottom.style;
-                if(element.border.bottom.colors.hex8){
-                  styleObject["border-bottom-color"]=element.border.bottom.colors.hex8;
-                }
-              }
-              if(element.border.left.width>0){
-                styleObject["border-left-width"]=element.border.left.width+element.border.left.widthUnit;
-                styleObject["border-left-style"]=element.border.left.style;
-                if(element.border.left.colors.hex8){
-                  styleObject["border-left-color"]=element.border.left.colors.hex8;
-                }
-              }
-              
-              styleObject["border-top-left-radius"]=element.radius.leftTop.radius+element.radius.leftTop.radiusUnit;
-              styleObject["border-top-right-radius"]=element.radius.rightTop.radius+element.radius.rightTop.radiusUnit;
-              styleObject["border-bottom-left-radius"]=element.radius.leftBottom.radius+element.radius.leftBottom.radiusUnit;
-              styleObject["border-bottom-right-radius"]=element.radius.rightBottom.radius+element.radius.rightBottom.radiusUnit;
+              IDM.style.setBorderStyle(styleObject, element);
               break;
           }
         }
@@ -181,17 +128,6 @@ export default {
      */
     convertAttrToDialogBgStyleObject(){
       var styleObject = {},styleObject1 = {};
-      if(this.propData.bgSize&&this.propData.bgSize=="custom"){
-        styleObject["background-size"]=(this.propData.bgSizeWidth?this.propData.bgSizeWidth.inputVal+this.propData.bgSizeWidth.selectVal:"auto")+" "+(this.propData.bgSizeHeight?this.propData.bgSizeHeight.inputVal+this.propData.bgSizeHeight.selectVal:"auto")
-      }else if(this.propData.bgSize){
-        styleObject["background-size"]=this.propData.bgSize;
-      }
-      if(this.propData.positionX&&this.propData.positionX.inputVal){
-        styleObject["background-position-x"]=this.propData.positionX.inputVal+this.propData.positionX.selectVal;
-      }
-      if(this.propData.positionY&&this.propData.positionY.inputVal){
-        styleObject["background-position-y"]=this.propData.positionY.inputVal+this.propData.positionY.selectVal;
-      }
       for (const key in this.propData) {
         if (this.propData.hasOwnProperty.call(this.propData, key)) {
           const element = this.propData[key];
@@ -199,34 +135,10 @@ export default {
             continue;
           }
           switch (key) {
-            case "bgColor":
-              if(element&&element.hex8){
-                styleObject["background-color"]=element.hex8;
-              }
-              break;
             case "bodyBgColor":
               if(element&&element.hex8){
                 styleObject1["background-color"]=element.hex8;
               }
-              break;
-            case "bgImgUrl":
-              styleObject["background-image"]=`url(${IDM.url.getWebPath(element)})`;
-              break;
-            case "positionX":
-              //背景横向偏移
-              
-              break;
-            case "positionY":
-              //背景纵向偏移
-              
-              break;
-            case "bgRepeat":
-              //平铺模式
-                styleObject["background-repeat"]=element;
-              break;
-            case "bgAttachment":
-              //背景模式
-                styleObject["background-attachment"]=element;
               break;
             case "dialogShadeColorCode":
               //窗口阴影颜色
@@ -237,6 +149,7 @@ export default {
           }
         }
       }
+      IDM.style.setBackgroundStyle(styleObject, this.propData);
       if(this.propData.bodyMaxWidth&&this.propData.bodyMaxWidth!="auto"){
         styleObject1["max-width"] = this.propData.bodyMaxWidth;
         styleObject1["overflow-x"] = "auto";
@@ -275,16 +188,7 @@ export default {
               }
               break;
             case "font":
-              styleObject["font-family"]=element.fontFamily;
-              if(element.fontColors.hex8){
-                styleObject["color"]=element.fontColors.hex8;
-              }
-              styleObject["font-weight"]=element.fontWeight&&element.fontWeight.split(" ")[0];
-              styleObject["font-style"]=element.fontStyle;
-              styleObject["font-size"]=element.fontSize+element.fontSizeUnit;
-              styleObject["line-height"]=element.fontLineHeight+(element.fontLineHeightUnit=="-"?"":element.fontLineHeightUnit);
-              styleObject["text-align"]=element.fontTextAlign;
-              styleObject["text-decoration"]=element.fontDecoration;
+              IDM.style.setFontStyle(styleObject, element);
               break;
             case "border":
               styleObject["border-top-left-radius"]=element.radius.leftTop.radius+element.radius.leftTop.radiusUnit;
@@ -393,30 +297,7 @@ export default {
           }
           switch (key) {
             case "contentBox":
-              if(element.marginTopVal){
-                styleObject["margin-top"]=`${element.marginTopVal}`;
-              }
-              if(element.marginRightVal){
-                styleObject["margin-right"]=`${element.marginRightVal}`;
-              }
-              if(element.marginBottomVal){
-                styleObject["margin-bottom"]=`${element.marginBottomVal}`;
-              }
-              if(element.marginLeftVal){
-                styleObject["margin-left"]=`${element.marginLeftVal}`;
-              }
-              if(element.paddingTopVal){
-                styleObject["padding-top"]=`${element.paddingTopVal}`;
-              }
-              if(element.paddingRightVal){
-                styleObject["padding-right"]=`${element.paddingRightVal}`;
-              }
-              if(element.paddingBottomVal){
-                styleObject["padding-bottom"]=`${element.paddingBottomVal}`;
-              }
-              if(element.paddingLeftVal){
-                styleObject["padding-left"]=`${element.paddingLeftVal}`;
-              }
+              IDM.style.setBoxStyle(styleObject, element);
               break;
           }
         }

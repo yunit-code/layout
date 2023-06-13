@@ -1059,7 +1059,9 @@ export default {
       var styleObject = {},
         errorStyleObject = {},
         innerLayoutStyleObject = {};
-      for (const key in this.propData) {
+      const keyList=["width","height","border","box","font","labelFont","errorMsgFont","errorBoxShadow","errorBorder","layout","boxShadow"];
+      for (const iKey in keyList) {
+        const key = keyList[iKey];
         if (this.propData.hasOwnProperty.call(this.propData, key)) {
           const element = this.propData[key];
           if (!element && element !== false && element != 0) {
@@ -1097,7 +1099,7 @@ export default {
                 errorInfoStyleObject
               );
               break;
-            case "errorRoxShadow":
+            case "errorBoxShadow":
               errorStyleObject["box-shadow"] = element;
               break;
             case "errorBorder":
@@ -1281,7 +1283,9 @@ export default {
      */
     convertTitleBoxAttrToStyleObject() {
       var styleObject = {};
-      for (const key in this.propData) {
+      const keyList=["titleWidth","titleHeight","titleBox","titleBorder","titleFont","titleLayout","titleBoxShadow"];
+      for (const iKey in keyList) {
+        const key = keyList[iKey];
         if (this.propData.hasOwnProperty.call(this.propData, key)) {
           const element = this.propData[key];
           if (!element && element !== false && element != 0) {
@@ -1431,7 +1435,9 @@ export default {
      */
     convertFooterBoxAttrToStyleObject() {
       var styleObject = {};
-      for (const key in this.propData) {
+      const keyList=["footerWidth","footerHeight","footerBox","footerBorder","footerFont","footerLayout","footerBoxShadow"];
+      for (const iKey in keyList) {
+        const key = keyList[iKey];
         if (this.propData.hasOwnProperty.call(this.propData, key)) {
           const element = this.propData[key];
           if (!element && element !== false && element != 0) {
