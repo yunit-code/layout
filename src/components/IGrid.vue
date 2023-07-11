@@ -170,7 +170,16 @@ export default {
      */
     convertAttrToStyleObject() {
       var styleObject = {};
-      const keyList=["width","height","box","border","font","layout","boxShadow"];
+      const keyList = [
+        "width",
+        "height",
+        "box",
+        "border",
+        "font",
+        "layout",
+        "boxShadow",
+        "bgColor",
+      ];
       for (const iKey in keyList) {
         const key = keyList[iKey];
         if (this.propData.hasOwnProperty.call(this.propData, key)) {
@@ -198,10 +207,20 @@ export default {
             case "boxShadow":
               styleObject["box-shadow"] = element;
               break;
+            case "bgColor":
+              if (element && element.hex8) {
+                styleObject["background-color"] =
+                  IDM.hex8ToRgbaString(element.hex8) + "  !important";
+              }
+              break;
           }
         }
       }
-      IDM.style.setBackgroundStyle(styleObject, this.propData);
+      if (!this.propData.bgList?.bgList?.length) {
+        IDM.style.setBackgroundStyle(styleObject, this.propData);
+      } else if (Object.keys(this.propData.bgList.style).length) {
+        Object.assign(styleObject, this.propData.bgList.style);
+      }
       IDM.setStyleToPageHead(this.moduleObject.id, styleObject);
       if (this.innerAttr && this.innerAttr.length > 0) {
         this.innerAttr.forEach((element) => {
@@ -240,10 +259,20 @@ export default {
             case "boxShadow":
               styleObject["box-shadow"] = element;
               break;
+            case "bgColor":
+              if (element && element.hex8) {
+                styleObject["background-color"] =
+                  IDM.hex8ToRgbaString(element.hex8) + "  !important";
+              }
+              break;
           }
         }
       }
-      IDM.style.setBackgroundStyle(styleObject, propData);
+      if (!propData.bgList?.bgList?.length) {
+        IDM.style.setBackgroundStyle(styleObject, propData);
+      } else if (Object.keys(propData.bgList.style).length) {
+        Object.assign(styleObject, propData.bgList.style);
+      }
       IDM.setStyleToPageHead(
         this.moduleObject.id +
           ` .drag_container[idm-ctrl-id="${this.moduleObject.id}"][idm-container-index="${index}"]`,

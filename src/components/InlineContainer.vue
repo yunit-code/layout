@@ -13,11 +13,23 @@
     class="idm-inlineblock-container-layout"
     :style="{
       position: propData.fixed ? 'fixed' : '',
-      left: propData.fixedLeft && propData.fixedLeft.selectVal ? propData.fixedLeft.inputVal + propData.fixedLeft.selectVal : '',
-      right: propData.fixedRight && propData.fixedRight.selectVal ? propData.fixedRight.inputVal + propData.fixedRight.selectVal : '',
-      top: propData.fixedTop && propData.fixedTop.selectVal ? propData.fixedTop.inputVal + propData.fixedTop.selectVal : '',
-      bottom: propData.fixedBottom && propData.fixedBottom.selectVal ? propData.fixedBottom.inputVal + propData.fixedBottom.selectVal : '',
-      zIndex: propData.fixedzIndex
+      left:
+        propData.fixedLeft && propData.fixedLeft.selectVal
+          ? propData.fixedLeft.inputVal + propData.fixedLeft.selectVal
+          : '',
+      right:
+        propData.fixedRight && propData.fixedRight.selectVal
+          ? propData.fixedRight.inputVal + propData.fixedRight.selectVal
+          : '',
+      top:
+        propData.fixedTop && propData.fixedTop.selectVal
+          ? propData.fixedTop.inputVal + propData.fixedTop.selectVal
+          : '',
+      bottom:
+        propData.fixedBottom && propData.fixedBottom.selectVal
+          ? propData.fixedBottom.inputVal + propData.fixedBottom.selectVal
+          : '',
+      zIndex: propData.fixedzIndex,
     }"
   >
     <!--
@@ -38,52 +50,50 @@
 
 <script>
 export default {
-  name: 'InlineContainer',
-  data(){
+  name: "InlineContainer",
+  data() {
     return {
-      moduleObject:{},
-      propData:this.$root.propData.compositeAttr||{}
-    }
+      moduleObject: {},
+      propData: this.$root.propData.compositeAttr || {},
+    };
   },
-  props: {
-  },
+  props: {},
   created() {
-    this.moduleObject = this.$root.moduleObject
+    this.moduleObject = this.$root.moduleObject;
     // console.log(this.moduleObject)
     this.convertAttrToStyleObject();
   },
-  mounted() {
-  },
+  mounted() {},
   destroyed() {},
-  methods:{
+  methods: {
     /**
      * 提供父级组件调用的刷新prop数据组件
      */
-    propDataWatchHandle(propData){
-      this.propData = propData.compositeAttr||{};
+    propDataWatchHandle(propData) {
+      this.propData = propData.compositeAttr || {};
       this.convertAttrToStyleObject();
     },
     /**
      * 把属性转换成样式对象
      */
-    convertAttrToStyleObject(){
+    convertAttrToStyleObject() {
       var styleObject = {};
       for (const key in this.propData) {
         if (this.propData.hasOwnProperty.call(this.propData, key)) {
           const element = this.propData[key];
-          if(!element&&element!==false&&element!=0){
+          if (!element && element !== false && element != 0) {
             continue;
           }
           switch (key) {
             case "width":
             case "height":
-              styleObject[key]=element;
+              styleObject[key] = element;
               break;
             case "justifyContent":
-                styleObject["justify-content"]=element;
+              styleObject["justify-content"] = element;
               break;
             case "autoWrap":
-                styleObject["flex-wrap"]=element?"wrap":"nowrap";
+              styleObject["flex-wrap"] = element ? "wrap" : "nowrap";
               break;
             case "box":
               IDM.style.setBoxStyle(styleObject, element);
@@ -94,24 +104,37 @@ export default {
             case "font":
               IDM.style.setFontStyle(styleObject, element);
               break;
+            case "bgColor":
+              if (element && element.hex8) {
+                styleObject["background-color"] =
+                  IDM.hex8ToRgbaString(element.hex8) + "  !important";
+              }
+              break;
           }
         }
       }
-      IDM.style.setBackgroundStyle(styleObject, this.propData);
-      IDM.setStyleToPageHead(this.moduleObject.id,styleObject);
+      if (!this.propData.bgList?.bgList?.length) {
+        IDM.style.setBackgroundStyle(styleObject, this.propData);
+      } else if (Object.keys(this.propData.bgList.style).length) {
+        Object.assign(styleObject, this.propData.bgList.style);
+      }
+      IDM.setStyleToPageHead(this.moduleObject.id, styleObject);
     },
     /**
      * 内部点击事件
      */
-    containerClickHandle(){
+    containerClickHandle() {
       let that = this;
-      if(this.moduleObject.env=="develop"){
+      if (this.moduleObject.env == "develop") {
         //开发模式下不执行此事件
         return;
       }
       //获取所有的URL参数、页面ID（pageId）、以及所有组件的返回值（用范围值去调用IDM提供的方法取出所有的组件值）
       let urlObject = window.IDM.url.queryObject(),
-      pageId = window.IDM.broadcast&&window.IDM.broadcast.pageModule?window.IDM.broadcast.pageModule.id:"";
+        pageId =
+          window.IDM.broadcast && window.IDM.broadcast.pageModule
+            ? window.IDM.broadcast.pageModule.id
+            : "";
       //自定义函数
       /**
        * [
@@ -119,15 +142,17 @@ export default {
        * ]
        */
       var clickFunction = this.propData.clickFunction;
-      clickFunction&&clickFunction.forEach(item=>{
-        window[item.name]&&window[item.name].call(this,{
-          urlData:urlObject,
-          pageId,
-          customParam:item.param,
-          _this:this
+      clickFunction &&
+        clickFunction.forEach((item) => {
+          window[item.name] &&
+            window[item.name].call(this, {
+              urlData: urlObject,
+              pageId,
+              customParam: item.param,
+              _this: this,
+            });
         });
-      })
-    }
-  }
-}
+    },
+  },
+};
 </script>

@@ -1059,7 +1059,20 @@ export default {
       var styleObject = {},
         errorStyleObject = {},
         innerLayoutStyleObject = {};
-      const keyList=["width","height","border","box","font","labelFont","errorMsgFont","errorBoxShadow","errorBorder","layout","boxShadow"];
+      const keyList = [
+        "width",
+        "height",
+        "border",
+        "box",
+        "font",
+        "labelFont",
+        "errorMsgFont",
+        "errorBoxShadow",
+        "errorBorder",
+        "layout",
+        "boxShadow",
+        "bgColor"
+      ];
       for (const iKey in keyList) {
         const key = keyList[iKey];
         if (this.propData.hasOwnProperty.call(this.propData, key)) {
@@ -1111,10 +1124,20 @@ export default {
             case "boxShadow":
               styleObject["box-shadow"] = element;
               break;
+            case "bgColor":
+              if (element && element.hex8) {
+                styleObject["background-color"] =
+                  IDM.hex8ToRgbaString(element.hex8) + "  !important";
+              }
+              break;
           }
         }
       }
-      IDM.style.setBackgroundStyle(styleObject, this.propData);
+      if (!this.propData.bgList?.bgList?.length) {
+        IDM.style.setBackgroundStyle(styleObject, this.propData);
+      } else if (Object.keys(this.propData.bgList.style).length) {
+        Object.assign(styleObject, this.propData.bgList.style);
+      }
 
       Object.keys(innerLayoutStyleObject).length &&
         IDM.setStyleToPageHead(
@@ -1269,10 +1292,20 @@ export default {
             case "boxShadow":
               styleObject["box-shadow"] = element;
               break;
+            case "bgColor":
+              if (element && element.hex8) {
+                styleObject["background-color"] =
+                  IDM.hex8ToRgbaString(element.hex8) + "  !important";
+              }
+              break;
           }
         }
       }
-      IDM.style.setBackgroundStyle(styleObject, propData);
+      if (!propData.bgList?.bgList?.length) {
+        IDM.style.setBackgroundStyle(styleObject, propData);
+      } else if (Object.keys(propData.bgList.style).length) {
+        Object.assign(styleObject, propData.bgList.style);
+      }
       IDM.setStyleToPageHead(
         this.moduleObject.id + ` .drag_container[idm-ctrl-id="${this.moduleObject.id}"]`,
         styleObject
@@ -1283,7 +1316,16 @@ export default {
      */
     convertTitleBoxAttrToStyleObject() {
       var styleObject = {};
-      const keyList=["titleWidth","titleHeight","titleBox","titleBorder","titleFont","titleLayout","titleBoxShadow"];
+      const keyList = [
+        "titleWidth",
+        "titleHeight",
+        "titleBox",
+        "titleBorder",
+        "titleFont",
+        "titleLayout",
+        "titleBoxShadow",
+        "titleBgColor"
+      ];
       for (const iKey in keyList) {
         const key = keyList[iKey];
         if (this.propData.hasOwnProperty.call(this.propData, key)) {
@@ -1311,21 +1353,31 @@ export default {
             case "titleBoxShadow":
               styleObject["box-shadow"] = element;
               break;
+            case "titleBgColor":
+              if (element && element.hex8) {
+                styleObject["background-color"] =
+                  IDM.hex8ToRgbaString(element.hex8) + "  !important";
+              }
+              break;
           }
         }
       }
 
-      IDM.style.setBackgroundStyle(styleObject, this.propData, {
-        bgSize: "titleBgSize",
-        bgSizeWidth: "titleBgSizeWidth",
-        bgSizeHeight: "titleBgSizeHeight",
-        positionX: "titlePositionX",
-        positionY: "titlePositionY",
-        bgColor: "titleBgColor",
-        bgImgUrl: "titleBgImgUrl",
-        bgRepeat: "titleBgRepeat",
-        bgAttachment: "titleBgAttachment",
-      });
+      if (!this.propData.titleBgList?.bgList?.length) {
+        IDM.style.setBackgroundStyle(styleObject, this.propData, {
+          bgSize: "titleBgSize",
+          bgSizeWidth: "titleBgSizeWidth",
+          bgSizeHeight: "titleBgSizeHeight",
+          positionX: "titlePositionX",
+          positionY: "titlePositionY",
+          bgColor: "",
+          bgImgUrl: "titleBgImgUrl",
+          bgRepeat: "titleBgRepeat",
+          bgAttachment: "titleBgAttachment",
+        });
+      } else if (Object.keys(this.propData.titleBgList.style).length) {
+        Object.assign(styleObject, this.propData.titleBgList.style);
+      }
       IDM.setStyleToPageHead(
         this.moduleObject.id + ` .idm_lc_titlebox[idm-ctrl-id="${this.moduleObject.id}"]`,
         styleObject
@@ -1435,7 +1487,16 @@ export default {
      */
     convertFooterBoxAttrToStyleObject() {
       var styleObject = {};
-      const keyList=["footerWidth","footerHeight","footerBox","footerBorder","footerFont","footerLayout","footerBoxShadow"];
+      const keyList = [
+        "footerWidth",
+        "footerHeight",
+        "footerBox",
+        "footerBorder",
+        "footerFont",
+        "footerLayout",
+        "footerBoxShadow",
+        "footerBgColor"
+      ];
       for (const iKey in keyList) {
         const key = keyList[iKey];
         if (this.propData.hasOwnProperty.call(this.propData, key)) {
@@ -1463,20 +1524,30 @@ export default {
             case "footerBoxShadow":
               styleObject["box-shadow"] = element;
               break;
+            case "footerBgColor":
+              if (element && element.hex8) {
+                styleObject["background-color"] =
+                  IDM.hex8ToRgbaString(element.hex8) + "  !important";
+              }
+              break;
           }
         }
       }
-      IDM.style.setBackgroundStyle(styleObject, this.propData, {
-        bgSize: "footerBgSize",
-        bgSizeWidth: "footerBgSizeWidth",
-        bgSizeHeight: "footerBgSizeHeight",
-        positionX: "footerPositionX",
-        positionY: "footerPositionY",
-        bgColor: "footerBgColor",
-        bgImgUrl: "footerBgImgUrl",
-        bgRepeat: "footerBgRepeat",
-        bgAttachment: "footerBgAttachment",
-      });
+      if (!this.propData.footerBgList?.bgList?.length) {
+        IDM.style.setBackgroundStyle(styleObject, this.propData, {
+          bgSize: "footerBgSize",
+          bgSizeWidth: "footerBgSizeWidth",
+          bgSizeHeight: "footerBgSizeHeight",
+          positionX: "footerPositionX",
+          positionY: "footerPositionY",
+          bgColor: "footerBgColor",
+          bgImgUrl: "footerBgImgUrl",
+          bgRepeat: "footerBgRepeat",
+          bgAttachment: "footerBgAttachment",
+        });
+      } else if (Object.keys(this.propData.footerBgList.style).length) {
+        Object.assign(styleObject, this.propData.footerBgList.style);
+      }
       IDM.setStyleToPageHead(
         this.moduleObject.id +
           ` .idm_lc_footerbox[idm-ctrl-id="${this.moduleObject.id}"]`,
