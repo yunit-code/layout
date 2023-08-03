@@ -457,6 +457,9 @@ export default {
      * 保存用户个性化定制数据
      */
     async saveUserDefined() {
+      if (this.userDefinedMediaGridList.length == 0) {
+        this.userDefinedMediaGridList = _.cloneDeep(this.chooseGridListFull);
+      }
       await IDM.http.post(
         "/ctrl/idm/console/commitUserControlSettingPanelData",
         {
