@@ -28,11 +28,28 @@
     </div> -->
     <!--预览模式下-->
     <div
-      class="idm-full-screen-layout-box"
+      class="idm-full-screen-layout-box idm-full-screen-production"
       ref="refFslBgGrid"
       v-if="moduleObject.env == 'production'"
       :class="{ 'no-layout': layoutMode == 1 || layoutFooterMode != -1 }"
     >
+      <!--百格布局底图，只用于设计时候展示-->
+      <div class="fsl-bg-grid" v-show="userDefinedStatus && layoutMode == 0">
+        <template v-if="userDefinedStatus">
+          <div
+            class="horizontal-line"
+            v-for="(item, index) in gridNumber + 1"
+            :key="index"
+            :style="{ top: index * (100 / gridNumber) + '%' }"
+          ></div>
+          <div
+            class="vertical-line"
+            v-for="(item, index) in gridNumber + 1"
+            :key="index"
+            :style="{ left: index * (100 / gridNumber) + '%' }"
+          ></div>
+        </template>
+      </div>
       <!--容器层（已选中的）-->
       <div class="fsl-box-body">
         <div
@@ -47,6 +64,43 @@
           :key="index"
           :style="getStyleObject(item)"
         >
+          <!--布局开发层面-->
+          <div
+            class="fsl-region-element-inner-develop"
+            v-if="userDefinedStatus"
+            v-show="layoutMode == 0"
+          >
+            <div class="fsl-element-number default-show">{{ item.itemNo }}</div>
+            <!--8个控制点+整体移动-->
+            <div
+              class="fsl-element-ctrl-center"
+              @mousedown="
+                gridAnchorMousedownHandle($event, getCurrentItem(item), 'center')
+              "
+            >
+              <svg viewBox="0 0 1024 1024">
+                <path
+                  d="M486.4 776.533333v-213.333333H247.466667v106.666667L85.333333 512l162.133334-162.133333V512h238.933333V247.466667H349.866667L512 85.333333l162.133333 162.133334h-132.266666V512h238.933333V349.866667L938.666667 512l-162.133334 162.133333v-106.666666h-238.933333v213.333333h132.266667L512 938.666667l-162.133333-162.133334h136.533333z"
+                  p-id="2016"
+                ></path>
+              </svg>
+            </div>
+            <div
+              v-for="(ikey, sindex) in [
+                'topleft',
+                'top',
+                'topright',
+                'left',
+                'right',
+                'bottomleft',
+                'bottom',
+                'bottomright',
+              ]"
+              :key="sindex"
+              :class="'fsl-element-ctrl-anchor fsl-element-ctrl-' + ikey"
+              @mousedown="gridAnchorMousedownHandle($event, getCurrentItem(item), ikey)"
+            ></div>
+          </div>
           <!--真正的存放组件容器-->
           <div
             class="fsl-region-element-inner-preview drag_container"
@@ -56,6 +110,17 @@
             :idm-container-index="item.itemNo"
           ></div>
         </div>
+      </div>
+      <!--布局模式切换按钮，只用于设计时候展示-->
+      <div class="fsl-layout-switch-tool" v-show="userDefinedStatus">
+        <template v-if="userDefinedStatus">
+          <div :class="{ active: layoutMode === 0 }" @click="layoutMode = 0">
+            布局调整
+          </div>
+          <div :class="{ active: layoutMode === 1 }" @click="layoutMode = 1">
+            换位调整
+          </div>
+        </template>
       </div>
     </div>
     <!--开发模式下-->
@@ -294,11 +359,22 @@ export default {
       //当前适配确定后的响应式布局
       productionMediaGridList: [],
       computedWidth: {},
+      //用户可配置的状态
+      userDefinedStatus: false,
+      //当前用户改变过的布局
+      userDefinedMediaGridList: [],
+      //当前预览状态下的适配对象
+      productionMediaObject: { w: 0, h: 0 },
+      //用户定制的结果集合：[{}]
+      userDefinedMediaObjectList: [],
     };
   },
   created() {
     this.moduleObject = this.$root.moduleObject;
     this.layoutMode = this.moduleObject.env != "production" ? this.layoutMode : 1;
+    if (this.moduleObject?.env == "production") {
+      this.getUserDefinedData();
+    }
     this.chooseGridList = this.propData.chooseGridList || [];
     this.chooseGridListFull = _.cloneDeep(this.chooseGridList);
     this.convertAttrToStyleObject();
@@ -321,12 +397,104 @@ export default {
         }
       });
       ro.observe(document.querySelector("#" + this.moduleObject.id));
+      //赋值给window提供跨页面调用
+      this.moduleObject && this.moduleObject.packageid
+        ? (window[this.moduleObject.packageid] = this)
+        : null;
     });
     this.initHandle();
-    console.log(this.propData, "初始化");
   },
   destroyed() {},
   methods: {
+    /**
+     * 获取用户定制数据
+     */
+    getUserDefinedData() {
+      let that = this;
+      const res = IDM.http.getSync(IDM.setting.api.dynamicAttributeListUrl, {
+        urlData: JSON.stringify({
+          marketModuleId: this.moduleObject.comId,
+          pageId: IDM.broadcast ? IDM.broadcast.pageModule.id : "",
+          packageid: this.moduleObject.packageid,
+        }),
+      });
+      that.userDefinedMediaObjectList = res.data;
+    },
+    handleGetParams() {
+      return {
+        // pageId: 'idm_control_setting_panel_001',
+        urlData: JSON.stringify({
+          pageId: IDM.broadcast ? IDM.broadcast.pageModule.id : "",
+          packageid: this.moduleObject.packageid,
+          marketModuleId: this.moduleObject.comId,
+        }),
+      };
+    },
+    /**
+     * 预览状态下布局改变事件
+     */
+    previewLayoutChangeHandle() {
+      if (this.moduleObject.env !== "production") {
+        return;
+      }
+      this.userDefinedMediaGridList = _.cloneDeep(this.chooseGridListFull);
+      this.autoLayoutSendLayoutInfoToChildrenMsg(this.userDefinedMediaGridList);
+    },
+    /**
+     * 打开用户定制状态
+     */
+    openUserDefined() {
+      this.userDefinedStatus = true;
+    },
+    /**
+     * 关闭用户定制状态
+     */
+    closeUserDefined() {
+      this.userDefinedStatus = false;
+      this.layoutMode = 1;
+    },
+    /**
+     * 保存用户个性化定制数据
+     */
+    async saveUserDefined() {
+      await IDM.http.post(
+        "/ctrl/idm/console/commitUserControlSettingPanelData",
+        {
+          ...this.handleGetParams(),
+          formData: {
+            [(this.propData.dynamicAttrLayoutName || "layoutData") +
+            "_" +
+            this.productionMediaObject.w +
+            "_" +
+            this.productionMediaObject.h]: {
+              w: this.productionMediaObject.w,
+              h: this.productionMediaObject.h,
+              gridList: this.userDefinedMediaGridList,
+            },
+          },
+        },
+        {
+          headers: {
+            "Content-Type": "application/json;charset=UTF-8",
+          },
+        }
+      );
+      this.closeUserDefined();
+    },
+    /**
+     * 重置用户个性化定制数据
+     */
+    async resetUserDefined() {
+      await IDM.http.post(
+        "/ctrl/idm/console/resetUserControlSettingPanelData",
+        this.handleGetParams(),
+        {
+          headers: {
+            "Content-Type": "application/json;charset=UTF-8",
+          },
+        }
+      );
+    },
     /**
      * 初始化事件
      */
@@ -532,6 +700,22 @@ export default {
       // }
       const autoLayoutType = this.propData.autoLayoutType || "close";
       if (autoLayoutType == "close") {
+        //这里需要根据宽高进行匹配属性   userDefinedMediaObjectList，然后赋值给maxMediaObject.gridList
+        this.moduleObject.env === "production" &&
+          this.userDefinedMediaObjectList &&
+          this.userDefinedMediaObjectList.forEach((item) => {
+            const key =
+              (this.propData.dynamicAttrLayoutName || "layoutData") + "_" + 0 + "_" + 0;
+            if (item.attrCode == key) {
+              const lsdata =
+                IDM.type(item.attrData) == "string"
+                  ? JSON.parse(item.attrData)
+                  : item.attrData;
+
+              this.chooseGridList = lsdata.gridList;
+              this.chooseGridListFull = _.cloneDeep(this.chooseGridList);
+            }
+          });
         this.autoLayoutSendLayoutInfoToChildrenMsg(this.chooseGridListFull);
         return;
       }
@@ -575,6 +759,27 @@ export default {
           }
         }
       }
+      //这里需要根据宽高进行匹配属性   userDefinedMediaObjectList，然后赋值给maxMediaObject.gridList
+      if (this.moduleObject.env === "production") {
+        this.userDefinedMediaObjectList &&
+          this.userDefinedMediaObjectList.forEach((item) => {
+            const key =
+              (this.propData.dynamicAttrLayoutName || "layoutData") +
+              "_" +
+              maxMediaObject.w +
+              "_" +
+              maxMediaObject.h;
+            if (item.attrCode == key) {
+              maxMediaObject =
+                IDM.type(item.attrData) == "string"
+                  ? JSON.parse(item.attrData)
+                  : item.attrData;
+            }
+          });
+        this.chooseGridList = maxMediaObject.gridList;
+        this.chooseGridListFull = _.cloneDeep(this.chooseGridList);
+      }
+      this.productionMediaObject = maxMediaObject;
       this.productionMediaGridList = maxMediaObject.gridList;
       this.autoLayoutSendLayoutInfoToChildrenMsg(this.productionMediaGridList);
     },
@@ -903,6 +1108,7 @@ export default {
           });
         document.removeEventListener("mousemove", moveEvent);
         document.removeEventListener("mouseup", moveUpEvent);
+        that.previewLayoutChangeHandle();
       };
       document.addEventListener("mousemove", moveEvent);
       document.addEventListener("mouseup", moveUpEvent);
@@ -1857,6 +2063,7 @@ export default {
     .fsl-bg-grid {
       z-index: 0;
       user-select: none;
+      overflow: hidden;
       > .horizontal-line {
         left: 0;
         right: 0;
@@ -2027,7 +2234,8 @@ export default {
             border-radius: 4px;
           }
         }
-        &:not(.layout-mode-common, .module_env_production) {
+        &:not(.layout-mode-common) {
+          //, .module_env_production
           &:hover,
           &.active {
             background-color: rgba($color: #1890ff, $alpha: 0.3);
@@ -2077,6 +2285,33 @@ export default {
         }
       }
     }
+    &.idm-full-screen-production {
+      cursor: inherit;
+      .fsl-region-element {
+        border: 1px solid #1890ff;
+        background-color: rgba($color: #1890ff, $alpha: 0.05);
+        &:not(.layout-mode-common) {
+          //, .module_env_production
+          &:hover,
+          &.active {
+            background-color: rgba($color: #1890ff, $alpha: 0.15);
+            .fsl-region-element-inner-develop {
+              * {
+                opacity: 1;
+                &.fsl-element-item-delete {
+                  opacity: 0.7;
+                }
+              }
+            }
+          }
+
+          .fsl-region-element-inner-preview {
+            pointer-events: none;
+            user-select: none;
+          }
+        }
+      }
+    }
     .fsl-region-element-inner-display {
       position: absolute;
       left: 0;
@@ -2087,6 +2322,8 @@ export default {
       z-index: 988;
       background-color: #ffffff;
     }
+  }
+  .idm-full-screen-production {
   }
   .fsl-layout-switch-tool,
   .fsl-layout-footer-switch-tool {

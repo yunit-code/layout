@@ -397,6 +397,21 @@
                     "bindKey": "font"
                 }
             ]
+        },
+        {
+            "type": "group",
+            "text": "功能设置",
+            "helpUrl": "",
+            "children": [
+                {
+                    "type": "input",
+                    "layoutType": "inline",
+                    "text": "定制标识",
+                    "bindKey": "dynamicAttrLayoutName",
+                    "desc":"用于设置个性化定制的时候存储在控制中心的动态属性标识，默认为layoutData",
+                    "default": "layoutData"
+                }
+            ]
         }
     ],
     "innerComName": "格子",
