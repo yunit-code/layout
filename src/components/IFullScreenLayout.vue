@@ -31,10 +31,11 @@
       class="idm-full-screen-layout-box idm-full-screen-production"
       ref="refFslBgGrid"
       v-if="moduleObject.env == 'production'"
-      :class="{ 'no-layout': layoutMode == 1 || layoutFooterMode != -1 }"
+      :class="{ 'no-layout': layoutMode == 1||!userDefinedStatus}"
     >
       <!--百格布局底图，只用于设计时候展示-->
-      <div class="fsl-bg-grid" v-show="userDefinedStatus && layoutMode == 0">
+      <div class="fsl-bg-grid" v-show="userDefinedStatus && layoutMode == 0"
+        @mousedown="gridMousedownHandle">
         <template v-if="userDefinedStatus">
           <div
             class="horizontal-line"
@@ -61,7 +62,7 @@
             //当在实际的运行环境中边框和底色都不要显示的env=='production'
             module_env_production: moduleObject.env == 'production',
           }"
-          :key="index"
+          :key="item.itemNo"
           :style="getStyleObject(item)"
         >
           <!--布局开发层面-->
@@ -71,6 +72,23 @@
             v-show="layoutMode == 0"
           >
             <div class="fsl-element-number default-show">{{ item.itemNo }}</div>
+            <div
+              class="fsl-element-item-delete"
+              @click="
+                deleteLayout(getCurrentItem(item), getCurrentItemIndex(item, index))
+              "
+            >
+              <svg viewBox="0 0 1024 1024">
+                <path
+                  d="M803.34 968.45H220.66c-19.58 0-35.5-15.92-35.5-35.5V228.41h653.68v704.54c0 19.57-15.92 35.5-35.5 35.5z m-555.18-63h527.68V291.41H248.16v614.04z"
+                  p-id="7333"
+                ></path>
+                <path
+                  d="M885.08 291.41H138.92c-17.4 0-31.5-14.1-31.5-31.5s14.1-31.5 31.5-31.5h746.17c17.4 0 31.5 14.1 31.5 31.5s-14.11 31.5-31.51 31.5zM342.21 826.75c-17.4 0-31.5-14.1-31.5-31.5V391.79c0-17.4 14.1-31.5 31.5-31.5s31.5 14.1 31.5 31.5v403.46c0 17.39-14.1 31.5-31.5 31.5zM509.77 826.75c-17.4 0-31.5-14.1-31.5-31.5V391.79c0-17.4 14.1-31.5 31.5-31.5s31.5 14.1 31.5 31.5v403.46c0 17.39-14.11 31.5-31.5 31.5zM677.32 826.75c-17.4 0-31.5-14.1-31.5-31.5V391.79c0-17.4 14.1-31.5 31.5-31.5s31.5 14.1 31.5 31.5v403.46c0 17.39-14.1 31.5-31.5 31.5zM702.12 205.01h-63v-86.46h-258.7v86.46h-63v-96.96c0-15.18 7.15-29.58 19.63-39.5 10.54-8.38 24.13-13 38.28-13h268.9c14.15 0 27.74 4.62 38.28 13 12.47 9.92 19.63 24.32 19.63 39.5v96.96z"
+                  p-id="7334"
+                ></path>
+              </svg>
+            </div>
             <!--8个控制点+整体移动-->
             <div
               class="fsl-element-ctrl-center"
@@ -111,6 +129,18 @@
           ></div>
         </div>
       </div>
+      <!--框选层-->
+      <div
+        v-show="userDefinedStatus && layoutMode == 0"
+        class="fsl-mouse-region-element"
+        v-if="movePosObject.width > 0 && movePosObject.height > 0"
+        :style="{
+          left: movePosObject.xRatio + '%',
+          top: movePosObject.yRatio + '%',
+          width: movePosObject.width + '%',
+          height: movePosObject.height + '%',
+        }"
+      ></div>
       <!--布局模式切换按钮，只用于设计时候展示-->
       <div class="fsl-layout-switch-tool" v-show="userDefinedStatus">
         <template v-if="userDefinedStatus">
@@ -258,7 +288,7 @@
         class="fsl-region-element-inner-display drag_container"
         idm-ctrl-inner
         :idm-ctrl-id="moduleObject.id"
-        :idm-container-index="999999999"
+        :idm-container-index="displayContainerIndex"
       ></div>
       <!--布局分辨率切换-->
       <div class="fsl-layout-footer-switch-tool" v-if="moduleObject.env != 'production'">
@@ -367,6 +397,8 @@ export default {
       productionMediaObject: { w: 0, h: 0 },
       //用户定制的结果集合：[{}]
       userDefinedMediaObjectList: [],
+      //隐藏容器的索引
+      displayContainerIndex:999999999
     };
   },
   created() {
@@ -438,6 +470,18 @@ export default {
         return;
       }
       this.userDefinedMediaGridList = _.cloneDeep(this.chooseGridListFull);
+      //更新未保存的数据
+      const key =
+              (this.propData.dynamicAttrLayoutName || "layoutData") + "_" + this.productionMediaObject.w + "_" + this.productionMediaObject.h;
+      this.userDefinedMediaObjectList&&this.userDefinedMediaObjectList.forEach(item=>{
+        if(item.attrCode==key){
+          item.attrData = JSON.stringify({
+              w: this.productionMediaObject.w,
+              h: this.productionMediaObject.h,
+              gridList: this.userDefinedMediaGridList,
+            })
+        }
+      })
       this.autoLayoutSendLayoutInfoToChildrenMsg(this.userDefinedMediaGridList);
     },
     /**
@@ -822,7 +866,15 @@ export default {
     },
     deleteLayout(item, index) {
       this.chooseGridList.splice(index, 1);
-      this.setPropDataToDevelopAttrData({ chooseGridList: this.chooseGridList });
+      if(this.moduleObject.env === "develop"){
+        this.setPropDataToDevelopAttrData({ chooseGridList: this.chooseGridList })
+      }else{
+        this.chooseGridListFull.splice(index, 1);
+        //是预览状态，需要调用页面的组件位置更换到隐藏容器中。
+        const pageid=this.moduleObject.pageid,routerId = this.moduleObject.routerId;
+        //item.itemNo ==》 displayContainerIndex
+        IDM.page.executeComponentMoveIndex({routerId,pageid,moveIndex:item.itemNo,targetIndex:this.displayContainerIndex})
+      };
     },
     /**
      * 单个格子的鼠标点击事件
@@ -1478,6 +1530,7 @@ export default {
           return;
         }
         that.addMoveObjToGridList();
+        that.previewLayoutChangeHandle();
         // document.removeEventListener("mousemove",moveEvent);
         // document.removeEventListener("mouseup",moveUpEvent);
       };
@@ -1498,7 +1551,16 @@ export default {
         //把已经选中的数据追加到chooseGridList当中
         that.chooseGridList.push(_.cloneDeep(that.movePosObject));
         //需要把数据调用插入到页面源码属性中
-        this.setPropDataToDevelopAttrData({ chooseGridList: this.chooseGridList });
+        if(this.moduleObject.env === "develop"){
+          this.setPropDataToDevelopAttrData({ chooseGridList: this.chooseGridList })
+        }else{
+          this.chooseGridListFull.push(_.cloneDeep(that.movePosObject));
+          this.$nextTick(()=>{
+            setTimeout(() => {
+              IDM.page.changePageUserDefinedStatus({ status: true });
+            }, 200);
+          })
+        }
       }
       //初始化移动坐标(清空)
       that.movePosObject = {
@@ -2289,7 +2351,6 @@ export default {
       }
     }
     &.idm-full-screen-production {
-      cursor: inherit;
       .fsl-region-element {
         border: 1px solid #1890ff;
         background-color: rgba($color: #1890ff, $alpha: 0.05);
@@ -2385,6 +2446,13 @@ export default {
     position: absolute;
     border: 1px solid #1890ff;
     background-color: rgba($color: #1890ff, $alpha: 0.15);
+  }
+  .idm-full-screen-production{
+    .fsl-mouse-region-element {
+      position: absolute;
+      border: 1px solid #1890ff;
+      background-color: rgba($color: #1890ff, $alpha: 0.05);
+    }
   }
 }
 </style>
