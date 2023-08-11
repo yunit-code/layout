@@ -98,20 +98,50 @@
                     "default": [],
                     "children": [
                         {
-                            "type": "inputNumber",
-                            "layoutType": "inline",
-                            "text": "宽",
-                            "desc": "单位为px，默认为1600*800",
-                            "bindKey": "w",
-                            "default": 1600
+                            "type": "inlineGroup",
+                            "text": "宽高",
+                            "children": [
+                                {
+                                    "type": "inputNumber",
+                                    "layoutType": "block",
+                                    "text": "最小宽",
+                                    "desc": "适配的最小宽，当实际预览页面的宽度大于此处设置的值则会从大到小取最大的布局，单位为px，默认为1600",
+                                    "bindKey": "w",
+                                    "width": "50%",
+                                    "default": 1600
+                                },
+                                {
+                                    "type": "inputNumber",
+                                    "layoutType": "block",
+                                    "text": "最小高",
+                                    "desc": "适配的最小高，当实际预览页面的高度大于此处设置的值则会从大到小取最大的布局，单位为px，默认为800",
+                                    "bindKey": "h",
+                                    "width": "50%",
+                                    "default": 800
+                                }
+                            ]
                         },
                         {
-                            "type": "inputNumber",
-                            "layoutType": "inline",
-                            "text": "高",
-                            "desc": "单位为px，默认为1600*800",
-                            "bindKey": "h",
-                            "default": 800
+                            "type": "inlineGroup",
+                            "text": "宽高",
+                            "children": [
+                                {
+                                    "type": "input",
+                                    "layoutType": "block",
+                                    "text": "整体宽",
+                                    "desc": "设置该适配布局下的整体宽度，填写auto则为自适应，或者使用px、%、vw等单位，比如100%、100px、100vw等等，开启适配菜单后禁止使用calc计算属性。",
+                                    "bindKey": "width",
+                                    "default": "100%"
+                                },
+                                {
+                                    "type": "input",
+                                    "layoutType": "block",
+                                    "text": "整体高",
+                                    "desc": "设置该适配布局下的整体高度，填写auto则为自适应，或者使用px、%、vh等单位，比如100%、100px、100vh等等",
+                                    "bindKey": "height",
+                                    "default": "100vh"
+                                }
+                            ]
                         },
                         {
                             "type": "switch",

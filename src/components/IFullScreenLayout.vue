@@ -450,7 +450,7 @@ export default {
           packageid: this.moduleObject.packageid,
         }),
       });
-      that.userDefinedMediaObjectList = res.data;
+      that.userDefinedMediaObjectList = res&&res.data;
     },
     handleGetParams() {
       return {
@@ -710,6 +710,8 @@ export default {
       this.chooseGridMediaList.push({
         w: 1600,
         h: 800,
+        width:this.propData.width,
+        height:this.propData.height,
         gridList: _.cloneDeep(this.chooseGridListFull),
         isEdit: false,
         powerActive: true,
@@ -808,6 +810,7 @@ export default {
       }
       //这里需要根据宽高进行匹配属性   userDefinedMediaObjectList，然后赋值给maxMediaObject.gridList
       if (this.moduleObject.env === "production") {
+        this.convertLayoutAttrToStyleObject(maxMediaObject);
         this.userDefinedMediaObjectList &&
           this.userDefinedMediaObjectList.forEach((item) => {
             const key =
@@ -1936,6 +1939,8 @@ export default {
         this.chooseGridMediaList.forEach((item, index) => {
           item.w = this.propData.chooseGridMediaList[index].w;
           item.h = this.propData.chooseGridMediaList[index].h;
+          item.width = this.propData.chooseGridMediaList[index].width;
+          item.height = this.propData.chooseGridMediaList[index].height;
           item.powerActive = this.propData.chooseGridMediaList[index].powerActive;
           item.isEdit = this.propData.chooseGridMediaList[index].isEdit;
           item.powerList = this.propData.chooseGridMediaList[index].powerList;
@@ -1985,6 +1990,27 @@ export default {
           this.autoLayout();
           break;
       }
+    },
+    /**
+     * 把属性转换成样式对象
+     */
+    convertLayoutAttrToStyleObject(propData) {
+      var styleObject = {};
+      for (const key in propData) {
+        if (propData.hasOwnProperty.call(propData, key)) {
+          const element = propData[key];
+          if (!element && element !== false && element != 0) {
+            continue;
+          }
+          switch (key) {
+            case "width":
+            case "height":
+              styleObject[key] = element + "  !important" ;
+              break;
+          }
+        }
+      }
+      Object.keys(styleObject).length&&IDM.setStyleToPageHead(this.moduleObject.id+",.emptyclassname", styleObject);
     },
     /**
      * 把属性转换成样式对象
