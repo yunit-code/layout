@@ -1161,6 +1161,36 @@
                     }
                 },
                 {
+                    "type": "table",
+                    "text": "接收其他组件联动参数",
+                    "bindKey": "linkageParamList",
+                    "tabText": "参数[index]",
+                    "children": [
+                        {
+                            "type": "input",
+                            "layoutType": "inline",
+                            "text": "消息类型",
+                            "bindKey": "messageType",
+                            "default": ""
+                        },
+                        {
+                            "type": "input",
+                            "layoutType": "inline",
+                            "text": "参数别名",
+                            "bindKey": "paramKey",
+                            "default": ""
+                        },
+                        {
+                            "type": "actionSelect",
+                            "layoutType": "block",
+                            "text": "自定义函数",
+                            "bindKey": "customFunction",
+                            "desc": "如果接收到参数需要自定义操作，可进行此项配置",
+                            "multiple": false
+                        }
+                    ]
+                },
+                {
                     "type": "input",
                     "layoutType": "inline",
                     "text": "结果集名",
@@ -2665,6 +2695,7 @@
                         }
                     ]
                 }
+
             ]
         }
     ],

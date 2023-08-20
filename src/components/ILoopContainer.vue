@@ -250,6 +250,8 @@ export default {
       isCompleteLoadData: false,
       //错误消息
       errorMessage: "",
+      // 其他组件传过来的参数
+      conditionObject: {},
     };
   },
   components: {
@@ -495,7 +497,10 @@ export default {
               this.propData.dataSourceSelectData[0].id,
               {
                 moduleObject: this.moduleObject,
-                param: this.commonParam(),
+                param: {
+                  ...this.conditionObject,
+                  ...this.commonParam()
+                },
               },
               function (resData) {
                 //这里是请求成功的返回结果
@@ -743,6 +748,7 @@ export default {
      * } object
      */
     receiveBroadcastMessage(object) {
+      console.log('循环组件收到消息',object)
       if (object && object.type == "linkageShowModule") {
         this.showThisModuleHandle();
       } else if (object && object.type == "linkageHideModule") {
@@ -798,6 +804,25 @@ export default {
           messageKey: object.messageKey,
           triggerType: object.triggerType,
         });
+      }
+      if (this.propData.linkageParamList && this.propData.linkageParamList.length&&this.moduleObject.env=='production') {
+        this.propData.linkageParamList.forEach((item) => {
+          if (object.type == item.messageType) {
+            if(item.customFunction&&item.customFunction.length) {
+              var clickFunction = item.customFunction;
+              clickFunction&&clickFunction.forEach(e=>{
+                  window[e.name]&&window[e.name].call(this,{
+                      customParam:e.param,
+                      message: object.message,
+                      _this:this,
+                  });
+              })
+            } else {
+              this.conditionObject[item.paramKey] = object.message
+              this.initData()
+            }
+          }
+        })
       }
     },
     /**
