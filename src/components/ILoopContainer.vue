@@ -263,7 +263,9 @@ export default {
     this.moduleObject = this.$root.moduleObject;
     this.initFirstComponentData();
     this.convertAttrToStyleObject();
-    this.initData();
+    if (this.propData.loadDataCreated) {
+      this.initData();
+    }
   },
   mounted() {},
   destroyed() {},

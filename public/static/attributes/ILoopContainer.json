@@ -21,6 +21,25 @@
             "helpUrl": "",
             "children": [
                 {
+                    "type": "radio",
+                    "styleType": "radio",
+                    "layoutType": "inline",
+                    "text": "初始加载",
+                    "desc":"是否在组件初始化时就加载数据",
+                    "bindKey": "loadDataCreated",
+                    "default": true,
+                    "dictionary": [
+                        {
+                            "label": "是",
+                            "value": true
+                        },
+                        {
+                            "label": "否",
+                            "value": false
+                        }
+                    ]
+                },
+                {
                     "type": "input",
                     "layoutType": "inline",
                     "text": "标题",
