@@ -483,6 +483,9 @@ export default {
       this.initComponentStatus();
       //需要增加设置是否默认至少保留一条且不能删除。如果不是则需要把 this.componentData 清空，然后显示空状态
       // this.propData.reserveOneData
+      if(this.moduleObject.env=="develop"){
+        return;
+      }
       if (!this.propData.reserveOneData) {
         this.componentData = [];
       }
