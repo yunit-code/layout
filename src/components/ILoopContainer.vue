@@ -1696,7 +1696,7 @@ export default {
   .table-field-layout-table {
     display: table;
     margin-bottom: 16px;
-    min-height: 84px;
+    // min-height: 84px;
     position: relative;
     table-layout: fixed;
     width: 100%;
