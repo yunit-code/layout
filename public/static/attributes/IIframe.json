@@ -307,9 +307,31 @@
                         {
                             "label": "接收联动消息",
                             "value": "receiveMessage"
+                        },
+                        {
+                          "label": "数据源",
+                          "value": "dataSource"
                         }
                     ],
                     "default": "fixed"
+                },
+                {
+                  "type": "dataSourceSelect",
+                  "layoutType": "inline",
+                  "text": "数据源",
+                  "desc": "用于选择组件的数据源",
+                  "bindKey": "dataSource",
+                  "display":"@[dataSourceType=='dataSource']",
+                  "dataSourceUrl": "ctrl/dataSource/getDatasourceByGroup"
+                },
+                {
+                  "type": "actionSelect",
+                  "layoutType": "block",
+                  "text": "参数自定义函数",
+                  "bindKey": "customParamsFunction",
+                  "display":"@[dataSourceType=='dataSource']",
+                  "desc": "用于格式化数据源的传参，参数为{customParam:自定义的参数,urlObject:url参数,routerParams:路由参数}",
+                  "multiple": false
                 },
                 {
                     "type": "input",

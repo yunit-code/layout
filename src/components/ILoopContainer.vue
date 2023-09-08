@@ -758,6 +758,8 @@ export default {
         this.showThisModuleHandle();
       } else if (object && object.type == "linkageHideModule") {
         this.hideThisModuleHandle();
+      } else if (object && object.type == 'linkageReload') {
+        this.initData()
       } else if (
         object &&
         object.type == "linkageResult" &&
