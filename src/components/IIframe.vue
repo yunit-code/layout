@@ -97,7 +97,41 @@ export default {
           break;
         case "customFunction":
           break;
+        case "dataSource":
+          this.getIframeSrcDataSource()
+          break
       }
+    },
+    getIframeSrcDataSource() {
+      const dataSource = this.propData.dataSource;
+      IDM.datasource.request(dataSource[0]?.id, {
+        moduleObject: this.moduleObject,
+        param: {
+          ...this.customParamsFormat()
+        }
+      }, (data) => {
+        this.iframeSrc = IDM.url.getWebPath( this.getExpressData("resultData", this.propData.dataFiled, data) );
+      })
+    },
+    customParamsFormat() {
+      let params = {}
+      if (
+        this.propData.customParamsFunction &&
+        this.propData.customParamsFunction[0] &&
+        this.propData.customParamsFunction[0].name
+      ) {
+        params =
+          window[this.propData.customParamsFunction[0].name] &&
+          window[this.propData.customParamsFunction[0].name].call(this, {
+            customParam: this.propData.customParamsFunction[0].param,
+            moduleObject: this.moduleObject,
+            urlObject: IDM.url.queryObject(),
+            routerParams: this.moduleObject.routerId
+              ? IDM.router.getParam(this.moduleObject.routerId)
+              : {}
+          });
+      }
+      return params;
     },
     /**
      * 组件通信：接收消息的方法
