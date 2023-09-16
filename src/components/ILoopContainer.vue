@@ -37,6 +37,7 @@
         class="idm_module_inner_box"
         :style="getStyle('content')"
         :class="{ 'error-state': errorMessage }"
+        v-show="isCompleteLoadData"
       >
         <add-new-button
           v-if="propData.newPosition == 'top' && componentEditStatus"
@@ -554,6 +555,8 @@ export default {
      * @param {*} resultDataParam
      */
     loadRealData(resultDataParam) {
+      // 重新加载设置为false
+      this.isCompleteLoadData = false;
       //处理循环字段
       let resultData = this.propData.forDataFiled
         ? IDM.express.replace("@[" + this.propData.forDataFiled + "]", resultDataParam)
@@ -571,6 +574,7 @@ export default {
       });
       if (IDM.type(resultData) !== "array") {
         this.componentData = [];
+        this.isCompleteLoadData = true;
         return;
       }
       const foldFlag = resultData.length > this.propData.autoFoldNumber;
@@ -593,8 +597,10 @@ export default {
               this.propData.sendMessageKey
             );
         });
+        setTimeout(() => {
+          this.isCompleteLoadData = true;
+        }, this.propData.delayShowTime ?? 0);
       });
-      this.isCompleteLoadData = true;
     },
     /**
      * 操作按钮公共点击处理函数

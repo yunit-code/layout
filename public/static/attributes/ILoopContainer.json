@@ -124,6 +124,14 @@
                     "display": "@[tempLayout=='tile']"
                 },
                 {
+                    "type": "inputNumber",
+                    "layoutType": "inline",
+                    "text": "延迟显示",
+                    "desc": "设置循环内容延迟显示时间，单位：ms,fix:重复渲染数据闪烁错误",
+                    "bindKey": "delayShowTime",
+                    "default": 0
+                },
+                {
                     "type": "radio",
                     "layoutType": "inline",
                     "text": "新增位置",
