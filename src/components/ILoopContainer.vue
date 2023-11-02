@@ -37,7 +37,7 @@
         class="idm_module_inner_box"
         :style="getStyle('content')"
         :class="{ 'error-state': errorMessage }"
-        v-show="isCompleteLoadData"
+        v-show="moduleObject.env !== 'production' || isCompleteLoadData"
       >
         <add-new-button
           v-if="propData.newPosition == 'top' && componentEditStatus"
