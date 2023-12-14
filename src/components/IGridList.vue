@@ -9,7 +9,6 @@
     idm-ctrl="idm_module"
     :id="moduleObject.id"
     :idm-ctrl-id="moduleObject.id"
-    class="idm-columns-layout"
   >
     <!--
       组件内部容器
@@ -25,24 +24,28 @@
     <div class="drag_container" :idm-ctrl-id="moduleObject.id" idm-container-index="2">
       
     </div> -->
-    <div
-      class="drag_container"
-      :class="`flex-${item}`"
-      v-for="(item, index) in (propData.grid || '12:12').split(':')"
-      :key="index"
-      :style="getColStyle(item, index + 1)"
-      @click="gridClickHandle(item, index + 1)"
-      idm-ctrl-inner
-      :idm-ctrl-id="moduleObject.id"
-      :idm-container-index="index + 1"
-      :idm-refresh-container="`flex-${item}`"
-    ></div>
+    <div 
+      class="idm-columns-layout" 
+      v-for="(grid,gindex) in propData.gridList" :style="getRowStyle(grid,gindex)" :key="gindex">
+      <div
+        class="drag_container"
+        :class="`flex-${item}`"
+        v-for="(item, index) in (grid.grid || '12:12').split(':')"
+        :key="gindex+'_'+index"
+        :style="getColStyle(grid,item, gindex+'_'+index)"
+        @click="gridClickHandle(item, gindex+'_'+index)"
+        idm-ctrl-inner
+        :idm-ctrl-id="moduleObject.id"
+        :idm-container-index="gindex+'_'+index"
+        :idm-refresh-container="`flex-${item}`"
+      ></div>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: "IGrid",
+  name: "IGridList",
   data() {
     return {
       moduleObject: {},
@@ -55,8 +58,10 @@ export default {
     this.moduleObject = this.$root.moduleObject;
     // console.log(this.moduleObject)
     this.convertAttrToStyleObject();
+    console.log("组件内的created事件")
   },
   mounted() {
+    console.log("组件内的mounted事件")
   },
   destroyed() {},
   methods: {
@@ -68,92 +73,22 @@ export default {
       this.innerAttr = propData.innerAttr || [];
       this.convertAttrToStyleObject();
     },
-    /**
-     * 获取格子的样式
-     * {
-    "containerIndex": "2",
-    "dataAttr": {
-        "width": "auto",
-        "height": "auto",
-        "bgColor": {},
-        "border": {
-            "border": {
-                "top": {
-                    "style": "dotted",
-                    "width": 4,
-                    "widthUnit": "px",
-                    "colors": {}
-                },
-                "right": {
-                    "style": "dotted",
-                    "width": 4,
-                    "widthUnit": "px",
-                    "colors": {}
-                },
-                "bottom": {
-                    "style": "dotted",
-                    "width": 4,
-                    "widthUnit": "px",
-                    "colors": {}
-                },
-                "left": {
-                    "style": "dotted",
-                    "width": 4,
-                    "widthUnit": "px",
-                    "colors": {}
-                }
-            },
-            "radius": {
-                "leftTop": {
-                    "radius": 0,
-                    "radiusUnit": "px"
-                },
-                "rightTop": {
-                    "radius": 0,
-                    "radiusUnit": "px"
-                },
-                "leftBottom": {
-                    "radius": 0,
-                    "radiusUnit": "px"
-                },
-                "rightBottom": {
-                    "radius": 0,
-                    "radiusUnit": "px"
-                }
-            }
-        },
-        "box": {
-            "marginTopVal": "0px",
-            "marginRightVal": "0px",
-            "marginBottomVal": "0px",
-            "marginLeftVal": "0px",
-            "paddingTopVal": "9px",
-            "paddingRightVal": "6px",
-            "paddingBottomVal": "0px",
-            "paddingLeftVal": "4px"
-        }
-    }
-}
-     */
-    getColStyle(item, index) {
+    getRowStyle(row,index){
       let styleObject = {};
-      if (this.propData.widthRatioFixed) {
-        styleObject["min-width"] = 0;
-      }
-      var colArray = (this.propData.grid || "12:12").split(":");
       if (
-        this.propData.colPadding &&
-        this.propData.colPadding.inputVal &&
-        this.propData.colPadding.selectVal
+        row.colPadding &&
+        row.colPadding.inputVal &&
+        row.colPadding.selectVal
       ) {
-        if (index != 1) {
-          styleObject["padding-left"] =
-            this.propData.colPadding.inputVal + this.propData.colPadding.selectVal;
-        }
-        if (index != colArray.length) {
-          styleObject["padding-right"] =
-            this.propData.colPadding.inputVal + this.propData.colPadding.selectVal;
-        }
+          styleObject["gap"] =
+          row.colPadding.inputVal + row.colPadding.selectVal;
+      }
+      return styleObject;
+    },
+    getColStyle(grid,item, index) {
+      let styleObject = {};
+      if (grid.widthRatioFixed) {
+        styleObject["min-width"] = 0;
       }
       let colAttrObject = this.innerAttr.filter((item) => item.containerIndex == index);
       if (colAttrObject && colAttrObject.length > 0) {
@@ -166,6 +101,12 @@ export default {
         }
         if(colAttrObject[0].dataAttr.clickFunction?.length){
           styleObject["cursor"] = "pointer";
+        }
+        if(colAttrObject[0].dataAttr.widthFixed&&colAttrObject[0].dataAttr.width&&colAttrObject[0].dataAttr.width!='auto'){
+          styleObject["flex"]="none";
+        }
+        if(colAttrObject[0].dataAttr.scrollAuto){
+          styleObject["overflow"]="auto";
         }
       }
       return styleObject;
@@ -233,10 +174,24 @@ export default {
           }
         }
       }
-      if (!this.propData.bgList?.bgList?.length) {
-        IDM.style.setBackgroundStyle(styleObject, this.propData);
-      } else if (Object.keys(this.propData.bgList.style).length) {
+      if (Object.keys(this.propData.bgList?.style||{}).length) {
         Object.assign(styleObject, this.propData.bgList.style);
+      }
+      if(this.propData.gridBdSize>0){
+        IDM.setStyleToPageHead(this.moduleObject.id+">.idm-columns-layout>div", {
+          "border":`${this.propData.gridBdSize}px solid ${this.propData.gridBdColor&&this.propData.gridBdColor.hex8?IDM.hex8ToRgbaString(this.propData.gridBdColor.hex8):"#000000"}`,
+          "margin-right":`-${this.propData.gridBdSize}px`,
+          "margin-bottom":`-${this.propData.gridBdSize}px`,
+        });
+        IDM.setStyleToPageHead(this.moduleObject.id+">.idm-columns-layout", {
+          "overflow":"visible"
+        });
+        styleObject["padding-right"]=this.propData.gridBdSize+"px";
+        styleObject["padding-bottom"]=this.propData.gridBdSize+"px";
+      }else{
+        IDM.setStyleToPageHead(this.moduleObject.id+">.idm-columns-layout>div", {
+          "border":`none`,
+        });
       }
       IDM.setStyleToPageHead(this.moduleObject.id, styleObject);
       if (this.innerAttr && this.innerAttr.length > 0) {
@@ -260,6 +215,12 @@ export default {
             case "width":
             case "height":
               styleObject[key] = element;
+              break;
+            case "minHeight":
+              styleObject["min-height"] = element;
+              break;
+            case "maxHeight":
+              styleObject["max-height"] = element;
               break;
             case "box":
               IDM.style.setBoxStyle(styleObject, element);
@@ -285,9 +246,7 @@ export default {
           }
         }
       }
-      if (!propData.bgList?.bgList?.length) {
-        IDM.style.setBackgroundStyle(styleObject, propData);
-      } else if (Object.keys(propData.bgList.style).length) {
+      if (Object.keys(propData.bgList?.style||{}).length) {
         Object.assign(styleObject, propData.bgList.style);
       }
       IDM.setStyleToPageHead(

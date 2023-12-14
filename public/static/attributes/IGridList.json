@@ -1,0 +1,346 @@
+{
+    "classId": "idm.componet.layout.igridlist",
+    "comName": "栅格布局",
+    "className": "IGridList",
+    "comType": "common",
+    "comLangue": "vue",
+    "compositeAttr": [
+        {
+            "type": "input",
+            "layoutType": "inline",
+            "text": "唯一标识",
+            "bindKey": "ctrlId",
+            "disabled": true,
+            "default": "@[packageid]",
+            "desc": "组件的唯一标识，自动生成的，请勿直接在任何地方直接写死，以防数据发生变化而导致功能失效"
+        },
+        {
+            "type": "input",
+            "layoutType": "inline",
+            "text": "标题",
+            "bindKey": "ctrlTitle",
+            "default": "栅格布局"
+        },
+        {
+            "type": "table",
+            "tabText":"行[index]",
+            "text": "行布局设置",
+            "desc": "点击？查看布局设置用法指南",
+            "helpUrl": "",
+            "bindKey":"gridList",
+            "default":[
+                {
+                    "grid":"4:8:4:8",
+                    "widthRatioFixed":true
+                },
+                {
+                    "grid":"4:8:4:8",
+                    "widthRatioFixed":true
+                }
+            ],
+            "children": [
+                {
+                    "type": "grid",
+                    "layoutType": "inline",
+                    "text": "分栏比例",
+                    "bindKey": "grid",
+                    "default": "12:12"
+                },
+                {
+                    "type": "inputNumberUnit",
+                    "layoutType": "inline",
+                    "text": "分栏间隔",
+                    "bindKey": "colPadding",
+                    "dictionary": [
+                        {
+                            "label": "px",
+                            "value": "px"
+                        },
+                        {
+                            "label": "%",
+                            "value": "%"
+                        },
+                        {
+                            "label": "em",
+                            "value": "em"
+                        }
+                    ]
+                },
+                {
+                    "type": "switch",
+                    "layoutType": "inline",
+                    "text": "强制宽比",
+                    "bindKey": "widthRatioFixed",
+                    "desc":"如果设置开启强制宽比则会给格子增加minWidth:0样式，也就是说设置了这个比例则只会这个比例大小，不会因为里面的内容撑大而变得比例不一样。",
+                    "default": true
+                }
+            ]
+        },
+        {
+            "type": "group",
+            "text": "边框设置",
+            "desc": "点击？查看边框设置用法指南",
+            "children":[
+                {
+                    "type": "inputNumber",
+                    "layoutType": "inline",
+                    "text": "边框大小",
+                    "bindKey": "gridBdSize",
+                    "default":0
+                },
+                {
+                    "type": "colorPicker",
+                    "layoutType": "inline",
+                    "text": "边框颜色",
+                    "bindKey": "gridBdColor",
+                    "placeholder": "请选择颜色",
+                    "default": {}
+                }
+            ]
+        },
+        {
+            "type": "group",
+            "text": "样式设置",
+            "desc": "点击？查看样式设置用法指南",
+            "helpUrl": "",
+            "children": [
+                {
+                    "type": "layout",
+                    "layoutType": "inline",
+                    "text": "栅格布局",
+                    "bindKey": "layout"
+                },
+                {
+                    "type": "box",
+                    "layoutType": "block",
+                    "text": "内外边距",
+                    "bindKey": "box"
+                },
+                {
+                    "type": "inlineGroup",
+                    "text": "宽高",
+                    "children": [
+                        {
+                            "type": "input",
+                            "layoutType": "block",
+                            "text": "宽",
+                            "desc": "填写auto则为自适应，或者使用px、%、vw等单位，比如100%、100px、100vw等等",
+                            "bindKey": "width",
+                            "width": "60px",
+                            "default": "auto"
+                        },
+                        {
+                            "type": "input",
+                            "layoutType": "block",
+                            "text": "高",
+                            "desc": "填写auto则为自适应，或者使用px、%、vh等单位，比如100%、100px、100vh等等",
+                            "bindKey": "height",
+                            "width": "60px",
+                            "default": "auto"
+                        }
+                    ]
+                },
+                {
+                    "type": "group",
+                    "text": "背景设置",
+                    "desc": "点击？查看背景设置用法指南",
+                    "helpUrl": "",
+                    "children": [
+                        {
+                            "type": "colorPicker",
+                            "layoutType": "inline",
+                            "text": "背景色",
+                            "bindKey": "bgColor",
+                            "placeholder": "请选择颜色",
+                            "default": {}
+                        },
+                        {
+                            "type": "multiBackground",
+                            "text": "多背景图",
+                            "tabText": "背景[index]",
+                            "bindKey": "bgList",
+                            "desc":"支持同时设置多个背景图片、渐变色作为背景，使用此属性则背景图片的设置作废",
+                            "ctrlAttrObject":{
+                                "maxSize":10485760,
+                                "suffix":["jpg","jpeg","png","gif","bmp"]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "border",
+                    "layoutType": "block",
+                    "text": "边框",
+                    "bindKey": "border"
+                },
+                {
+                    "type": "input",
+                    "layoutType": "inline",
+                    "text": "边框阴影",
+                    "bindKey": "boxShadow",
+                    "default": ""
+                },
+                {
+                    "type": "font",
+                    "layoutType": "block",
+                    "text": "文字",
+                    "bindKey": "font"
+                }
+            ]
+        }
+    ],
+    "innerComName": "格子",
+    "innerAttr": [
+        {
+            "type": "group",
+            "text": "样式设置",
+            "desc": "点击？查看样式设置用法指南",
+            "helpUrl": "",
+            "children": [
+                {
+                    "type": "layout",
+                    "layoutType": "inline",
+                    "text": "栅格布局",
+                    "bindKey": "layout"
+                },
+                {
+                    "type": "box",
+                    "layoutType": "block",
+                    "text": "内外边距",
+                    "bindKey": "box"
+                },
+                {
+                    "type": "inlineGroup",
+                    "text": "宽高",
+                    "children": [
+                        {
+                            "type": "input",
+                            "layoutType": "block",
+                            "text": "宽",
+                            "desc": "填写auto则为自适应，或者使用px、%、vw等单位，比如100%、100px、100vw等等",
+                            "bindKey": "width",
+                            "width": "60px",
+                            "default": "auto"
+                        },
+                        {
+                            "type": "input",
+                            "layoutType": "block",
+                            "text": "高",
+                            "desc": "填写auto则为自适应，或者使用px、%、vh等单位，比如100%、100px、100vh等等",
+                            "bindKey": "height",
+                            "width": "60px",
+                            "default": "auto"
+                        }
+                    ]
+                },
+                {
+                    "type": "inlineGroup",
+                    "text": "最大最小",
+                    "children": [
+                        {
+                            "type": "input",
+                            "layoutType": "block",
+                            "text": "最小高",
+                            "desc": "设置格子的最小高度，使用px、%、vh等单位，比如100%、100px、100vh等等",
+                            "bindKey": "minHeight",
+                            "width": "60px",
+                            "default": ""
+                        },
+                        {
+                            "type": "input",
+                            "layoutType": "block",
+                            "text": "最大高",
+                            "desc": "设置格子的最大高度，使用px、%、vh等单位，比如100%、100px、100vh等等",
+                            "bindKey": "maxHeight",
+                            "width": "60px",
+                            "default": ""
+                        }
+                    ]
+                },
+                {
+                    "type": "inlineGroup",
+                    "text": "固定滚动",
+                    "children": [
+                        {
+                            "type": "switch",
+                            "layoutType": "inline",
+                            "text": "固定宽度",
+                            "bindKey": "widthFixed",
+                            "desc":"如果设置了宽度的具体值且当前格子不会跟随栅格设置的比例变化可以开启此处设置，开启后此格子大小始终固定。",
+                            "default": false
+                        },
+                        {
+                            "type": "switch",
+                            "layoutType": "inline",
+                            "text": "内容滚动",
+                            "bindKey": "scrollAuto",
+                            "desc":"如果设置了最大高，则此处可以设置格子内的内容超出最大高度后是否出现滚动条，如果不开启则会裁剪隐藏超出格子外的内容",
+                            "default": false
+                        }
+                    ]
+                },
+                {
+                    "type": "group",
+                    "text": "背景设置",
+                    "desc": "点击？查看背景设置用法指南",
+                    "helpUrl": "",
+                    "children": [
+                        {
+                            "type": "colorPicker",
+                            "layoutType": "inline",
+                            "text": "背景色",
+                            "bindKey": "bgColor",
+                            "placeholder": "请选择颜色",
+                            "default": {}
+                        },
+                        {
+                            "type": "multiBackground",
+                            "text": "多背景图",
+                            "tabText": "背景[index]",
+                            "bindKey": "bgList",
+                            "desc":"支持同时设置多个背景图片、渐变色作为背景，使用此属性则背景图片的设置作废",
+                            "ctrlAttrObject":{
+                                "maxSize":10485760,
+                                "suffix":["jpg","jpeg","png","gif","bmp"]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "border",
+                    "layoutType": "block",
+                    "text": "边框",
+                    "bindKey": "border"
+                },
+                {
+                    "type": "input",
+                    "layoutType": "inline",
+                    "text": "边框阴影",
+                    "bindKey": "boxShadow",
+                    "default": ""
+                },
+                {
+                    "type": "font",
+                    "layoutType": "block",
+                    "text": "文字",
+                    "bindKey": "font"
+                }
+            ]
+        },
+        {
+            "type": "group",
+            "text": "高级",
+            "desc": "点击？查看高级设置用法指南",
+            "children": [
+                {
+                    "type": "actionSelect",
+                    "layoutType": "block",
+                    "text": "点击时动作",
+                    "bindKey": "clickFunction",
+                    "desc": "点击的时候会调用设置的自定义函数，接收参数为格式为{...自定义的,item：当前点击的配置item,index：容器索引}",
+                    "multiple": true
+                }
+            ]
+        }
+    ]
+}
