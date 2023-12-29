@@ -89,6 +89,7 @@
               idm-ctrl-inner
               :idm-ctrl-id="moduleObject.id"
               :idm-container-index="item[indexDataFiled]"
+              v-show="!item.hideDragDom"
             ></div>
           </div>
         </template>
@@ -585,7 +586,11 @@ export default {
           item.idmContainerFold = foldFlag;
         }
       });
-      this.componentData = resultData;
+      if ( resultData && resultData.length ) {
+        this.componentData = resultData;
+      } else {
+        this.componentData = [{ idmContainerId: "index0", idmContainerFold: false, hideDragDom: true }];
+      }
       this.$nextTick(() => {
         this.componentData.forEach((item, index) => {
           this.moduleObject.dynamicRenderModuleGroupInitData &&
