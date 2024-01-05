@@ -30,15 +30,26 @@
             "bindKey":"gridList",
             "default":[
                 {
+                    "gridGuid":"W4hwHespe1BXsBA3",
                     "grid":"4:8:4:8",
                     "widthRatioFixed":true
                 },
                 {
+                    "gridGuid":"jGKlt5iCk5EwxbT3",
                     "grid":"4:8:4:8",
                     "widthRatioFixed":true
                 }
             ],
             "children": [
+                {
+                    "type": "input",
+                    "layoutType": "inline",
+                    "text": "分栏标识",
+                    "bindKey": "gridGuid",
+                    "disabled": true,
+                    "default": "@[IDM.UUID()]",
+                    "desc":"行的唯一标识，用于区别行的索引"
+                },
                 {
                     "type": "grid",
                     "layoutType": "inline",
