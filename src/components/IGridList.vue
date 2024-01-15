@@ -26,17 +26,17 @@
     </div> -->
     <div 
       class="idm-columns-layout" 
-      v-for="(grid,gindex) in propData.gridList" :style="getRowStyle(grid,gindex)" :key="gindex">
+      v-for="(grid,gindex) in propData.gridList" :style="getRowStyle(grid,grid.gridGuid||gindex)" :key="grid.gridGuid||gindex">
       <div
         class="drag_container"
         :class="`flex-${item}`"
         v-for="(item, index) in (grid.grid || '12:12').split(':')"
-        :key="gindex+'_'+index"
-        :style="getColStyle(grid,item, gindex+'_'+index)"
-        @click="gridClickHandle(item, gindex+'_'+index)"
+        :key="(grid.gridGuid||gindex)+'_'+index"
+        :style="getColStyle(grid,item, (grid.gridGuid||gindex)+'_'+index)"
+        @click="gridClickHandle(item, (grid.gridGuid||gindex)+'_'+index)"
         idm-ctrl-inner
         :idm-ctrl-id="moduleObject.id"
-        :idm-container-index="gindex+'_'+index"
+        :idm-container-index="(grid.gridGuid||gindex)+'_'+index"
         :idm-refresh-container="`flex-${item}`"
       ></div>
     </div>
