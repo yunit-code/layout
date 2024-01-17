@@ -877,7 +877,7 @@ export default {
         const pageid=this.moduleObject.pageid,routerId = this.moduleObject.routerId;
         //item.itemNo ==》 displayContainerIndex
         IDM.page.executeComponentMoveIndex({routerId,pageid,moveIndex:item.itemNo,targetIndex:this.displayContainerIndex})
-      };
+      }
     },
     /**
      * 单个格子的鼠标点击事件
@@ -2389,7 +2389,18 @@ export default {
               * {
                 opacity: 1;
                 &.fsl-element-item-delete {
-                  opacity: 0.7;
+                  opacity: 1;
+                  background-color: #1890ff;
+                  padding: 5px;
+                  border-radius: 4px;
+                  svg {
+                    color: #FFF;
+                  }
+                }
+                &.fsl-element-number {
+                  color: #FFF;
+                  background-color: #1890ff;
+                  font-size: 14px;
                 }
               }
             }
@@ -2398,6 +2409,7 @@ export default {
           .fsl-region-element-inner-preview {
             pointer-events: none;
             user-select: none;
+            opacity: 1;
           }
         }
       }
@@ -2478,6 +2490,12 @@ export default {
       position: absolute;
       border: 1px solid #1890ff;
       background-color: rgba($color: #1890ff, $alpha: 0.05);
+    }
+    .fsl-layout-switch-tool {
+      display: none;
+    }
+    .fsl-bg-grid {
+      opacity: 0.1;
     }
   }
 }
