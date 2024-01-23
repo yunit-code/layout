@@ -199,6 +199,40 @@ export default {
           this.convertInnerAttrToStyleObject(element.dataAttr, element.containerIndex);
         });
       }
+      this.convertAttrToAllStyleObject();
+    },
+    /**
+     * 把属性转换成样式对象
+     */
+    convertAttrToAllStyleObject() {
+      var styleObject = {};
+      const keyList = [
+        "allBox",
+        "allLayout",
+      ];
+      let hasLayout = false;
+      for (const iKey in keyList) {
+        const key = keyList[iKey];
+        if (this.propData.hasOwnProperty.call(this.propData, key)) {
+          const element = this.propData[key];
+          if (!element && element !== false && element != 0) {
+            continue;
+          }
+          switch (key) {
+            case "allBox":
+              IDM.style.setBoxStyle(styleObject, element);
+              break;
+            case "allLayout":
+              IDM.style.setLayoutStyle(styleObject, element);
+              hasLayout = styleObject["display"]=="flex";
+              break;
+          }
+        }
+      }
+      Object.keys(styleObject).length&&IDM.setStyleToPageHead(this.moduleObject.id+">.idm-columns-layout>div,.emptyclassname", styleObject);
+      hasLayout&&IDM.setStyleToPageHead(this.moduleObject.id+">.idm-columns-layout>div>*", {
+                  "min-width":"100%"
+                });
     },
     /**
      * 把属性参数转换成内部容器样式对象
@@ -233,6 +267,14 @@ export default {
               break;
             case "layout":
               IDM.style.setLayoutStyle(styleObject, element);
+              //如果单个设置了，则对单个的min-width设置为auto
+              IDM.setStyleToPageHead(
+                this.moduleObject.id +
+                  ` .drag_container[idm-ctrl-id="${this.moduleObject.id}"][idm-container-index="${index}"]>*`,
+                {
+                  "min-width":"auto"
+                }
+              );
               break;
             case "boxShadow":
               styleObject["box-shadow"] = element;

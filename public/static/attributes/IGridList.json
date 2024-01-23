@@ -111,6 +111,27 @@
         },
         {
             "type": "group",
+            "text": "全部格子设置",
+            "desc": "用于设置整体的单元格样式，如需要单独设置格子的样式请选中此单元格进行调整",
+            "children":[
+                {
+                    "type": "layout",
+                    "layoutType": "inline",
+                    "text": "栅格布局",
+                    "bindKey": "allLayout",
+                    "desc":"如果设置了为flex模式，则会给所有子级添加min-width:100%的样式"
+                },
+                {
+                    "type": "box",
+                    "layoutType": "block",
+                    "text": "内外边距",
+                    "bindKey": "allBox",
+                    "desc":"设置了外边距则会影响边框的重叠，因为如果设置了边框则会对格子进行偏移以达到重叠"
+                }
+            ]
+        },
+        {
+            "type": "group",
             "text": "样式设置",
             "desc": "点击？查看样式设置用法指南",
             "helpUrl": "",
