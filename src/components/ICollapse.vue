@@ -9,8 +9,8 @@
     idm-ctrl="idm_module"
     :id="moduleObject.id"
     :idm-ctrl-id="moduleObject.id"
-    :idm-refresh-container="activeTab"
-    class="idm_itabs_box"
+    :idm-refresh-container="activeTab.join(',')"
+    class="idm_icollapse_box"
   >
     <!--
       组件内部容器
@@ -19,57 +19,50 @@
       idm-ctrl-id：组件的id，这个必须不能为空
       idm-container-index  组件的内部容器索引，不重复唯一且不变，必选，建议从1开始
     -->
-    <layout220-a-tabs
+    <div class="idm_form_setting_tip" v-if="propData.showComponentTip">
+      重要提示：本组件为表单区域分块级别配置专用组件，请按表单要素进行分类配置，最终展现效果需要再次套用最终使用的模板
+    </div>
+    <a-collapse
       :activeKey="activeTab"
-      :animated="propData.animated !== false ? true : false"
-      :size="propData.size || 'default'"
-      :tabPosition="propData.tabPosition || 'top'"
-      :type="propData.type || 'line'"
-      :tabBarGutter="propData.tabBarGutter == 0 ? 0 : propData.tabBarGutter || null"
-      :tabBarStyle="getTabStyleObject()"
+      :bordered="propData.collapseBordered !== false ? true : false"
+      :accordion="propData.collapseAccordion === true ? true : false"
+      :expandIconPosition="propData.expandIconPosition || 'left'"
       @change="changeCallback"
-      @nextClick="nextClickCallback"
-      @prevClick="prevClickCallback"
-      @tabClick="tabClickCallback"
     >
-      <layout220-a-tab-pane forceRender v-for="item in tabList" :key="item.key">
+      <a-collapse-panel forceRender v-for="item in panelList" :showArrow="item.showArrow!==false" :disabled="item.disabled===true" :key="item.key">
         <div
           class="drag_container"
           v-if="item.opened"
-          :class="`idm-tab-inner-${item.key}`"
+          :class="`idm-collapse-inner-${item.key}`"
           idm-ctrl-inner
           :idm-ctrl-id="moduleObject.id"
           :idm-container-index="item.key"
         ></div>
-        <span slot="tab">
+        <span slot="header">
           <div
-            v-if="item.tabSlotFunction && item.tabSlotFunction.length > 0"
+            v-if="item.panelTitleSlotFunction && item.panelTitleSlotFunction.length > 0"
             v-html="getTabCustomRender(item)"
           ></div>
           <template v-else>{{ item.tab }}</template>
         </span>
-      </layout220-a-tab-pane>
-      <div
-        v-if="
-          propData.tabBarExtraContentFunction &&
-          propData.tabBarExtraContentFunction.length > 0
-        "
-        :slot="`tabBarExtraContent${
-          propData.tabBarExtraContentFunction &&
-          propData.tabBarExtraContentFunction.length > 0
-            ? ''
-            : 'close'
-        }`"
-      >
         <div
           v-if="
             propData.tabBarExtraContentFunction &&
             propData.tabBarExtraContentFunction.length > 0
           "
-          v-html="getTabBarExtraContentCustomRender()"
-        ></div>
-      </div>
-    </layout220-a-tabs>
+          slot="extra"
+        >
+          <div
+            @click="tabBarExtraClickFunction(item)"
+            v-if="
+              propData.tabBarExtraContentFunction &&
+              propData.tabBarExtraContentFunction.length > 0
+            "
+            v-html="getTabBarExtraContentCustomRender(item)"
+          ></div>
+        </div>
+      </a-collapse-panel>
+    </a-collapse>
     <div
       v-if="propData.showDragContainer"
       v-show="this.moduleObject.env != 'production' || showDragContainer"
@@ -88,18 +81,19 @@
 
 <script>
 export default {
-  name: "ITabs",
+  name: "ICollapse",
   data() {
     return {
       moduleObject: {},
       propData: this.$root.propData.compositeAttr || {
+        showComponentTip:true,
         dragContainerY: "8px",
         dragContainerX: "60%",
         showDragContainer: false,
       },
       innerAttr: this.$root.propData.innerAttr || [],
-      activeTab: "",
-      tabList: [],
+      activeTab: [],
+      panelList: [],
       showDragContainer: false,
     };
   },
@@ -115,11 +109,25 @@ export default {
     /**
      * 切换面板的回调
      */
-    changeCallback(key) {
+    changeCallback(keys) {
+      if(IDM.type(keys)!="array"){
+        keys = [keys]
+      }
       let that = this;
-      this.activeTab = key;
-      this.tabList.forEach((item) => {
-        if (this.activeTab == item.key) {
+      //比对当前展开的哪一个
+      let changeType = "open";
+      let key = _.difference(keys,this.activeTab);
+      if(!key.length){
+        key = _.difference(this.activeTab,keys);
+        changeType = "close";
+      }
+      if(!key.length){
+        return;
+      }
+      key = key[0];
+      this.activeTab = keys;
+      this.panelList.forEach((item) => {
+        if (key==item.key) {
           if (!item.opened) {
             item.opened = true;
             that.$nextTick(function (params) {
@@ -131,26 +139,18 @@ export default {
           // item.opened = true;
         }
       });
-      this.dragContainerShowStatusHandle("changeTab");
+      this.dragContainerShowStatusHandle("changeTab",key,changeType);
       this.changeEventFunHandle("changeFunction");
     },
-    /**
-     * next 按钮被点击的回调
-     */
-    nextClickCallback() {
-      this.changeEventFunHandle("nextClickFunction");
-    },
-    /**
-     * prev 按钮被点击的回调
-     */
-    prevClickCallback() {
-      this.changeEventFunHandle("prevClickFunction");
-    },
-    /**
-     * tab 被点击的回调
-     */
-    tabClickCallback() {
-      this.changeEventFunHandle("tabClickFunction");
+    tabBarExtraClickFunction(item){
+      IDM.invokeCustomFunctions.apply(this, [
+          this.propData.tabBarExtraClickFunction,
+          {
+            clickItem:item,
+            activeKey: this.activeTab,
+            allKey: this.panelList,
+          },
+        ]);
     },
     /**
      * 通用自定义函数
@@ -166,7 +166,7 @@ export default {
               customParam: item.param,
               _this: that,
               activeKey: that.activeTab,
-              allKey: that.tabList,
+              allKey: that.panelList,
             });
         });
     },
@@ -188,46 +188,28 @@ export default {
     /**
      * 获取扩展的结果
      */
-    getTabBarExtraContentCustomRender() {
+    getTabBarExtraContentCustomRender(item) {
       return (
         window[this.propData.tabBarExtraContentFunction[0].name] &&
         window[this.propData.tabBarExtraContentFunction[0].name].call(this, {
           customParam: this.propData.tabBarExtraContentFunction[0].param,
-          tabList: this.tabList,
+          panelList: this.panelList,
+          item
         })
       );
-    },
-    /**
-     * 获取tab bar样式对象的结果
-     */
-    getTabStyleObject() {
-      if (
-        this.propData.tabBarStyleFunction &&
-        this.propData.tabBarStyleFunction.length > 0
-      ) {
-        return (
-          window[this.propData.tabBarStyleFunction[0].name] &&
-          window[this.propData.tabBarStyleFunction[0].name].call(this, {
-            customParam: this.propData.tabBarStyleFunction[0].param,
-            tabList: this.tabList,
-          })
-        );
-      } else {
-        return {};
-      }
     },
     /**
      * 获取tab自定义的数据
      */
     getTabCustomRender(item) {
-      if (item.tabSlotFunction && item.tabSlotFunction.length > 0) {
-        if (!window[item.tabSlotFunction[0].name]) {
+      if (item.panelTitleSlotFunction && item.panelTitleSlotFunction.length > 0) {
+        if (!window[item.panelTitleSlotFunction[0].name]) {
           return this.moduleObject.env == "develop" ? "请把动作面板打开" : "";
         }
         return (
-          window[item.tabSlotFunction[0].name] &&
-          window[item.tabSlotFunction[0].name].call(this, {
-            customParam: item.tabSlotFunction[0].param,
+          window[item.panelTitleSlotFunction[0].name] &&
+          window[item.panelTitleSlotFunction[0].name].call(this, {
+            customParam: item.panelTitleSlotFunction[0].param,
             tab: item,
           })
         );
@@ -242,7 +224,6 @@ export default {
       this.propData = propData.compositeAttr || {};
       this.innerAttr = propData.innerAttr || [];
       this.initAttrToModule();
-      console.log("组件内属性发生变化，变化后====》", this.propData);
     },
     /**
      * 把属性转换成样式对象
@@ -295,9 +276,7 @@ export default {
           }
         }
       }
-      if (!this.propData.bgList?.bgList?.length) {
-        IDM.style.setBackgroundStyle(styleObject, this.propData);
-      } else if (Object.keys(this.propData.bgList.style).length) {
+      if (Object.keys(this.propData.bgList?.style||{}).length) {
         Object.assign(styleObject, this.propData.bgList.style);
       }
       IDM.setStyleToPageHead(this.moduleObject.id + "", styleObject);
@@ -339,9 +318,7 @@ export default {
           }
         }
       }
-      if (!propData.bgList?.bgList?.length) {
-        IDM.style.setBackgroundStyle(styleObject, propData);
-      } else if (Object.keys(propData.bgList.style).length) {
+      if (Object.keys(propData.bgList?.style||{}).length) {
         Object.assign(styleObject, propData.bgList.style);
       }
       IDM.setStyleToPageHead(
@@ -356,53 +333,55 @@ export default {
     initBaseAttrToModule() {
       if (this.propData.TabPaneList && this.propData.TabPaneList.length > 0) {
         if (this.moduleObject.env != "develop") {
+          this.activeTab = [];
           this.propData.TabPaneList.forEach((tabItem) => {
             if (tabItem.defaultActiveKey) {
-              this.activeTab = tabItem.key;
+              this.activeTab.push(tabItem.key);
             }
           });
-          if (!this.activeTab) {
-            this.activeTab = this.propData.TabPaneList[0].key;
-          }
         }
-        if (!this.activeTab && this.moduleObject.env == "develop") {
-          this.activeTab = this.propData.TabPaneList[0].key;
+        if (this.moduleObject.env == "develop") {
+          if(!this.activeTab.length){
+            this.activeTab.push(this.propData.TabPaneList[0].key)
+          }
         }
         //设置初始化状态打开状态
         this.propData.TabPaneList.forEach((tabItem, index) => {
           tabItem.opened =
-            this.moduleObject.env == "develop" ? true : this.activeTab == tabItem.key;
+            this.moduleObject.env == "develop" ? true : this.activeTab.includes(tabItem.key);
           if (!tabItem.forceRender) {
             tabItem.opened = true;
           }
         });
 
-        this.tabList = this.propData.TabPaneList;
+        this.panelList = this.propData.TabPaneList;
       } else {
-        this.tabList = [];
+        this.panelList = [];
         if (this.moduleObject.env == undefined || this.moduleObject.env == "develop") {
           //开发模式下不执行此事件
-          this.tabList = [
+          this.panelList = [
             {
               key: "123",
-              tab: "页签demo",
+              tab: "面板demo",
               defaultActiveKey: true,
               forceRender: false,
+              showArrow:true
             },
             {
               key: "1233",
-              tab: "页签demo1",
+              tab: "面板demo1",
               defaultActiveKey: true,
               forceRender: false,
+              showArrow:true
             },
           ];
-          if (!this.activeTab) {
-            this.activeTab = this.tabList[0].key;
+          if(!this.activeTab.length){
+            this.activeTab.push(this.panelList[0].key)
           }
         }
       }
       this.showDragContainer = this.propData.dragContainerShowType == "default";
-      this.dragContainerShowStatusHandle("changeTab");
+      this.dragContainerShowStatusHandle("changeTab",this.activeTab.length?this.activeTab[0]:"","open");
     },
     /**
      * 加载属性到组件中
@@ -419,7 +398,7 @@ export default {
     /**
      * 悬浮容器显示处理事件
      */
-    dragContainerShowStatusHandle(actionType) {
+    dragContainerShowStatusHandle(actionType,activeKey,changeType) {
       if (
         this.propData.dragContainerShowType == "default" ||
         this.propData.showDragContainer === false
@@ -433,7 +412,7 @@ export default {
             this.getExpressData(
               "data",
               this.propData.dragContainerDataFiled,
-              this.tabList.find((item) => item.key === this.activeTab) || {}
+              this.panelList.find((item) => item.key === activeKey) || {}
             )
           ) {
             this.showDragContainer = true;
@@ -450,9 +429,11 @@ export default {
               ...this.commonParam(),
               customParam: this.propData.dragContainerDataFunction[0].param,
               _this: this,
-              activeKey: this.activeTab,
-              allKey: this.tabList,
+              currentActiveKey:activeKey,
+              activeTab:this.activeTab,
+              allKey: this.panelList,
               actionType,
+              changeType
             });
           break;
       }
@@ -483,14 +464,19 @@ export default {
 };
 </script>
 <style lang="scss">
-.idm_itabs_box {
-  .ant-tabs-bar {
-    margin: 0 0 0 0;
-  }
-}
 .idm_itabs_drag_container {
   position: absolute;
   top: 0;
   left: 0;
+}
+.idm_icollapse_box{
+  .idm_form_setting_tip{
+    border: 1px solid #F59A23;
+    background-color: rgba($color: #F59A23, $alpha: 0.24);
+    color: #B8741A;
+    padding: 10px;
+    text-align: center;
+    margin-bottom: 10px;
+  }
 }
 </style>

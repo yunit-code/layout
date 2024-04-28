@@ -139,6 +139,20 @@
                     "desc":"选用此项则被隐藏的tab默认不渲染dom，点击的时候第一次去渲染tab",
                     "default": false
                 }
+            ],
+            "default":[
+                {
+                    "key":"tab1",
+                    "tab":"页签1",
+                    "defaultActiveKey":true,
+                    "forceRender":false
+                },
+                {
+                    "key":"tab2",
+                    "tab":"页签2",
+                    "defaultActiveKey":false,
+                    "forceRender":false
+                }
             ]
         },
         {

@@ -1,0 +1,1366 @@
+{
+    "classId": "idm.componet.layout.itablelayout",
+    "comName": "表格布局",
+    "className": "ITableLayout",
+    "comType": "common",
+    "comLangue": "vue",
+    "compositeAttr": [
+        {
+            "type": "input",
+            "layoutType": "inline",
+            "text": "唯一标识",
+            "bindKey": "ctrlId",
+            "disabled": true,
+            "default": "@[packageid]",
+            "desc": "组件的唯一标识，自动生成的，请勿直接在任何地方直接写死，以防数据发生变化而导致功能失效"
+        },
+        {
+            "type": "group",
+            "text": "边框设置",
+            "desc": "点击？查看边框设置用法指南",
+            "children":[
+                {
+                    "type": "switch",
+                    "layoutType": "inline",
+                    "text": "边框显示",
+                    "bindKey": "tableBdShow",
+                    "desc":"设置表格单元格内边框是否显示",
+                    "default": true
+                },
+                {
+                    "type": "switch",
+                    "layoutType": "inline",
+                    "text": "边框合并",
+                    "bindKey": "tableBorderCollapse",
+                    "desc":"设置表格边框是否合并，默认为分开，如果需要每个单元格的边框有单独的颜色则不开启（开启了会导致有边框设置了无法显示），如果全部为统一颜色则开启合并效果更佳",
+                    "default": true
+                },
+                {
+                    "type": "switch",
+                    "layoutType": "inline",
+                    "text": "固定布局",
+                    "bindKey": "fixedLayout",
+                    "desc":"设置表格是否固定每一列的布局不变，如果设置了则单元格不会随内容变动而撑大",
+                    "default": true
+                },
+                {
+                    "type": "select",
+                    "layoutType": "inline",
+                    "text": "边框样式",
+                    "bindKey": "tableBdStyle",
+                    "dictionary": [
+                        {
+                            "label": "实线",
+                            "value": "solid"
+                        },
+                        {
+                            "label": "虚线",
+                            "value": "dashed"
+                        },
+                        {
+                            "label": "无",
+                            "value": "none"
+                        }
+                    ],
+                    "default": "solid"
+                },
+                {
+                    "type": "inputNumber",
+                    "layoutType": "inline",
+                    "text": "边框大小",
+                    "bindKey": "tableBdSize",
+                    "default":1
+                },
+                {
+                    "type": "colorPicker",
+                    "layoutType": "inline",
+                    "text": "边框颜色",
+                    "bindKey": "tableBdColor",
+                    "placeholder": "请选择颜色",
+                    "default": {}
+                },
+                {
+                    "type": "select",
+                    "layoutType": "inline",
+                    "text": "外边框",
+                    "bindKey": "tableOutBdShow",
+                    "desc":"设置外边框上右下左是否显示，可单独控制",
+                    "dictionary": [
+                        {
+                            "label": "上",
+                            "value": "top"
+                        },
+                        {
+                            "label": "右",
+                            "value": "right"
+                        },
+                        {
+                            "label": "下",
+                            "value": "bottom"
+                        },
+                        {
+                            "label": "左",
+                            "value": "left"
+                        }
+                    ],
+                    "multiple":true,
+                    "default": ["top","right","bottom","left"]
+                }
+            ]
+        },
+        {
+            "type": "table",
+            "tabText":"列[index]",
+            "text": "列宽设置",
+            "bindKey":"columnsList",
+            "desc":"请直接在表格上操作",
+            "ctrlAttrObject":{
+                "hideAdd":true,
+                "hideDel":true
+            },
+            "default":[
+                {
+                    "colGuid":"W4hwHespe1BXsBA3",
+                    "width":"auto"
+                },
+                {
+                    "colGuid":"jGKlt5iCk5EwxbT3",
+                    "width":"auto"
+                },
+                {
+                    "colGuid":"OY6SkGIeXMSuCTQG",
+                    "width":"auto"
+                },
+                {
+                    "colGuid":"wRulSFevImJQnONq",
+                    "width":"auto"
+                }
+            ],
+            "children": [
+                {
+                    "type": "input",
+                    "layoutType": "inline",
+                    "text": "列标识",
+                    "bindKey": "colGuid",
+                    "disabled": true,
+                    "default": "@[IDM.UUID()]",
+                    "desc":"列的唯一标识，用于区别列的索引"
+                },
+                {
+                    "type": "input",
+                    "layoutType": "inline",
+                    "text": "列宽",
+                    "bindKey": "width",
+                    "default": "auto",
+                    "desc":"设置列的宽度，支持auto、px、%"
+                }
+            ]
+        },
+        {
+            "type": "table",
+            "tabText":"行[index]",
+            "text": "行高设置",
+            "bindKey":"tableRows",
+            "default":[
+                {
+                    "rowGuid":"MgGC8YoYVjetIr1W",
+                    "height":"52px",
+                    "rowIndex":0,
+                    "cols":[
+                        {
+                            "colGuid":"XkF2SjFUlEZBBFAr",
+                            "width": "auto",
+                            "rowspan": 1,
+                            "colspan": 1,
+                            "cellIndex": 0,
+                            "rowIndex":0,
+                            "cellAttr": {
+                                "align": "",
+                                "valign": ""
+                            },
+                            "cellStyle": {},
+                            "cellBorderStyle": {}
+                        },
+                        {
+                            "colGuid":"5xknWne15GMOTKaJ",
+                            "width": "auto",
+                            "rowspan": 1,
+                            "colspan": 1,
+                            "cellIndex": 1,
+                            "rowIndex":0,
+                            "cellAttr": {
+                                "align": "",
+                                "valign": ""
+                            },
+                            "cellStyle": {},
+                            "cellBorderStyle": {}
+                        },
+                        {
+                            "colGuid":"wuCENwSP2kTxjdJA",
+                            "width": "auto",
+                            "rowspan": 1,
+                            "colspan": 1,
+                            "cellIndex": 2,
+                            "rowIndex":0,
+                            "cellAttr": {
+                                "align": "",
+                                "valign": ""
+                            },
+                            "cellStyle": {},
+                            "cellBorderStyle": {}
+                        },
+                        {
+                            "colGuid":"BndNcxzz8T9GUVm4",
+                            "width": "auto",
+                            "rowspan": 1,
+                            "colspan": 1,
+                            "cellIndex": 3,
+                            "rowIndex":0,
+                            "cellAttr": {
+                                "align": "",
+                                "valign": ""
+                            },
+                            "cellStyle": {},
+                            "cellBorderStyle": {}
+                        }
+                    ]
+                },
+                {
+                    "rowGuid":"sSgnJzd60VM7uOP3",
+                    "height":"52px",
+                    "rowIndex":1,
+                    "cols":[
+                        {
+                            "colGuid":"P2hg20ok7LKC8xA0",
+                            "width": "auto",
+                            "rowspan": 1,
+                            "colspan": 1,
+                            "cellIndex": 0,
+                            "rowIndex":1,
+                            "cellAttr": {
+                                "align": "",
+                                "valign": ""
+                            },
+                            "cellStyle": {},
+                            "cellBorderStyle": {}
+                        },
+                        {
+                            "colGuid":"28VbMi5V3Spz2Adk",
+                            "width": "auto",
+                            "rowspan": 1,
+                            "colspan": 1,
+                            "cellIndex": 1,
+                            "rowIndex":1,
+                            "cellAttr": {
+                                "align": "",
+                                "valign": ""
+                            },
+                            "cellStyle": {},
+                            "cellBorderStyle": {}
+                        },
+                        {
+                            "colGuid":"LUv21pgWOGDwjP2m",
+                            "width": "auto",
+                            "rowspan": 1,
+                            "colspan": 1,
+                            "cellIndex": 2,
+                            "rowIndex":1,
+                            "cellAttr": {
+                                "align": "",
+                                "valign": ""
+                            },
+                            "cellStyle": {},
+                            "cellBorderStyle": {}
+                        },
+                        {
+                            "colGuid":"30CMOERGir7btUNU",
+                            "width": "auto",
+                            "rowspan": 1,
+                            "colspan": 1,
+                            "cellIndex": 3,
+                            "rowIndex":1,
+                            "cellAttr": {
+                                "align": "",
+                                "valign": ""
+                            },
+                            "cellStyle": {},
+                            "cellBorderStyle": {}
+                        }
+                    ]
+                },
+                {
+                    "rowGuid":"Ill8kZVUeAGhGbje",
+                    "height":"52px",
+                    "rowIndex":2,
+                    "cols":[
+                        {
+                            "colGuid":"iJ0UYGRVWdCCPOh9",
+                            "width": "auto",
+                            "rowspan": 1,
+                            "colspan": 1,
+                            "cellIndex": 0,
+                            "rowIndex":2,
+                            "cellAttr": {
+                                "align": "",
+                                "valign": ""
+                            },
+                            "cellStyle": {},
+                            "cellBorderStyle": {}
+                        },
+                        {
+                            "colGuid":"fA1ap3cIdl48xTZK",
+                            "width": "auto",
+                            "rowspan": 1,
+                            "colspan": 1,
+                            "cellIndex": 1,
+                            "rowIndex":2,
+                            "cellAttr": {
+                                "align": "",
+                                "valign": ""
+                            },
+                            "cellStyle": {},
+                            "cellBorderStyle": {}
+                        },
+                        {
+                            "colGuid":"KuSOLREIUAOWv56V",
+                            "width": "auto",
+                            "rowspan": 1,
+                            "colspan": 1,
+                            "cellIndex": 2,
+                            "rowIndex":2,
+                            "cellAttr": {
+                                "align": "",
+                                "valign": ""
+                            },
+                            "cellStyle": {},
+                            "cellBorderStyle": {}
+                        },
+                        {
+                            "colGuid":"duc6tUwwLvbYjASc",
+                            "width": "auto",
+                            "rowspan": 1,
+                            "colspan": 1,
+                            "cellIndex": 3,
+                            "rowIndex":2,
+                            "cellAttr": {
+                                "align": "",
+                                "valign": ""
+                            },
+                            "cellStyle": {},
+                            "cellBorderStyle": {}
+                        }
+                    ]
+                },
+                {
+                    "rowGuid":"cFsaOtV3hq4U4kff",
+                    "height":"52px",
+                    "rowIndex":3,
+                    "cols":[
+                        {
+                            "colGuid":"MDWmRxHGldVhb7Af",
+                            "width": "auto",
+                            "rowspan": 1,
+                            "colspan": 1,
+                            "cellIndex": 0,
+                            "rowIndex":3,
+                            "cellAttr": {
+                                "align": "",
+                                "valign": ""
+                            },
+                            "cellStyle": {},
+                            "cellBorderStyle": {}
+                        },
+                        {
+                            "colGuid":"BYypuvo0IUmXHxQg",
+                            "width": "auto",
+                            "rowspan": 1,
+                            "colspan": 1,
+                            "cellIndex": 1,
+                            "rowIndex":3,
+                            "cellAttr": {
+                                "align": "",
+                                "valign": ""
+                            },
+                            "cellStyle": {},
+                            "cellBorderStyle": {}
+                        },
+                        {
+                            "colGuid":"vq7WLobG4NEYfv7g",
+                            "width": "auto",
+                            "rowspan": 1,
+                            "colspan": 1,
+                            "cellIndex": 2,
+                            "rowIndex":3,
+                            "cellAttr": {
+                                "align": "",
+                                "valign": ""
+                            },
+                            "cellStyle": {},
+                            "cellBorderStyle": {}
+                        },
+                        {
+                            "colGuid":"vNcBmIT8rikrTO2Y",
+                            "width": "auto",
+                            "rowspan": 1,
+                            "colspan": 1,
+                            "cellIndex": 3,
+                            "rowIndex":3,
+                            "cellAttr": {
+                                "align": "",
+                                "valign": ""
+                            },
+                            "cellStyle": {},
+                            "cellBorderStyle": {}
+                        }
+                    ]
+                }
+            ],
+            "children": [
+                {
+                    "type": "input",
+                    "layoutType": "inline",
+                    "text": "行标识",
+                    "bindKey": "rowGuid",
+                    "disabled": true,
+                    "default": "@[IDM.UUID()]",
+                    "desc":"行的唯一标识，用于区别行的索引"
+                },
+                {
+                    "type": "input",
+                    "layoutType": "inline",
+                    "text": "行高",
+                    "bindKey": "height",
+                    "default": "52px",
+                    "desc":"设置行的高度，支持auto、px、%"
+                },
+                {
+                    "type": "inputNumber",
+                    "layoutType": "inline",
+                    "text": "行索引",
+                    "bindKey": "rowIndex",
+                    "desc":"行的索引，请勿随意编辑，跟随维护的行索引（从第一个页签以0开始）来定义此处",
+                    "default":"@[currentIndex]"
+                },
+                {
+                    "type": "jsonEditor",
+                    "layoutType": "inline",
+                    "text": "列数据",
+                    "bindKey": "cols",
+                    "desc":"当前行的列数据信息，请勿随意编辑，请在组件内右键菜单中操作",
+                    "default":[]
+                },
+                {
+                    "type": "input",
+                    "layoutType": "inline",
+                    "text": "样式类名",
+                    "bindKey": "rowClass",
+                    "default": "",
+                    "desc":"给当前行增加样式类名，多个可逗号隔开，当然你也可以把行标识当做类名使用"
+                }
+            ]
+        },
+        {
+            "type": "group",
+            "text": "主题设置",
+            "desc": "用于设置在各种主题风格下该组件的样式风格的属性，点击？查看主题设置指南",
+            "children": [
+                {
+                    "type": "group",
+                    "text": "应用范围",
+                    "desc":"用于设置主题下的各个等级的颜色、背景应用在上述样式设置的应用类型范围，简要概述就是对应的主题设置的各种颜色、背景都在组件哪个区域的样式生效，当组件样式单独设置了颜色、背景则不会再应用主题颜色的设置了",
+                    "children": [
+                        {
+                            "type": "select",
+                            "layoutType": "inline",
+                            "text": "主颜色",
+                            "bindKey": "mainColorRang",
+                            "desc": "用于设置主题样式下的主要颜色应用在组件的哪个区域范围",
+                            "placeholder": "请选择",
+                            "multiple":true,
+                            "dictionary": [
+                                {
+                                    "label": "组件",
+                                    "value": "global"
+                                },
+                                {
+                                    "label": "单元格",
+                                    "value": "cell"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "select",
+                            "layoutType": "inline",
+                            "text": "次颜色",
+                            "bindKey": "minorColorRang",
+                            "desc": "用于设置主题样式下的次要颜色应用在组件的哪个区域范围",
+                            "placeholder": "请选择",
+                            "multiple":true,
+                            "dictionary": [
+                                {
+                                    "label": "组件",
+                                    "value": "global"
+                                },
+                                {
+                                    "label": "单元格",
+                                    "value": "cell"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "select",
+                            "layoutType": "inline",
+                            "text": "低颜色",
+                            "bindKey": "lowColorRang",
+                            "desc": "用于设置主题样式下的低级颜色应用在组件的哪个区域范围",
+                            "placeholder": "请选择",
+                            "multiple":true,
+                            "dictionary": [
+                                {
+                                    "label": "组件",
+                                    "value": "global"
+                                },
+                                {
+                                    "label": "单元格",
+                                    "value": "cell"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "select",
+                            "layoutType": "inline",
+                            "text": "主边框",
+                            "bindKey": "mainBdColorRang",
+                            "desc": "用于设置主题样式下的主要边框应用在组件的哪个区域范围",
+                            "placeholder": "请选择",
+                            "multiple":true,
+                            "dictionary": [
+                                {
+                                    "label": "组件",
+                                    "value": "global"
+                                },
+                                {
+                                    "label": "表格",
+                                    "value": "table"
+                                },
+                                {
+                                    "label": "单元格",
+                                    "value": "cell"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "select",
+                            "layoutType": "inline",
+                            "text": "次边框",
+                            "bindKey": "minorBdColorRang",
+                            "desc": "用于设置主题样式下的次要边框应用在组件的哪个区域范围",
+                            "placeholder": "请选择",
+                            "multiple":true,
+                            "dictionary": [
+                                {
+                                    "label": "组件",
+                                    "value": "global"
+                                },
+                                {
+                                    "label": "表格",
+                                    "value": "table"
+                                },
+                                {
+                                    "label": "单元格",
+                                    "value": "cell"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "select",
+                            "layoutType": "inline",
+                            "text": "低边框",
+                            "bindKey": "lowBdColorRang",
+                            "desc": "用于设置主题样式下的低级边框应用在组件的哪个区域范围",
+                            "placeholder": "请选择",
+                            "multiple":true,
+                            "dictionary": [
+                                {
+                                    "label": "组件",
+                                    "value": "global"
+                                },
+                                {
+                                    "label": "表格",
+                                    "value": "table"
+                                },
+                                {
+                                    "label": "单元格",
+                                    "value": "cell"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "select",
+                            "layoutType": "inline",
+                            "text": "主背景",
+                            "bindKey": "mainBgColorRang",
+                            "desc": "用于设置主题样式下的主要背景应用在组件的哪个区域范围",
+                            "placeholder": "请选择",
+                            "multiple":true,
+                            "dictionary": [
+                                {
+                                    "label": "组件",
+                                    "value": "global"
+                                },
+                                {
+                                    "label": "表格",
+                                    "value": "table"
+                                },
+                                {
+                                    "label": "单元格",
+                                    "value": "cell"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "select",
+                            "layoutType": "inline",
+                            "text": "次背景",
+                            "bindKey": "minorBgColorRang",
+                            "desc": "用于设置主题样式下的次要背景应用在组件的哪个区域范围",
+                            "placeholder": "请选择",
+                            "multiple":true,
+                            "dictionary": [
+                                {
+                                    "label": "组件",
+                                    "value": "global"
+                                },
+                                {
+                                    "label": "表格",
+                                    "value": "table"
+                                },
+                                {
+                                    "label": "单元格",
+                                    "value": "cell"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "select",
+                            "layoutType": "inline",
+                            "text": "低背景",
+                            "bindKey": "lowBgColorRang",
+                            "desc": "用于设置主题样式下的低级背景应用在组件的哪个区域范围",
+                            "placeholder": "请选择",
+                            "multiple":true,
+                            "dictionary": [
+                                {
+                                    "label": "组件",
+                                    "value": "global"
+                                },
+                                {
+                                    "label": "表格",
+                                    "value": "table"
+                                },
+                                {
+                                    "label": "单元格",
+                                    "value": "cell"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "table",
+                    "text": "主题样式",
+                    "bindKey": "themeList",
+                    "tabText": "主题[index]",
+                    "children": [
+                        {
+                            "type": "select",
+                            "layoutType": "inline",
+                            "text": "主题标识",
+                            "bindKey": "key",
+                            "desc": "用于设置主题的标识，此项需要搭配自定义开发切换主题的功能，例如：蓝色标识为blue，用户切换主题的时候存储到数据库中的标识为blue，则这里选择blue",
+                            "default": "",
+                            "placeholder": "例如：blue",
+                            "ctrlAttrObject": {
+                                "mode": "combobox"
+                            },
+                            "dictionary": [
+                                {
+                                    "label": "red",
+                                    "value": "red"
+                                },
+                                {
+                                    "label": "green",
+                                    "value": "green"
+                                },
+                                {
+                                    "label": "blue",
+                                    "value": "blue"
+                                },
+                                {
+                                    "label": "zwblue",
+                                    "value": "zwblue"
+                                },
+                                {
+                                    "label": "inblue",
+                                    "value": "inblue"
+                                },
+                                {
+                                    "label": "ycgreen",
+                                    "value": "ycgreen"
+                                },
+                                {
+                                    "label": "black",
+                                    "value": "black"
+                                },
+                                {
+                                    "label": "orange",
+                                    "value": "orange"
+                                },
+                                {
+                                    "label": "elegant",
+                                    "value": "elegant"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "colorPicker",
+                            "layoutType": "inline",
+                            "text": "主要颜色",
+                            "bindKey": "mainColor",
+                            "desc": "主题的主要颜色",
+                            "placeholder": "请选择颜色",
+                            "display": "@[key]"
+                        },
+                        {
+                            "type": "colorPicker",
+                            "layoutType": "inline",
+                            "text": "次要颜色",
+                            "bindKey": "minorColor",
+                            "desc": "主题的次要颜色",
+                            "placeholder": "请选择颜色",
+                            "display": "@[key]"
+                        },
+                        {
+                            "type": "colorPicker",
+                            "layoutType": "inline",
+                            "text": "低级颜色",
+                            "bindKey": "lowColor",
+                            "desc": "主题的低级颜色",
+                            "placeholder": "请选择颜色",
+                            "display": "@[key]"
+                        },
+                        {
+                            "type": "colorPicker",
+                            "layoutType": "inline",
+                            "text": "主要边框",
+                            "bindKey": "mainBdColor",
+                            "desc": "主题的主要边框颜色",
+                            "placeholder": "请选择颜色",
+                            "display": "@[key]"
+                        },
+                        {
+                            "type": "colorPicker",
+                            "layoutType": "inline",
+                            "text": "次要边框",
+                            "bindKey": "minorBdColor",
+                            "desc": "主题的次要边框颜色",
+                            "placeholder": "请选择颜色",
+                            "display": "@[key]"
+                        },
+                        {
+                            "type": "colorPicker",
+                            "layoutType": "inline",
+                            "text": "低级边框",
+                            "bindKey": "lowBdColor",
+                            "desc": "主题的次要边框颜色",
+                            "placeholder": "请选择颜色",
+                            "display": "@[key]"
+                        },
+                        {
+                            "type":"group",
+                            "text":"主要背景",
+                            "display": "@[key]",
+                            "children":[
+                                {
+                                    "type": "colorPicker",
+                                    "layoutType": "inline",
+                                    "text": "背景色",
+                                    "bindKey": "mainBgColor",
+                                    "placeholder": "请选择颜色",
+                                    "default": {}
+                                },
+                                {
+                                    "type": "multiBackground",
+                                    "text": "多背景图",
+                                    "tabText": "背景[index]",
+                                    "bindKey": "mainBgList",
+                                    "desc":"支持同时设置多个背景图片、渐变色作为背景",
+                                    "ctrlAttrObject":{
+                                        "maxSize":10485760,
+                                        "suffix":["jpg","jpeg","png","gif","bmp"]
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "type":"group",
+                            "text":"次要背景",
+                            "display": "@[key]",
+                            "children":[
+                                {
+                                    "type": "colorPicker",
+                                    "layoutType": "inline",
+                                    "text": "背景色",
+                                    "bindKey": "minorBgColor",
+                                    "placeholder": "请选择颜色",
+                                    "default": {}
+                                },
+                                {
+                                    "type": "multiBackground",
+                                    "text": "多背景图",
+                                    "tabText": "背景[index]",
+                                    "bindKey": "minorBgList",
+                                    "desc":"支持同时设置多个背景图片、渐变色作为背景",
+                                    "ctrlAttrObject":{
+                                        "maxSize":10485760,
+                                        "suffix":["jpg","jpeg","png","gif","bmp"]
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "type": "group",
+                            "text": "低级背景",
+                            "display": "@[key]",
+                            "children": [
+                                {
+                                    "type": "colorPicker",
+                                    "layoutType": "inline",
+                                    "text": "背景色",
+                                    "bindKey": "lowBgColor",
+                                    "placeholder": "请选择颜色",
+                                    "default": {}
+                                },
+                                {
+                                    "type": "multiBackground",
+                                    "text": "多背景图",
+                                    "tabText": "背景[index]",
+                                    "bindKey": "lowBgList",
+                                    "desc": "支持同时设置多个背景图片、渐变色作为背景",
+                                    "ctrlAttrObject": {
+                                        "maxSize": 10485760,
+                                        "suffix": [
+                                            "jpg",
+                                            "jpeg",
+                                            "png",
+                                            "gif",
+                                            "bmp"
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    "default":[
+                        {
+                          "key": "red",
+                          "mainBdColor": {
+                            "hex": "#E21A1A",
+                            "hex8": "#E21A1AFF"
+                          }
+                        },
+                        {
+                          "key": "green",
+                          "mainBdColor": {
+                            "hex": "#0EAF64",
+                            "hex8": "#0EAF64FF"
+                          }
+                        },
+                        {
+                          "key": "blue",
+                          "mainBdColor": {
+                            "hex": "#0073CA",
+                            "hex8": "#0073CAFF"
+                          }
+                        },
+                        {
+                          "key": "inblue",
+                          "mainBdColor": {
+                            "hex": "#0080FF",
+                            "hex8": "#0080FFFF"
+                          }
+                        },
+                        {
+                          "key": "ycgreen",
+                          "mainBdColor": {
+                            "hex": "#026A52",
+                            "hex8": "#026A52FF"
+                          }
+                        },
+                        {
+                          "key": "black",
+                          "mainBdColor": {
+                            "hex": "#333333",
+                            "hex8": "#333333FF"
+                          }
+                        },
+                        {
+                          "key": "orange",
+                          "mainBdColor": {
+                            "hex": "#ff6a00",
+                            "hex8": "#ff6a00FF"
+                          }
+                        },
+                        {
+                          "key": "elegant",
+                          "mainBdColor": {
+                            "hex": "#438eb9",
+                            "hex8": "#438eb9FF"
+                          }
+                        },
+                        {
+                          "key": "zwblue",
+                          "mainBdColor": {
+                            "hex": "#0086d9",
+                            "hex8": "#0086d9FF"
+                          }
+                        }
+                      ]
+                }
+            ]
+        },
+        {
+            "type": "group",
+            "text": "样式设置",
+            "desc": "点击？查看样式设置用法指南",
+            "helpUrl": "",
+            "children": [
+                {
+                    "type": "box",
+                    "layoutType": "block",
+                    "text": "内外边距",
+                    "bindKey": "box"
+                },
+                {
+                    "type": "inlineGroup",
+                    "text": "宽高",
+                    "children": [
+                        {
+                            "type": "input",
+                            "layoutType": "block",
+                            "text": "宽",
+                            "desc": "填写auto则为自适应，或者使用px、%、vw等单位，比如100%、100px、100vw等等",
+                            "bindKey": "width",
+                            "width": "60px",
+                            "default": "auto"
+                        },
+                        {
+                            "type": "input",
+                            "layoutType": "block",
+                            "text": "高",
+                            "desc": "填写auto则为自适应，或者使用px、%、vh等单位，比如100%、100px、100vh等等",
+                            "bindKey": "height",
+                            "width": "60px",
+                            "default": "auto"
+                        }
+                    ]
+                },
+                {
+                    "type": "group",
+                    "text": "背景设置",
+                    "desc": "点击？查看背景设置用法指南",
+                    "helpUrl": "",
+                    "children": [
+                        {
+                            "type": "colorPicker",
+                            "layoutType": "inline",
+                            "text": "背景色",
+                            "bindKey": "bgColor",
+                            "placeholder": "请选择颜色",
+                            "default": {}
+                        },
+                        {
+                            "type": "multiBackground",
+                            "text": "多背景图",
+                            "tabText": "背景[index]",
+                            "bindKey": "bgList",
+                            "desc":"支持同时设置多个背景图片、渐变色作为背景，使用此属性则背景图片的设置作废",
+                            "ctrlAttrObject":{
+                                "maxSize":10485760,
+                                "suffix":["jpg","jpeg","png","gif","bmp"]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "border",
+                    "layoutType": "block",
+                    "text": "边框",
+                    "bindKey": "border"
+                },
+                {
+                    "type": "input",
+                    "layoutType": "inline",
+                    "text": "边框阴影",
+                    "bindKey": "boxShadow",
+                    "default": ""
+                },
+                {
+                    "type": "font",
+                    "layoutType": "block",
+                    "text": "文字",
+                    "bindKey": "font"
+                }
+            ]
+        },
+        {
+            "type": "group",
+            "text": "表单套模板设置",
+            "desc": "用于设置内容生成的表单结合样式表单模板自动生成表单的时候的一些生成设置",
+            "helpUrl": "",
+            "children": [
+                {
+                    "type": "select",
+                    "layoutType": "block",
+                    "text": "表格属性覆盖范围",
+                    "bindKey": "tableStyleCoverRange",
+                    "desc":"设置表单模板中的表格属性覆盖内容表单状态下表格的属性范围",
+                    "dictionary": [
+                        {
+                            "label": "边框显示",
+                            "value": "tableCover_border_show"
+                        },
+                        {
+                            "label": "边框合并",
+                            "value": "tableCover_border_merge"
+                        },
+                        {
+                            "label": "固定布局",
+                            "value": "tableCover_layout_fiexd"
+                        },
+                        {
+                            "label": "边框样式",
+                            "value": "tableCover_border_style"
+                        },
+                        {
+                            "label": "边框大小",
+                            "value": "tableCover_border_size"
+                        },
+                        {
+                            "label": "边框颜色",
+                            "value": "tableCover_border_color"
+                        },
+                        {
+                            "label": "外边框",
+                            "value": "tableCover_border_out"
+                        },
+                        {
+                            "label": "组件背景",
+                            "value": "tableCover_component_bg"
+                        },
+                        {
+                            "label": "组件边框",
+                            "value": "tableCover_component_border"
+                        },
+                        {
+                            "label": "组件阴影",
+                            "value": "tableCover_component_shadow"
+                        }
+                    ],
+                    "multiple":true,
+                    "default": [
+                        "tableCover_border_show",
+                        "tableCover_border_merge",
+                        "tableCover_layout_fiexd",
+                        "tableCover_border_style",
+                        "tableCover_border_size",
+                        "tableCover_border_color",
+                        "tableCover_border_out"
+                    ]
+                },
+                {
+                    "type": "select",
+                    "layoutType": "block",
+                    "text": "单元格样式覆盖定义",
+                    "bindKey": "cellStyleCoverRange",
+                    "desc":"设置表单模板中的表格单元格属性覆盖内容表单状态下表格单元格的属性范围",
+                    "dictionary": [
+                        {
+                            "label": "主题应用",
+                            "value": "tableCover_cell_theme"
+                        },
+                        {
+                            "label": "外边框",
+                            "value": "tableCover_cell_border"
+                        },
+                        {
+                            "label": "边框样式",
+                            "value": "tableCover_cell_borderStyle"
+                        },
+                        {
+                            "label": "边框大小",
+                            "value": "tableCover_cell_borderWidth"
+                        },
+                        {
+                            "label": "边框颜色",
+                            "value": "tableCover_cell_borderColor"
+                        },
+                        {
+                            "label": "文字样式",
+                            "value": "tableCover_cell_font"
+                        },
+                        {
+                            "label": "背景样式",
+                            "value": "tableCover_cell_bg"
+                        }
+                    ],
+                    "multiple":true,
+                    "default": [
+                        "tableCover_cell_theme",
+                        "tableCover_cell_border",
+                        "tableCover_cell_borderStyle",
+                        "tableCover_cell_borderWidth",
+                        "tableCover_cell_borderColor",
+                        "tableCover_cell_font",
+                        "tableCover_cell_bg"
+                    ]
+                }
+            ]
+        }
+    ],
+    "innerComName": "单元格",
+    "innerAttr": [
+        {
+            "type": "input",
+            "layoutType": "inline",
+            "text": "样式类名",
+            "bindKey": "cellClass",
+            "default": "",
+            "desc":"给当前单元格增加样式类名，多个可逗号隔开"
+        },
+        {
+            "type": "group",
+            "text": "主题应用设置",
+            "desc": "点击？查看主题应用设置用法指南",
+            "children":[
+                {
+                    "type": "switch",
+                    "layoutType": "inline",
+                    "text": "边框颜色",
+                    "bindKey": "openTdThemeBdColor",
+                    "desc":"设置单元格的边框颜色是否跟随主题变化而变化，变化的前提条件是此处的单元格的边框颜色设置过才会覆盖，如果设置过不想跟随主题可以关闭此属性，如果想要主题变化生效可以随性设置任何颜色值",
+                    "default": true
+                },
+                {
+                    "type": "switch",
+                    "layoutType": "inline",
+                    "text": "文字颜色",
+                    "bindKey": "openTdThemeFontColor",
+                    "desc":"设置单元格的文字颜色是否跟随主题变化而变化，变化的前提条件是此处的单元格的文字颜色设置过才会覆盖，如果设置过不想跟随主题可以关闭此属性，如果想要主题变化生效可以随性设置任何颜色值",
+                    "default": true
+                },
+                {
+                    "type": "switch",
+                    "layoutType": "inline",
+                    "text": "背景颜色",
+                    "bindKey": "openTdThemeBgColor",
+                    "desc":"设置单元格的背景颜色是否跟随主题变化而变化，变化的前提条件是此处的单元格的背景颜色设置过才会覆盖，如果设置过不想跟随主题可以关闭此属性，如果想要主题变化生效可以随性设置任何颜色值",
+                    "default": true
+                }
+            ]
+        },
+        {
+            "type": "group",
+            "text": "样式设置",
+            "desc": "点击？查看样式设置用法指南",
+            "helpUrl": "",
+            "children": [
+                {
+                    "type": "select",
+                    "layoutType": "inline",
+                    "text": "水平对齐",
+                    "bindKey": "align",
+                    "dictionary": [
+                        {
+                            "label": "跟随上下文",
+                            "value": ""
+                        },
+                        {
+                            "label": "靠左",
+                            "value": "left"
+                        },
+                        {
+                            "label": "居中",
+                            "value": "center"
+                        },
+                        {
+                            "label": "靠右",
+                            "value": "right"
+                        }
+                    ],
+                    "default": ""
+                },
+                {
+                    "type": "select",
+                    "layoutType": "inline",
+                    "text": "垂直对齐",
+                    "bindKey": "valign",
+                    "dictionary": [
+                        {
+                            "label": "跟随上下文",
+                            "value": ""
+                        },
+                        {
+                            "label": "靠上",
+                            "value": "top"
+                        },
+                        {
+                            "label": "居中",
+                            "value": "middle"
+                        },
+                        {
+                            "label": "靠下",
+                            "value": "bottom"
+                        },
+                        {
+                            "label": "基线对齐",
+                            "value": "baseline"
+                        }
+                    ],
+                    "default": ""
+                },
+                {
+                    "type": "group",
+                    "text": "边框设置",
+                    "children": [
+                        {
+                            "type": "select",
+                            "layoutType": "inline",
+                            "text": "样式",
+                            "bindKey": "borderStyle",
+                            "dictionary": [
+                                {
+                                    "label": "无",
+                                    "value": "none"
+                                },
+                                {
+                                    "label": "实线",
+                                    "value": "solid"
+                                },
+                                {
+                                    "label": "点虚线",
+                                    "value": "dotted"
+                                },
+                                {
+                                    "label": "虚线",
+                                    "value": "dashed"
+                                }
+                            ],
+                            "default": "none"
+                        },
+                        {
+                            "type": "inputNumber",
+                            "layoutType": "inline",
+                            "text": "宽度px",
+                            "bindKey": "borderWidth",
+                            "default":1
+                        },
+                        {
+                            "type": "colorPicker",
+                            "layoutType": "inline",
+                            "text": "颜色",
+                            "bindKey": "borderColor",
+                            "placeholder": "请选择颜色",
+                            "default": {}
+                        },
+                        {
+                            "type": "select",
+                            "layoutType": "inline",
+                            "text": "边框",
+                            "bindKey": "borderPosition",
+                            "multiple":true,
+                            "dictionary": [
+                                {
+                                    "label": "顶部",
+                                    "value": "top"
+                                },
+                                {
+                                    "label": "横向中间",
+                                    "value": "hcenter"
+                                },
+                                {
+                                    "label": "底部",
+                                    "value": "bottom"
+                                },
+                                {
+                                    "label": "左边",
+                                    "value": "left"
+                                },
+                                {
+                                    "label": "垂直中间",
+                                    "value": "vcenter"
+                                },
+                                {
+                                    "label": "右边",
+                                    "value": "right"
+                                }
+                            ],
+                            "default":[]
+                        }
+                    ]
+                },
+                {
+                    "type": "group",
+                    "text": "背景设置",
+                    "desc": "点击？查看背景设置用法指南",
+                    "helpUrl": "",
+                    "children": [
+                        {
+                            "type": "colorPicker",
+                            "layoutType": "inline",
+                            "text": "背景色",
+                            "bindKey": "bgColor",
+                            "placeholder": "请选择颜色",
+                            "default": {}
+                        },
+                        {
+                            "type": "multiBackground",
+                            "text": "多背景图",
+                            "tabText": "背景[index]",
+                            "bindKey": "bgList",
+                            "desc":"支持同时设置多个背景图片、渐变色作为背景，使用此属性则背景图片的设置作废",
+                            "ctrlAttrObject":{
+                                "maxSize":10485760,
+                                "suffix":["jpg","jpeg","png","gif","bmp"]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "font",
+                    "layoutType": "block",
+                    "text": "文字",
+                    "bindKey": "font"
+                }
+            ]
+        },
+        {
+            "type": "group",
+            "text": "高级",
+            "desc": "点击？查看高级设置用法指南",
+            "children": [
+                {
+                    "type": "actionSelect",
+                    "layoutType": "block",
+                    "text": "点击时动作",
+                    "bindKey": "clickFunction",
+                    "desc": "点击的时候会调用设置的自定义函数，接收参数为格式为{...自定义的,row：行数据,cell：单元格数据,rowIndex：行索引,cellIndex：单元格的索引}",
+                    "multiple": true,
+                    "ctrlAttrObject": {
+                        "customActionTab": false
+                    }
+                }
+            ]
+        }
+    ]
+}

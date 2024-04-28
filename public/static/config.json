@@ -71,6 +71,22 @@
             "comType": "common",
             "comLangue": "vue",
             "innerComName": "格子"
+        },
+        {
+            "classId": "idm.componet.layout.itablelayout",
+            "comName": "表格布局",
+            "className": "ITableLayout",
+            "comType": "common",
+            "comLangue": "vue",
+            "innerComName": "单元格"
+        },
+        {
+            "classId": "idm.componet.layout.icollapse",
+            "comName": "折叠面板",
+            "className": "ICollapse",
+            "comType": "common",
+            "comLangue": "vue",
+            "innerComName": "容器"
         }
     ]
 }

@@ -92,6 +92,10 @@ import Vue from 'vue'
                         return null
                     }
             }
+            //组件实例
+            moduleObject.getComponentVm = function(){
+                return vm.$children[0].$refs[vm.componentName];
+            }
             console.log("渲染的ID>>>>", moduleObject.id);
         }
     })
