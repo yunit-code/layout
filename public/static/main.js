@@ -170,42 +170,12 @@
             return that
         },
         linkCss: function (src,reload, fun) {//往页面引入css
-            var head = document.getElementsByTagName('head')[0] || document.head || document.documentElement
-            var linkList = head.getElementsByTagName('link')
-            var isExists = false
-            for (var index = 0; index < linkList.length; index++) {
-                var element = linkList[index]
-                if(element.getAttribute('objectID')=='IDM-Module-'+src){
-                    if(reload){
-                        element.remove()
-                    }else{
-                        isExists = true
-                    }
-                }
-            }
-            if(isExists){
-                //存在则不再次加载css
-                fun&&fun()
-                return
-            }
-            var link = document.createElement('link')
-            link.setAttribute('rel', 'stylesheet')
-            link.setAttribute('type', 'text/css')
-            link.setAttribute('href', src)
-            link.setAttribute('objectID', 'IDM-Module-'+src)
-            if (typeof fun === 'function') {
-                if (window.attachEvent) {
-                    link.onreadystatechange = function () {
-                        var r = link.readyState
-                        if (r === 'loaded' || r === 'complete') {
-                            link.onreadystatechange = null
-                            fun()
-                        }
-                    }
-                } else {
-                    link.onload = fun
-                }
-            }
+            var head = document.getElementsByTagName('HEAD').item(0)
+            var link = document.createElement("link")
+            link.type = "text/css"
+            link.rel = "stylesheet"
+            link.media = "screen"
+            link.href = src
             head.appendChild(link)
         }
     };
