@@ -342,7 +342,7 @@ export default {
         }
         if (this.moduleObject.env == "develop") {
           if(!this.activeTab.length){
-            this.activeTab.push(this.propData.TabPaneList[0].key)
+            this.activeTab = this.propData.TabPaneList.map(item=>item.key);
           }
         }
         //设置初始化状态打开状态
