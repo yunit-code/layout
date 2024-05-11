@@ -540,6 +540,7 @@ export default {
         "boxShadow",
         "bgColor",
         "tableBdSize",
+        "tableBox",
       ];
       for (const iKey in keyList) {
         const key = keyList[iKey];
@@ -579,6 +580,15 @@ export default {
                   "border-width": element + "px",
                 },
                 "tableBdSize-" + this.moduleObject.id
+              );
+              break;
+            case "tableBox":
+              let cellStyle = {};
+              IDM.style.setBoxStyle(cellStyle, element)
+              IDM.setStyleToPageHead(
+                `${this.moduleObject.id}>.idm-table-layout-box>table>tbody>tr>td`,
+                cellStyle,
+                "tableBox-" + this.moduleObject.id
               );
               break;
           }
@@ -1913,6 +1923,7 @@ function setTableCellStyle(props) {
   if (Object.keys(props.bgList?.style || {}).length) {
     Object.assign(cellStyle, props.bgList.style);
   }
+  props.box&&IDM.style.setBoxStyle(cellStyle, props.box);
 
   let cellAttr = {
     align: props?.align || "",

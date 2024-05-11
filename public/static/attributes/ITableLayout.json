@@ -109,6 +109,19 @@
             ]
         },
         {
+            "type": "group",
+            "text": "单元格内外边距",
+            "desc": "统一设置单元格的内外边距",
+            "children":[
+                {
+                    "type": "box",
+                    "layoutType": "block",
+                    "text": "内外边距",
+                    "bindKey": "tableBox"
+                }
+            ]
+        },
+        {
             "type": "table",
             "tabText":"列[index]",
             "text": "列宽设置",
@@ -1065,6 +1078,10 @@
                         {
                             "label": "组件阴影",
                             "value": "tableCover_component_shadow"
+                        },
+                        {
+                            "label": "内外边距",
+                            "value": "tableCover_box"
                         }
                     ],
                     "multiple":true,
@@ -1075,7 +1092,8 @@
                         "tableCover_border_style",
                         "tableCover_border_size",
                         "tableCover_border_color",
-                        "tableCover_border_out"
+                        "tableCover_border_out",
+                        "tableCover_box"
                     ]
                 },
                 {
@@ -1112,6 +1130,10 @@
                         {
                             "label": "背景样式",
                             "value": "tableCover_cell_bg"
+                        },
+                        {
+                            "label": "内外边距",
+                            "value": "tableCover_cell_box"
                         }
                     ],
                     "multiple":true,
@@ -1122,7 +1144,8 @@
                         "tableCover_cell_borderWidth",
                         "tableCover_cell_borderColor",
                         "tableCover_cell_font",
-                        "tableCover_cell_bg"
+                        "tableCover_cell_bg",
+                        "tableCover_cell_box"
                     ]
                 }
             ]
@@ -1306,6 +1329,19 @@
                                 }
                             ],
                             "default":[]
+                        }
+                    ]
+                },
+                {
+                    "type": "group",
+                    "text": "内外边距",
+                    "desc": "设置单元格的内外边距",
+                    "children":[
+                        {
+                            "type": "box",
+                            "layoutType": "block",
+                            "text": "内外边距",
+                            "bindKey": "box"
                         }
                     ]
                 },
