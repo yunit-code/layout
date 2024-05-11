@@ -1,8 +1,18 @@
 (function(window){
-    var whir = {};
+    var whir = {}, lastMdule
+    if(window.IDM&&window.IDM.module&&window.IDM.module.queue&&window.IDM.module.queue.moduleMain.length>0){
+        lastMdule = window.IDM.module.queue.moduleMain[window.IDM.module.queue.moduleMain.length-1]
+    }
+    var resource={
+        js:{
+            vendors:'js/chunk-vendors',
+            index:'js/index',
+        },
+        css:['css/index','css/chunk-vendors']
+    }, doc = document, config = {}
     whir.res = {
         _cv : '', // 组件版本，用于更新
-        _lk: 'layout/2.2.0',
+        _lk: 'layout',
         loadJs: function (name, url, cb) { //动态加载js文件并缓存
             if (window.localStorage) {
                 var xhr, _this = this, js = localStorage.getItem(name)
@@ -186,18 +196,6 @@
             head.appendChild(link)
         }
     };
-    //获取IDM的加载队列最后一条信息，旧模式，后期不兼容，会移除
-    var lastMdule
-    if(window.IDM&&window.IDM.module&&window.IDM.module.queue&&window.IDM.module.queue.moduleMain.length>0){
-        lastMdule = window.IDM.module.queue.moduleMain[window.IDM.module.queue.moduleMain.length-1]
-    }
-    var resource={
-        js:{
-            vendors:'js/chunk-vendors',
-            index:'js/index',
-        },
-        css:['css/index','css/chunk-vendors']
-    }, doc = document,
     getPath = function(){
         var head = doc.getElementsByTagName('head')[0] || doc.head || doc.documentElement
         var js = head.getElementsByTagName('script'), jsPath = js[js.length - 1].src
