@@ -443,6 +443,12 @@ export default {
      */
     getUserDefinedData() {
       let that = this;
+      
+      let resData = IDM.page?.getComponentAttrUserData?.(this.moduleObject.packageid)
+      if(Array.isArray(resData)) {
+        that.userDefinedMediaObjectList = resData;
+        return
+      }
       const res = IDM.http.getSync(IDM.setting.api.dynamicAttributeListUrl, {
         urlData: JSON.stringify({
           marketModuleId: this.moduleObject.comId,
