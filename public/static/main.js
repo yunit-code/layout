@@ -9,7 +9,20 @@
             index:'js/index',
         },
         css:['css/index','css/chunk-vendors']
-    }, doc = document, config = {}
+    }, doc = document, config = {},
+    error = function(msg){
+        window.console && console.error && console.error('IDM hint: ' + msg);
+    },
+    getPath = function(){
+        var head = doc.getElementsByTagName('head')[0] || doc.head || doc.documentElement
+        var js = head.getElementsByTagName('script'), jsPath = js[js.length - 1].src
+        jsPath = document.currentScript.src||jsPath
+        return jsPath.substring(0, jsPath.lastIndexOf('/') + 1);
+    }(),
+    isOpera = typeof opera !== 'undefined' && opera.toString() === '[object Opera]';
+    config.resources = {}; //记录资源物理路径
+    config.status = {}; //记录资源加载状态
+    config.timeout = 10; //符合规范的资源请求最长等待秒数
     whir.res = {
         _cv : '', // 组件版本，用于更新
         _lk: 'layout',
@@ -150,7 +163,7 @@
             }
             var onCallback = function(apps){
                 apps.length > 1 ?
-                loadjs(apps.slice(1), this.callback)
+                whir.res.loadjs(apps.slice(1), this.callback)
                 : ( typeof this.callback === 'function' && this.callback.call(this) );
             }
             config.resources[item] = url
@@ -196,12 +209,6 @@
             head.appendChild(link)
         }
     };
-    getPath = function(){
-        var head = doc.getElementsByTagName('head')[0] || doc.head || doc.documentElement
-        var js = head.getElementsByTagName('script'), jsPath = js[js.length - 1].src
-        jsPath = document.currentScript.src||jsPath
-        return jsPath.substring(0, jsPath.lastIndexOf('/') + 1);
-    }()
     resource.css&&resource.css.forEach(function(item){
         var url = getPath + item + '.css'
         whir.res.linkCss(url,false)
