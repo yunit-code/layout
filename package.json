@@ -6,7 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build && npm run zip",
     "lint": "vue-cli-service lint",
-    "zip": "idm zip"
+    "zip": "idm zip -ml"
   },
   "dependencies": {
     "ant-design-vue": "^1.7.6",
@@ -15,7 +15,7 @@
     "vue": "^2.6.11"
   },
   "devDependencies": {
-    "@idm-modules/cli": "latest",
+    "@idm-modules/cli": "1.1.2",
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-eslint": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
