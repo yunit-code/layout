@@ -150,7 +150,7 @@ module.exports = {
           // chunkFilename: `${assetsDir}/css/[name].css`
         },
         // 开启 CSS source maps?
-        sourceMap: true,
+        sourceMap: isDev,
         // css预设器配置项
         // 启用 CSS modules for all css / pre-processor files.
         requireModuleExtension: true,
