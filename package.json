@@ -6,7 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build && npm run zip",
     "lint": "vue-cli-service lint",
-    "zip": "idm zip -ml"
+    "zip": "idm zip"
   },
   "dependencies": {
     "ant-design-vue": "^1.7.6",
