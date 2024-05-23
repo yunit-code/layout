@@ -1,10 +1,17 @@
 
 const path = require('path')
+// const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const webpack = require('webpack');
+const isDev = process.env.NODE_ENV === 'development'
 function resolve(dir) {
     return path.join(__dirname, dir)
 }
-const isDev = process.env.NODE_ENV === 'development'
+
+const fileMode = process.env.FILE_MODE || 'dynamic'
+const entryFileMap = {
+  dynamic: 'src/main.js',
+  static: 'src/mainStatic.js'
+}
 let assetsDir = "./static";
 let getAssetsDir = function(filename) {
   return path.posix.join(assetsDir, filename);
@@ -39,6 +46,23 @@ let getGUID = function(len, radix) {
 
   return uuid.join("");
 }
+const splitChunks = {
+  chunks: 'async',
+  minSize: 2000000,
+  minChunks: 1,
+  maxAsyncRequests: 30,
+  maxInitialRequests: 30,
+  enforceSizeThreshold: 50000,
+  cacheGroups: {
+    vendors: {
+      name: 'chunk-vendors',
+      test: /[\\/]node_modules[\\/]/,
+      enforce: true,
+      reuseExistingChunk: true,
+      priority: 0
+    }
+  },
+}
 const externals = {
   vue: 'Vue',
   'vue-router': 'VueRouter',
@@ -48,15 +72,12 @@ const externals = {
 }
 module.exports = {
     publicPath:"./",
-    productionSourceMap: false,
     assetsDir:assetsDir,
-    transpileDependencies: [
-      /[/\\]node_modules[/\\](.+?)?ant-design_colors(.*)[/\\]colors/
-  ],
+    productionSourceMap: false,
     pages:{
       index: {
         // page 的入口
-        entry: 'src/main.js',
+        entry: entryFileMap[fileMode],
         // 模板来源
         template: 'public/index.html',
         // 在 dist/index.html 的输出
@@ -70,7 +91,8 @@ module.exports = {
             "./lib/axios.min.js",
             "./lib/qs.js",
             "./lib/lodash.min.js",
-            "./lib/idm.core.js"
+            "./lib/idm.core.js",
+            "./lib/iconfont/iconfont.js"
         ],
         includeCss:[
           "./lib/idm.base.css"
@@ -118,20 +140,22 @@ module.exports = {
       //   .use(require('webpack-bundle-analyzer').BundleAnalyzerPlugin)
     },
     configureWebpack: {
+      optimization: fileMode == 'dynamic' ?  undefined : { splitChunks },
       plugins: [
-        new webpack.optimize.LimitChunkCountPlugin({
-          maxChunks: 1
-        }),
+        // new webpack.optimize.LimitChunkCountPlugin({
+        //   maxChunks: 1
+        // }),
         // new MiniCssExtractPlugin({
         //   // 修改打包后css文件名
         //   filename: `${assetsDir}/css/[name].css`,
         //   chunkFilename: `${assetsDir}/css/[name].css`
-        // })
+        // }),
+        new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /zh-cn/)
       ],
       output: {
         // 输出重构  打包编译后的 文件名称
         filename: `${assetsDir}/js/[name].js`,
-        // chunkFilename: `${assetsDir}/js/[name].js`,
+        chunkFilename: `${assetsDir}/js/[name].js`,
         jsonpFunction:JSON.stringify("webpackJsonp_"+getGUID()+"_"+new Date().getTime())
       },
       resolve:{
@@ -144,9 +168,9 @@ module.exports = {
     },
     css: {
         // 是否使用css分离插件 ExtractTextPlugin
-        extract:  isDev ? false : {
+        extract: isDev ? false : {
           filename: `${assetsDir}/css/[name].css`,
-          // chunkFilename: `${assetsDir}/css/[name].css`
+          chunkFilename: `${assetsDir}/css/[name].css`
         },
         // 开启 CSS source maps?
         sourceMap: isDev,

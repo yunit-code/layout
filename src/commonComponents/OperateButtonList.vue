@@ -79,6 +79,13 @@
 
 <script>
 import ILoopContainer from "../mixins/ILoopContainer";
+
+import 'ant-design-vue/lib/dropdown/style/css';
+import 'ant-design-vue/lib/menu/style/css';
+import {
+  Dropdown,
+  Menu
+} from 'ant-design-vue';
 export default {
   name: "OperateButtonList",
   mixins: [ILoopContainer],
@@ -87,6 +94,10 @@ export default {
       MoreButtonList: [],
       commonButtonList: [],
     };
+  },
+  components: {
+    [Dropdown.name]: Dropdown,
+    [Menu.name]: Menu,
   },
   props: {
     propData: {

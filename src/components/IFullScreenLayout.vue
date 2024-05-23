@@ -352,6 +352,10 @@
  * 兼容方案是通过 MutationObserver API 实现的，通过监听 dom 的变化并加以判断，至此主流浏览器均可运行。非轮询监控，所以不会造成性能问题。
  */
 import ResizeObserver from "resize-observer-polyfill";
+import 'ant-design-vue/lib/tooltip/style/css';
+import {
+  Tooltip,
+} from 'ant-design-vue';
 
 export default {
   name: "IFullScreenLayout",
@@ -400,6 +404,9 @@ export default {
       //隐藏容器的索引
       displayContainerIndex:999999999
     };
+  },
+  components: {
+    [Tooltip.name]: Tooltip
   },
   created() {
     this.moduleObject = this.$root.moduleObject;

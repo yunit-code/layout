@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import Main from './Main.vue'
 import './core/regModule';
 import config from '../public/static/config.json';
 //引入图标
@@ -39,18 +38,6 @@ requireComponent.keys().forEach(fileName => {
     componentConfig.default || componentConfig
   )
 })
-Vue.prototype.IDM = window.IDM;
+
 Vue.config.productionTip = false
 Vue.config.devtools = true
-//这里每次打包都会生成一个随机的变量，唯一，保证能加载到对应的对象
-window[`${process.env.CodeVar}`] = Main;
-// //每次打包都会生成不同的CodeVar
-//这里渲染需要更改，改成实时渲染id
-// new Vue({
-//   render: h => h(Main),
-//   data(){
-//     return {
-//       componentName:"HelloWorld"
-//     }
-//   }
-// }).$mount("#component_202003T6YG1GH0L1YFEREQLKK9")

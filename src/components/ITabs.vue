@@ -87,6 +87,11 @@
 </template>
 
 <script>
+
+import 'ant-design-vue/lib/tabs/style/css';
+import {
+  Tabs
+} from 'ant-design-vue';
 export default {
   name: "ITabs",
   data() {
@@ -102,6 +107,11 @@ export default {
       tabList: [],
       showDragContainer: false,
     };
+  },
+  components: {
+    ["layout220"+Tabs.name]: Tabs,
+    ["layout220"+Tabs.TabPane.name]: Tabs.TabPane,
+    ["layout220"+Tabs.TabContent.name]: Tabs.TabContent,
   },
   props: {},
   created() {

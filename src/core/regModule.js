@@ -1,32 +1,34 @@
 import config from '../../public/static/config.json';
 import Vue from 'vue'
+import Main from '../Main.vue'
 //闭包方法
 (() => {
     //这里把classId+@+version作为入口方法名（组件的包名）
     var defining = {
     };
     config && config.module.forEach(item => {
+
         defining[item.classId + "@" + config.version] = function (moduleObject) {
-            console.log("加载的组件：", moduleObject, item)
+            // console.log("加载的组件：", moduleObject, item)
             //把组件定义的属性返回给核心框架
             moduleObject.compositeAttr = item.compositeAttr;
             //把组件定义的组件内属性返回给核心框架(如果有的话)
-            if (item.innerAttr) {
+            if(item.innerAttr){
                 moduleObject.innerAttr = item.innerAttr;
             }
             //组件内部容器组件的名称
-            if (item.innerComName) {
+            if(item.innerComName){
                 moduleObject.innerComName = item.innerComName;
             }
             var vm = new Vue({
-                render: h => h(window[`${process.env.CodeVar}`]),
+                render: h => h(Main),
                 data() {
                     return {
                         //这里使用本身自己定义的组件名称，从系统维护（moduleObject）取来的怕不准去
                         componentName: item.className + "@"+config.className+"-" + config.version,
                         moduleObject: moduleObject,
                         //需要把默认值传递
-                        propData: moduleObject.props || {}
+                        propData: moduleObject.props||{}
                     }
                 },
                 mounted() {
@@ -41,10 +43,7 @@ import Vue from 'vue'
                 // console.log("实时更新的数据", props)
                 vm.propData = props;
                 // console.log(vm)
-                vm.$children.length > 0 &&
-                    vm.$children[0].$refs[vm.componentName] &&
-                    vm.$children[0].$refs[vm.componentName].propDataWatchHandle &&
-                    vm.$children[0].$refs[vm.componentName].propDataWatchHandle(props);
+                vm.$children.length>0&&vm.$children[0].$refs[vm.componentName] && vm.$children[0].$refs[vm.componentName].propDataWatchHandle && vm.$children[0].$refs[vm.componentName].propDataWatchHandle(props);
             }
             /**
              * 接收消息的方法
@@ -56,7 +55,7 @@ import Vue from 'vue'
              *  isAcross:如果为true则代表发送来源是其他页面的组件，默认为false
              * } object 
              */
-            moduleObject.idmBroadcastMessage = function (object) {
+             moduleObject.idmBroadcastMessage = function (object) {
                 vm.$children.length > 0 &&
                     vm.$children[0].$refs[vm.componentName] &&
                     vm.$children[0].$refs[vm.componentName].receiveBroadcastMessage &&
@@ -65,7 +64,7 @@ import Vue from 'vue'
             /**
              * 交互功能：设置组件的上下文内容值
              * @param {
-             *  type:"定义的类型，已知类型：pageCommonInterface（页面统一接口返回值）、"
+             *  type:"定义的类型，已知类型：pageCommonInterface（页面统一接口返回值）"
              *  Key:"数据key标识，页面每个接口设置的数据集名称，方便识别获取自己需要的数据"
              *  data:"数据集，内容为：字符串 or 数组 or 对象"
              * }
@@ -92,16 +91,12 @@ import Vue from 'vue'
                         return null
                     }
             }
-            //组件实例
-            moduleObject.getComponentVm = function(){
-                return vm.$children[0].$refs[vm.componentName];
-            }
-            console.log("渲染的ID>>>>", moduleObject.id);
+            // console.log("渲染的ID>>>>", moduleObject.id);
         }
     })
     //这里注册了CodeVar变量，就是利用这个变量给这里使用，核心框架调用这里的组件初始化方法，然后这里的方法就给这个变量设置要加载的组件
     //更改完变量后再实时加载渲染下面代码
-
+    
     // new Vue({
     //     render: h => h(window[`${process.env.CodeVar}`]),
     //     data(){
@@ -119,15 +114,15 @@ import Vue from 'vue'
     //     })
     // }else 
     //延时
-    setTimeout(function () {
-        if (window.IDM && window.IDM.url.queryString("className")) {
+    setTimeout(function(){
+        if(window.IDM&&window.IDM.url.queryString("className")){
             config && config.module.forEach(item => {
-                if (item.className == window.IDM.url.queryString("className")) {
+                if(item.className == window.IDM.url.queryString("className")){
                     window[item.classId + "@" + config.version].call(this, {
                         "id": "module_demo"
                     })
                 }
             });
         }
-    }, 100)
+    },100)
 })();

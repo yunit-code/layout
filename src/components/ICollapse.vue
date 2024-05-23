@@ -80,6 +80,11 @@
 </template>
 
 <script>
+
+import 'ant-design-vue/lib/collapse/style/css';
+import {
+  Collapse
+} from 'ant-design-vue';
 export default {
   name: "ICollapse",
   data() {
@@ -96,6 +101,9 @@ export default {
       panelList: [],
       showDragContainer: false,
     };
+  },
+  components: {
+    [Collapse.name]: Collapse
   },
   props: {},
   created() {

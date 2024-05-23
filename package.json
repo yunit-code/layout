@@ -3,8 +3,12 @@
   "version": "2.2.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build && npm run zip",
+    "serve": "npm run serve:dynamic",
+    "serve:static": "cross-env FILE_MODE=static  vue-cli-service serve",
+    "serve:dynamic": "cross-env FILE_MODE=dynamic  vue-cli-service serve",
+    "build": "npm run build:dynamic",
+    "build:static": "cross-env FILE_MODE=static vue-cli-service build",
+    "build:dynamic": "cross-env FILE_MODE=dynamic vue-cli-service build",
     "lint": "vue-cli-service lint",
     "zip": "idm zip"
   },
@@ -20,13 +24,14 @@
     "@vue/cli-plugin-eslint": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
     "babel-eslint": "^10.1.0",
+    "cross-env": "^7.0.3",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
+    "resize-observer-polyfill": "^1.5.1",
     "sass": "^1.32.8",
     "sass-loader": "^8.0.2",
-    "vue-template-compiler": "^2.6.11",
     "svg-sprite-loader": "^4.1.6",
-    "resize-observer-polyfill": "^1.5.1"
+    "vue-template-compiler": "^2.6.11"
   },
   "eslintConfig": {
     "root": true,
