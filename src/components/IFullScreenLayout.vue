@@ -126,7 +126,10 @@
             idm-ctrl-inner
             :idm-ctrl-id="moduleObject.id"
             :idm-container-index="item.itemNo"
-          ></div>
+          >
+            <!--统一的插槽写法，主要用于vue组件，其他语言的脚手架可忽略-->
+            <slot :name="moduleObject.id+item.itemNo"></slot>
+          </div>
         </div>
       </div>
       <!--框选层-->
@@ -357,9 +360,9 @@ export default {
   name: "IFullScreenLayout",
   data() {
     return {
-      moduleObject: {},
-      propData: this.$root.propData.compositeAttr || {},
-      innerAttr: this.$root.propData.innerAttr || [],
+      moduleObject: this._moduleObject||{},
+      propData: this._propData?.compositeAttr||this.$root?.propData?.compositeAttr || {},
+      innerAttr: this._propData?.innerAttr||this.$root?.propData?.innerAttr || [],
       //当前鼠标移动的对象数据
       movePosObject: {
         x: 0,
@@ -401,8 +404,12 @@ export default {
       displayContainerIndex:999999999
     };
   },
+  props: {
+    _moduleObject: Object,
+    _propData: Object
+  },
   created() {
-    this.moduleObject = this.$root.moduleObject;
+    this.moduleObject = this._moduleObject||this.$root.moduleObject;
     this.layoutMode = this.moduleObject.env != "production" ? this.layoutMode : 1;
     if (this.moduleObject?.env == "production") {
       this.getUserDefinedData();
@@ -412,6 +419,8 @@ export default {
     this.convertAttrToStyleObject();
   },
   mounted() {
+    //直接使用组件此处的回调必须的
+    this._moduleObject&&IDM.callBackComponentMountComplete?.apply(this,[this._moduleObject]);
     const that = this;
     this.$nextTick(function (params) {
       // if(this.moduleObject.env=='production'){

@@ -90,7 +90,10 @@
               :idm-ctrl-id="moduleObject.id"
               :idm-container-index="item[indexDataFiled]"
               v-show="!item.hideDragDom"
-            ></div>
+            >
+                <!--统一的插槽写法，主要用于vue组件，其他语言的脚手架可忽略-->
+                <slot :name="moduleObject.id+item[indexDataFiled]"></slot>
+            </div>
           </div>
         </template>
         <!--表格模式-->
@@ -179,7 +182,10 @@
                 :idm-ctrl-id="moduleObject.id"
                 :idm-container-index="item[indexDataFiled] + '_' + sindex"
                 :idm-refresh-container="`${item[indexDataFiled] + '_' + sindex}`"
-              ></div>
+              >
+                <!--统一的插槽写法，主要用于vue组件，其他语言的脚手架可忽略-->
+                <slot :name="moduleObject.id+item[indexDataFiled] + '_' + sindex"></slot>
+              </div>
               <div
                 class="table-field-table-cell"
                 :idm-ctrl-id="moduleObject.id"
@@ -236,9 +242,9 @@ export default {
   mixins: [ILoopContainer],
   data() {
     return {
-      moduleObject: {},
-      propData: this.$root.propData.compositeAttr || {},
-      innerAttr: this.$root.propData.innerAttr || [],
+      moduleObject: this._moduleObject||{},
+      propData: this._propData?.compositeAttr||this.$root?.propData?.compositeAttr || {},
+      innerAttr: this._propData?.innerAttr||this.$root?.propData?.innerAttr || [],
       componentData: [{ idmContainerId: "index0", idmContainerFold: false }],
       //控件读写状态，true代表可编辑状态、false代表只读
       componentEditStatus: false,
@@ -260,16 +266,22 @@ export default {
     AddNewButton,
     OperateButtonList,
   },
-  props: {},
+  props: {
+    _moduleObject: Object,
+    _propData: Object
+  },
   created() {
-    this.moduleObject = this.$root.moduleObject;
+    this.moduleObject = this._moduleObject||this.$root.moduleObject;
     this.initFirstComponentData();
     this.convertAttrToStyleObject();
     if (this.propData.loadDataCreated) {
       this.initData();
     }
   },
-  mounted() {},
+  mounted() {
+    //直接使用组件此处的回调必须的
+    this._moduleObject&&IDM.callBackComponentMountComplete?.apply(this,[this._moduleObject]);
+  },
   destroyed() {},
   methods: {
     /**

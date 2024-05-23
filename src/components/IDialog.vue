@@ -59,7 +59,10 @@
             class="drag_container"
             :idm-ctrl-id="moduleObject.id"
             idm-container-index="1"
-          ></div>
+          >
+            <!--统一的插槽写法，主要用于vue组件，其他语言的脚手架可忽略-->
+            <slot :name="moduleObject.id+1"></slot>
+          </div>
         </div>
         <div class="idm-md-footer" v-if="propData.footerDisplay">
           <a-button
@@ -96,19 +99,24 @@ export default {
   name: "IDialog",
   data() {
     return {
-      moduleObject: {},
-      propData: this.$root.propData.compositeAttr || {},
+      moduleObject: this._moduleObject||{},
+      propData: this._propData?.compositeAttr||this.$root?.propData?.compositeAttr || {},
       dialogVisible: false,
       okLoading: false,
     };
   },
-  props: {},
+  props: {
+    _moduleObject: Object,
+    _propData: Object
+  },
   created() {
-    this.moduleObject = this.$root.moduleObject;
+    this.moduleObject = this._moduleObject||this.$root.moduleObject;
     // console.log(this.moduleObject)
     this.convertAttrToStyleObject();
   },
   mounted() {
+    //直接使用组件此处的回调必须的
+    this._moduleObject&&IDM.callBackComponentMountComplete?.apply(this,[this._moduleObject]);
     //赋值给window提供跨页面调用
     this.$nextTick(function (params) {
       window[this.moduleObject.packageid] = this;
