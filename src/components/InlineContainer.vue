@@ -32,6 +32,9 @@
       zIndex: propData.fixedzIndex,
     }"
   >
+    
+    <!--统一的插槽写法，主要用于vue组件，其他语言的脚手架可忽略-->
+    <slot :name="moduleObject.id"></slot>
     <!--
       组件内部容器
       增加class="drag_container" 必选
@@ -53,17 +56,23 @@ export default {
   name: "InlineContainer",
   data() {
     return {
-      moduleObject: {},
-      propData: this.$root.propData.compositeAttr || {},
+      moduleObject: this._moduleObject||{},
+      propData: this._propData?.compositeAttr||this.$root?.propData?.compositeAttr || {}
     };
   },
-  props: {},
+  props: {
+    _moduleObject: Object,
+    _propData: Object
+  },
   created() {
-    this.moduleObject = this.$root.moduleObject;
+    this.moduleObject = this._moduleObject||this.$root.moduleObject;
     // console.log(this.moduleObject)
     this.convertAttrToStyleObject();
   },
-  mounted() {},
+  mounted() {
+    //直接使用组件此处的回调必须的
+    this._moduleObject&&IDM.callBackComponentMountComplete?.apply(this,[this._moduleObject]);
+  },
   destroyed() {},
   methods: {
     /**
