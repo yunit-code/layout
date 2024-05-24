@@ -38,7 +38,10 @@
         :idm-ctrl-id="moduleObject.id"
         :idm-container-index="(grid.gridGuid||gindex)+'_'+index"
         :idm-refresh-container="`flex-${item}`"
-      ></div>
+      >
+        <!--统一的插槽写法，主要用于vue组件，其他语言的脚手架可忽略-->
+        <slot :name="moduleObject.id+((grid.gridGuid||gindex)+'_'+index)"></slot>
+      </div>
     </div>
   </div>
 </template>
@@ -48,20 +51,24 @@ export default {
   name: "IGridList",
   data() {
     return {
-      moduleObject: {},
-      propData: this.$root.propData.compositeAttr || {},
-      innerAttr: this.$root.propData.innerAttr || [],
+      moduleObject: this._moduleObject||{},
+      propData: this._propData?.compositeAttr||this.$root?.propData?.compositeAttr || {},
+      innerAttr: this._propData?.innerAttr||this.$root?.propData?.innerAttr || [],
     };
   },
-  props: {},
+  props: {
+    _moduleObject: Object,
+    _propData: Object
+  },
   created() {
-    this.moduleObject = this.$root.moduleObject;
+    this.moduleObject = this._moduleObject||this.$root.moduleObject;
     // console.log(this.moduleObject)
     this.convertAttrToStyleObject();
     console.log("组件内的created事件")
   },
   mounted() {
-    console.log("组件内的mounted事件")
+    //直接使用组件此处的回调必须的
+    this._moduleObject&&IDM.callBackComponentMountComplete?.apply(this,[this._moduleObject]);
   },
   destroyed() {},
   methods: {
