@@ -4,11 +4,11 @@ import Main from '../Main.vue'
 //闭包方法
 (() => {
     //这里把classId+@+version作为入口方法名（组件的包名）
-    var defining = {
-    };
+    // var defining = {
+    // };
     config && config.module.forEach(item => {
 
-        defining[item.classId + "@" + config.version] = function (moduleObject) {
+        window[item.classId + "@" + config.version] = function (moduleObject) {
             // console.log("加载的组件：", moduleObject, item)
             //把组件定义的属性返回给核心框架
             moduleObject.compositeAttr = item.compositeAttr;
@@ -105,9 +105,9 @@ import Main from '../Main.vue'
     //       }
     //     }
     //   }).$mount("#这里是核心框架调用传递过来的对象中的要加载进去的容器ID")
-    Object.keys(defining).forEach(key => {
-        window[key] = defining[key];
-    });
+    // Object.keys(defining).forEach(key => {
+    //     window[key] = defining[key];
+    // });
     // if (process.env.NODE_ENV === 'development') {
     //     window["idm.componet.basics.text@1.0.0"].call(this, {
     //         "id": "module_demo"

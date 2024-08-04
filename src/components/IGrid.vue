@@ -246,19 +246,35 @@ export default {
       } else if (Object.keys(this.propData.bgList.style).length) {
         Object.assign(styleObject, this.propData.bgList.style);
       }
-      IDM.setStyleToPageHead(this.moduleObject.id, styleObject);
+      let styleList = [];
+      styleList.push({
+        selector:this.moduleObject.id,
+        style:styleObject
+      })
       if (this.innerAttr && this.innerAttr.length > 0) {
         this.innerAttr.forEach((element) => {
-          this.convertInnerAttrToStyleObject(element.dataAttr, element.containerIndex);
+          this.convertInnerAttrToStyleObject(element.dataAttr, element.containerIndex,styleList);
         });
       }
+      IDM.setStyleObjectToPageHead(this.moduleObject.id+"_codestyle", styleList);
     },
     /**
      * 把属性参数转换成内部容器样式对象
      */
-    convertInnerAttrToStyleObject(propData, index) {
+    convertInnerAttrToStyleObject(propData, index,styleList) {
       var styleObject = {};
-      for (const key in propData) {
+      const keyList = [
+        "width",
+        "height",
+        "box",
+        "border",
+        "font",
+        "layout",
+        "boxShadow",
+        "bgColor"
+      ];
+      for (const iKey in keyList) {
+        const key = keyList[iKey];
         if (propData.hasOwnProperty.call(propData, key)) {
           const element = propData[key];
           if (!element && element !== false && element != 0) {
@@ -298,11 +314,11 @@ export default {
       } else if (Object.keys(propData.bgList.style).length) {
         Object.assign(styleObject, propData.bgList.style);
       }
-      IDM.setStyleToPageHead(
-        this.moduleObject.id +
+      styleList.push({
+        selector:this.moduleObject.id +
           ` .drag_container[idm-ctrl-id="${this.moduleObject.id}"][idm-container-index="${index}"]`,
-        styleObject
-      );
+        style:styleObject
+      })
     },
   },
 };
