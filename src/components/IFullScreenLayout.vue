@@ -432,7 +432,7 @@ export default {
     this.$nextTick(function (params) {
       // if(this.moduleObject.env=='production'){
       // }
-      that.autoLayout();
+      that.autoLayout(false);
       //监测元素改变事件
       const ro = new ResizeObserver((entries, observer) => {
         // console.log("🚀 ~ file: IFullScreenLayout.vue ~ line 120 ~ ro ~ entries, observer", entries, observer)
@@ -461,7 +461,7 @@ export default {
       let that = this;
       
       let resData = IDM.page?.getComponentAttrUserData?.(this.moduleObject.packageid)
-      if(Array.isArray(resData)) {
+      if(Array.isArray(resData)&&resData.length>0) {
         that.userDefinedMediaObjectList = resData;
         return
       }
@@ -472,7 +472,9 @@ export default {
           packageid: this.moduleObject.packageid,
         }),
       });
-      that.userDefinedMediaObjectList = res&&res.data;
+      if(res&&res.data){
+        that.userDefinedMediaObjectList = res&&res.data;
+      }
     },
     handleGetParams() {
       return {
@@ -764,7 +766,7 @@ export default {
     /**
      * 自动布局
      */
-    autoLayout() {
+    autoLayout(isnosendmsg) {
       //非预览模式下不实现自动布局
       // if(this.moduleObject.env!='production'){
       //   return;
@@ -853,7 +855,7 @@ export default {
       }
       this.productionMediaObject = maxMediaObject;
       this.productionMediaGridList = maxMediaObject.gridList;
-      this.autoLayoutSendLayoutInfoToChildrenMsg(this.productionMediaGridList);
+      isnosendmsg!==false&&this.autoLayoutSendLayoutInfoToChildrenMsg(this.productionMediaGridList);
     },
     autoLayoutSendLayoutInfoToChildrenMsg(gridList) {
       //IDM.broadcast.sendChildren({"type":"regionResize","message":{w:800,h:600},module:{"packageid":"component_LEaFl0DL0wMq7Y10","containerIndex":"1"}});
@@ -2018,7 +2020,12 @@ export default {
      */
     convertLayoutAttrToStyleObject(propData) {
       var styleObject = {};
-      for (const key in propData) {
+      const keyList = [
+        "width",
+        "height"
+      ];
+      for (const iKey in keyList) {
+        const key = keyList[iKey];
         if (propData.hasOwnProperty.call(propData, key)) {
           const element = propData[key];
           if (!element && element !== false && element != 0) {
@@ -2032,14 +2039,29 @@ export default {
           }
         }
       }
-      Object.keys(styleObject).length&&IDM.setStyleToPageHead(this.moduleObject.id+",.emptyclassname", styleObject);
+      Object.keys(styleObject).length&&IDM.setStyleObjectToPageHead(this.moduleObject.id+"_codestyle", [
+        {
+          selector:this.moduleObject.id+",.emptyclassname",
+          style:styleObject
+        }
+      ]);
     },
     /**
      * 把属性转换成样式对象
      */
     convertAttrToStyleObject() {
       var styleObject = {};
-      for (const key in this.propData) {
+      const keyList = [
+        "width",
+        "height",
+        "box",
+        "border",
+        "font",
+        "layout",
+        "bgColor"
+      ];
+      for (const iKey in keyList) {
+        const key = keyList[iKey];
         if (this.propData.hasOwnProperty.call(this.propData, key)) {
           const element = this.propData[key];
           if (!element && element !== false && element != 0) {
@@ -2076,21 +2098,37 @@ export default {
       } else if (Object.keys(this.propData.bgList.style).length) {
         Object.assign(styleObject, this.propData.bgList.style);
       }
-      IDM.setStyleToPageHead(this.moduleObject.id, styleObject);
+      let styleList = [];
+      styleList.push({
+        selector:this.moduleObject.id,
+        style:styleObject
+      })
       if (this.innerAttr && this.innerAttr.length > 0) {
         this.innerAttr.forEach((element) => {
-          this.convertInnerAttrToStyleObject(element.dataAttr, element.containerIndex);
+          this.convertInnerAttrToStyleObject(element.dataAttr, element.containerIndex,styleList);
         });
       }
+      IDM.setStyleObjectToPageHead(this.moduleObject.id+"_codestyle", styleList);
 
       this.gridNumber = this.propData.gridNumber || this.gridNumber;
     },
     /**
      * 把属性参数转换成内部容器样式对象
      */
-    convertInnerAttrToStyleObject(propData, index) {
+    convertInnerAttrToStyleObject(propData, index,styleList) {
       var styleObject = {};
-      for (const key in propData) {
+      const keyList = [
+        "width",
+        "height",
+        "box",
+        "border",
+        "font",
+        "layout",
+        "overflow",
+        "bgColor"
+      ];
+      for (const iKey in keyList) {
+        const key = keyList[iKey];
         if (propData.hasOwnProperty.call(propData, key)) {
           const element = propData[key];
           if (!element && element !== false && element != 0) {
@@ -2130,11 +2168,11 @@ export default {
       } else if (Object.keys(propData.bgList.style).length) {
         Object.assign(styleObject, propData.bgList.style);
       }
-      IDM.setStyleToPageHead(
-        this.moduleObject.id +
+      styleList.push({
+        selector:this.moduleObject.id +
           ` .drag_container[idm-ctrl-id="${this.moduleObject.id}"][idm-container-index="${index}"]`,
-        styleObject
-      );
+        style:styleObject
+      })
       //设置追加页面宽与高
       this.chooseGridList &&
         this.chooseGridList.forEach((item) => {

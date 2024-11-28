@@ -109,7 +109,8 @@ export default {
     };
   },
   components: {
-    [Collapse.name]: Collapse
+    [Collapse.name]: Collapse,
+    [Collapse.Panel.name]: Collapse.Panel
   },
   props: {
     _moduleObject: Object,

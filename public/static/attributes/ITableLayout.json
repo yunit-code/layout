@@ -1108,20 +1108,8 @@
                             "value": "tableCover_cell_theme"
                         },
                         {
-                            "label": "外边框",
-                            "value": "tableCover_cell_border"
-                        },
-                        {
                             "label": "边框样式",
-                            "value": "tableCover_cell_borderStyle"
-                        },
-                        {
-                            "label": "边框大小",
-                            "value": "tableCover_cell_borderWidth"
-                        },
-                        {
-                            "label": "边框颜色",
-                            "value": "tableCover_cell_borderColor"
+                            "value": "tableCover_cell_border"
                         },
                         {
                             "label": "文字样式",
@@ -1140,9 +1128,6 @@
                     "default": [
                         "tableCover_cell_theme",
                         "tableCover_cell_border",
-                        "tableCover_cell_borderStyle",
-                        "tableCover_cell_borderWidth",
-                        "tableCover_cell_borderColor",
                         "tableCover_cell_font",
                         "tableCover_cell_bg",
                         "tableCover_cell_box"

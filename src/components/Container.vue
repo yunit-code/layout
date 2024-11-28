@@ -117,6 +117,7 @@ export default {
         "layout",
         "overflow",
         "bgColor",
+        "bgList"
       ];
       for (const iKey in keyList) {
         const key = keyList[iKey];
@@ -154,13 +155,14 @@ export default {
             case "overflow":
               styleObject["overflow"] = element;
               break;
+            case "bgList":
+              IDM.style.setMultiBackgroundStyle(styleObject, element);
+              break;
           }
         }
       }
       if (!this.propData.bgList?.bgList?.length) {
         IDM.style.setBackgroundStyle(styleObject, this.propData);
-      } else if (Object.keys(this.propData.bgList.style).length) {
-        Object.assign(styleObject, this.propData.bgList.style);
       }
       IDM.setStyleToPageHead(this.moduleObject.id, styleObject);
       this.convertThemeListAttrToStyleObject();
