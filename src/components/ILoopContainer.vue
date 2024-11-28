@@ -550,7 +550,7 @@ export default {
           //使用通用接口直接跳过，在setContextValue执行
           break;
         case "customFunction":
-          let resValue = this.commonCustomEventFunHandle(
+          var resValue = this.commonCustomEventFunHandle(
             this.propData,
             "customFunction",
             {
@@ -799,12 +799,12 @@ export default {
         this.formatReceiveOtherData(object.message, object);
       }
       //转发消息，如果其他组件接收到了他的消息可以选择   获取此控件的值然后做整体合计、计算类的动作
+      var moduleIdArray = [];
       if (
         this.propData.linkageDemandPageModule &&
         this.propData.linkageDemandPageModule.length > 0 &&
         object.type == "linkageDemand"
       ) {
-        var moduleIdArray = [];
         this.propData.linkageDemandPageModule.forEach((item) => {
           moduleIdArray.push(item.moduleId);
         });
@@ -822,7 +822,6 @@ export default {
         this.propData.linkageResultPageModule.length > 0 &&
         object.type == "linkageResult"
       ) {
-        var moduleIdArray = [];
         this.propData.linkageResultPageModule.forEach((item) => {
           moduleIdArray.push(item.moduleId);
         });
@@ -1004,7 +1003,7 @@ export default {
           this.propData.label + "最小条数为" + this.propData.maxLengthNumber;
       } else if (this.propData.customFun && this.propData.customFunCode) {
         try {
-          var fun = IDM.express.eval(this.propData.customFunCode);
+          let fun = IDM.express.eval(this.propData.customFunCode);
           if (!fun(thisInputVal)) {
             result.success = false;
             result.message =
@@ -1013,7 +1012,7 @@ export default {
         } catch (e) {}
       } else if (this.propData.customFun && this.propData.customFunCode) {
         try {
-          var fun = IDM.express.eval(this.propData.customFunCode);
+          let fun = IDM.express.eval(this.propData.customFunCode);
           if (!fun(thisInputVal)) {
             result.success = false;
             result.message =
@@ -1150,7 +1149,7 @@ export default {
               IDM.style.setFontStyle(styleObject, element);
               break;
             case "labelFont":
-              let labelInfoStyleObject = {};
+              var labelInfoStyleObject = {};
               IDM.style.setFontStyle(labelInfoStyleObject, element);
               IDM.setStyleToPageHead(
                 this.moduleObject.id +
@@ -1159,7 +1158,7 @@ export default {
               );
               break;
             case "errorMsgFont":
-              let errorInfoStyleObject = {};
+              var errorInfoStyleObject = {};
               IDM.style.setFontStyle(errorInfoStyleObject, element);
               IDM.setStyleToPageHead(
                 this.moduleObject.id +

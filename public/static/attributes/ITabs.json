@@ -96,6 +96,29 @@
                     "desc":"是否使用动画切换 Tabs，在 页签位置=top|bottom 时有效",
                     "bindKey": "animated",
                     "default": true
+                },
+                {
+                    "type": "switch",
+                    "layoutType": "inline",
+                    "text": "底部滑块",
+                    "desc":"是否显示底部滑块",
+                    "bindKey": "showDotted",
+                    "default": false
+                },
+                {
+                    "type": "switch",
+                    "layoutType": "inline",
+                    "text": "自动播放",
+                    "desc":"是否启用页签自动播放功能",
+                    "bindKey": "loop",
+                    "default": false
+                },
+                {
+                    "type": "input",
+                    "layoutType": "inline",
+                    "text": "轮播时间间隔",
+                    "bindKey": "loopTime",
+                    "default": 5000
                 }
             ]
         },

@@ -89,6 +89,9 @@
           <slot :name="moduleObject.id+1"></slot>
       </div>
     </div>
+    <div class="dotted" v-if="propData.showDotted">
+      <div class="pointe" :class="{'active':activeTab == item.key}" v-for="(item,index) in tabList" :key="index" @click="changeDotted(item)"></div>
+    </div>
   </div>
 </template>
 
@@ -112,6 +115,7 @@ export default {
       activeTab: "",
       tabList: [],
       showDragContainer: false,
+      loopTimer:0
     };
   },
   components: {
@@ -134,6 +138,25 @@ export default {
   },
   destroyed() {},
   methods: {
+    changeDotted(item){
+      this.activeTab = item.key;
+      this.changeCallback(this.activeTab);
+    },
+    initLoop(){
+      if (this.propData.loop) {
+        clearTimeout(this.loopTimer);
+        this.loopTimer = setTimeout(()=>{
+          let index = this.tabList.findIndex(item=>{
+            return item.key == this.activeTab;
+          })
+          if (index+1 == this.tabList.length) {
+            index = -1
+          }
+          this.activeTab = this.tabList[index+1].key;
+          this.changeCallback(this.activeTab);
+        },this.propData.loopTime || 5000)
+      }
+    },
     /**
      * 切换面板的回调
      */
@@ -155,6 +178,7 @@ export default {
       });
       this.dragContainerShowStatusHandle("changeTab");
       this.changeEventFunHandle("changeFunction");
+      this.initLoop();
     },
     /**
      * next 按钮被点击的回调
@@ -318,7 +342,7 @@ export default {
         }
       }
       if (!this.propData.bgList?.bgList?.length) {
-        IDM.style.setBackgroundStyle(styleObject, this.propData);
+        // IDM.style.setBackgroundStyle(styleObject, this.propData);
       } else if (Object.keys(this.propData.bgList.style).length) {
         Object.assign(styleObject, this.propData.bgList.style);
       }
@@ -402,6 +426,7 @@ export default {
         this.tabList = this.propData.TabPaneList;
       } else {
         this.tabList = [];
+        console.log('*-*****************')
         if (this.moduleObject.env == undefined || this.moduleObject.env == "develop") {
           //开发模式下不执行此事件
           this.tabList = [
@@ -437,6 +462,7 @@ export default {
         });
       }
       this.initBaseAttrToModule();
+      this.initLoop();
     },
     /**
      * 悬浮容器显示处理事件
@@ -514,5 +540,27 @@ export default {
   position: absolute;
   top: 0;
   left: 0;
+}
+.dotted{
+  margin-top: 14px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  .pointe{
+    width: 30px;
+    height: 6px;
+    background: #ccc;
+    border-radius: 3px;
+    cursor: pointer;
+    &+.pointe{
+      margin-left: 10px;
+    }
+    &.active{
+      background: #1890ff;
+    }
+  }
+}
+.idm_itabs_box{
+  height: 100%;
 }
 </style>

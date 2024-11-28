@@ -588,7 +588,7 @@ export default {
               );
               break;
             case "tableBox":
-              let cellStyle = {};
+              var cellStyle = {};
               IDM.style.setBoxStyle(cellStyle, element)
               IDM.setStyleToPageHead(
                 `${this.moduleObject.id}>.idm-table-layout-box>table>tbody>tr>td`,
