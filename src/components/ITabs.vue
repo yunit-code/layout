@@ -11,6 +11,11 @@
     :idm-ctrl-id="moduleObject.id"
     :idm-refresh-container="activeTab"
     class="idm_itabs_box"
+    :style="
+      propData.heightType == 'adaptive' && moduleHeight
+        ? { height: moduleHeight + 'px' }
+        : { height: propData.height, width: propData.width }"
+    ref="module_ref"
   >
     <!--
       组件内部容器
@@ -20,6 +25,8 @@
       idm-container-index  组件的内部容器索引，不重复唯一且不变，必选，建议从1开始
     -->
     <layout220-a-tabs
+      ref="idm_module_tabs_wrapper"
+      style="height:100%"
       :activeKey="activeTab"
       :animated="propData.animated !== false ? true : false"
       :size="propData.size || 'default'"
@@ -40,6 +47,7 @@
           idm-ctrl-inner
           :idm-ctrl-id="moduleObject.id"
           :idm-container-index="item.key"
+          ref="drag_container"
         >
           <!--统一的插槽写法，主要用于vue组件，其他语言的脚手架可忽略-->
           <slot :name="moduleObject.id+item.key"></slot>
@@ -115,7 +123,8 @@ export default {
       activeTab: "",
       tabList: [],
       showDragContainer: false,
-      loopTimer:0
+      loopTimer:0,
+      moduleHeight:0
     };
   },
   components: {
@@ -291,6 +300,139 @@ export default {
       console.log("组件内属性发生变化，变化后====》", this.propData);
     },
     /**
+     * 根据属性heightType确定是使用固定高度还是自动适应外层的高度
+     * 如果使用固定高度则取设置的固定高度
+     * 如果使用自适应外层高度则需要外层传过来高度
+     * 不管上述使用哪种高度都需要去减去tab的高度外加外层容器的padding、margin和内层列表的margin、padding、注意重叠计算
+     * @param {Number} wrapperHeight 为外层容器的实际高度值
+     */
+     resizeContentWrapperHeight(wrapperHeight) {
+      debugger
+      let moduleHeight =
+        this.propData.heightType == "adaptive"
+          ? $("#" + this.moduleObject.packageid)
+              .parents(".fsl-region-element")
+              .height()
+          : this.propData.moduleHeight;
+      if (
+        this.propData.heightType == "adaptive" &&
+        (wrapperHeight || moduleHeight)
+      ) {
+        //自适应父级容器
+        moduleHeight = wrapperHeight || moduleHeight;
+
+        //如果自适应则要减去上margin和下margin(因为margin、padding百分比都是相对父级宽度，所以要计算出实际的宽度值)
+        //父级宽度值未知的，因为组件的宽度是100%显示的
+        //所以计算公式为：(当前组件的宽度+左右margin实际数值)/(100-左右margin百分比总和)*100=实际宽度
+        let iAttrArray = ["marginLeftVal", "marginRightVal"];
+        let marginNumber = 0,
+          marginRatio = 0;
+        iAttrArray.forEach((item) => {
+          if (
+            this.propData.box &&
+            this.propData.box[item] &&
+            this.propData.box[item].indexOf("%") > -1
+          ) {
+            //用宽度计算出实际的px
+            marginRatio += parseFloat(this.propData.box[item].replace("%", ""));
+          } else if (this.propData.box && this.propData.box[item]) {
+            marginNumber += parseFloat(
+              this.propData.box[item].replace("px", "")
+            );
+          }
+        });
+        let module_width = this.$refs.module_ref.offsetWidth;
+        //实际的100%的宽度
+        const module_width_100 =
+          ((module_width + marginNumber) / (100 - marginRatio)) * 100;
+
+        let moduleTBMarginNumber = 0;
+        iAttrArray = ["marginTopVal", "marginBottomVal"];
+        iAttrArray.forEach((item) => {
+          if (this.propData.box && this.propData.box[item]) {
+            if (this.propData.box[item].indexOf("%") > -1) {
+              //用宽度计算出实际的px
+              moduleTBMarginNumber =
+                moduleTBMarginNumber +
+                (parseFloat(this.propData.box[item].replace("%", "")) / 100) *
+                  module_width_100;
+            } else {
+              moduleTBMarginNumber =
+                moduleTBMarginNumber +
+                parseFloat(this.propData.box[item].replace("px", ""));
+            }
+          }
+        });
+        moduleHeight = moduleHeight - moduleTBMarginNumber;
+      }
+      this.moduleHeight = moduleHeight;
+      this.$nextTick(function() {
+        //moduleHeight已经确定了固定的高度了
+        let tabs_el = this.$refs.idm_module_tabs_wrapper.$el;
+        //tabs的整体高度
+        const tabHeight = tabs_el.offsetHeight;
+        //获取tabbar的高度
+        let tabbarHeight = 0,
+          topTabBar = tabs_el.querySelector(".ant-tabs-top-bar"),
+          bottomTabBar = tabs_el.querySelector(".ant-tabs-bottom-bar");
+        if (topTabBar) {
+          tabbarHeight = topTabBar.offsetHeight;
+        } else if (bottomTabBar) {
+          tabbarHeight = bottomTabBar.offsetHeight;
+        }
+        //tab内容高度
+        let tabContentHeight = tabHeight - tabbarHeight,
+          tabContentDom = tabs_el.querySelector(".ant-tabs-content");
+        if(this.propData.heightType == 'adaptive') tabContentDom.style.height = tabContentHeight + "px";
+        //tab内容宽度
+        const tabContentWidth = tabContentDom.offsetWidth;
+
+        //tabContent容器外边距
+        let contentTBMarginNumber = 0; //内容容器的占用的高度数
+        let attrArray = ["marginTopVal", "marginBottomVal"];
+        attrArray.forEach((item) => {
+          if (this.propData.innerBox && this.propData.innerBox[item]) {
+            if (this.propData.innerBox[item].indexOf("%") > -1) {
+              //用宽度计算出实际的px
+              contentTBMarginNumber =
+                contentTBMarginNumber +
+                (parseFloat(this.propData.innerBox[item].replace("%", "")) /
+                  100) *
+                  tabContentWidth;
+            } else {
+              contentTBMarginNumber =
+                contentTBMarginNumber +
+                parseFloat(this.propData.innerBox[item].replace("px", ""));
+            }
+          }
+        });
+        //tabContent容器的内边距
+        let contentTBPaddingNumber = 0;
+        attrArray = ["paddingTopVal", "paddingBottomVal"];
+        attrArray.forEach((item) => {
+          if (this.propData.innerBox && this.propData.innerBox[item]) {
+            if (this.propData.innerBox[item].indexOf("%") > -1) {
+              //用宽度计算出实际的px
+              contentTBPaddingNumber =
+                contentTBPaddingNumber +
+                (parseFloat(this.propData.innerBox[item].replace("%", "")) /
+                  100) *
+                  tabContentWidth;
+            } else {
+              contentTBPaddingNumber =
+                contentTBPaddingNumber +
+                parseFloat(this.propData.innerBox[item].replace("px", ""));
+            }
+          }
+        });
+        //添加内容容器的高度样式(拿父容器的高度-本身的上外边距和下外边距=tab下的内容容器的高度)
+        let itodolistHeight = tabContentHeight - contentTBMarginNumber;
+        if (this.propData.heightType == 'adaptive' && this.$refs.drag_container){
+          this.$refs.drag_container[0].style.height = itodolistHeight + "px";
+        }
+      });
+    },
+    /**
      * 把属性转换成样式对象
      */
     convertAttrToStyleObject() {
@@ -463,6 +605,10 @@ export default {
       }
       this.initBaseAttrToModule();
       this.initLoop();
+
+      this.$nextTick(() => {
+        this.resizeContentWrapperHeight();
+      });
     },
     /**
      * 悬浮容器显示处理事件
