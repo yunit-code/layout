@@ -119,7 +119,25 @@
                     "text": "轮播时间间隔",
                     "bindKey": "loopTime",
                     "default": 5000
-                }
+                },
+                {
+                    "type": "radio",
+                    "layoutType": "inline",
+                    "text": "响应方式",
+                    "desc": "用于设置组件高度的响应方式，如果是不适配响应父容器选择固定值就好，如果需要适配父容器(或其他)组件传递的具体值则选择适应容器即可",
+                    "bindKey": "heightType",
+                    "dictionary": [
+                      {
+                        "label": "固定值",
+                        "value": "fixed"
+                      },
+                      {
+                        "label": "适应容器",
+                        "value": "adaptive"
+                      }
+                    ],
+                    "default": "fixed"
+                  }
             ]
         },
         {
