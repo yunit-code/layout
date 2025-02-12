@@ -204,7 +204,7 @@ export default {
     /**
      * tab 被点击的回调
      */
-    tabClickCallback() {
+    tabClickCallback(tab) {
       this.changeEventFunHandle("tabClickFunction");
     },
     /**
@@ -275,6 +275,7 @@ export default {
      * 获取tab自定义的数据
      */
     getTabCustomRender(item) {
+      var that = this;
       if (item.tabSlotFunction && item.tabSlotFunction.length > 0) {
         if (!window[item.tabSlotFunction[0].name]) {
           return this.moduleObject.env == "develop" ? "请把动作面板打开" : "";
@@ -283,6 +284,7 @@ export default {
           window[item.tabSlotFunction[0].name] &&
           window[item.tabSlotFunction[0].name].call(this, {
             customParam: item.tabSlotFunction[0].param,
+            _this: that,
             tab: item,
           })
         );
