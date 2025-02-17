@@ -54,7 +54,7 @@
         </div>
         <span slot="tab">
           <div
-            v-if="item.tabSlotFunction && item.tabSlotFunction.length > 0"
+            v-if="item.tabSlotFunction && item.tabSlotFunction.length > 0 && !refreshTab"
             v-html="getTabCustomRender(item)"
           ></div>
           <template v-else>{{ item.tab }}</template>
@@ -124,7 +124,8 @@ export default {
       tabList: [],
       showDragContainer: false,
       loopTimer:0,
-      moduleHeight:0
+      moduleHeight:0,
+      refreshTab:false,
     };
   },
   components: {
@@ -147,6 +148,25 @@ export default {
   },
   destroyed() {},
   methods: {
+    /**
+     * 组件通信：接收消息的方法
+     * @param {
+     *  type:"发送消息的时候定义的类型，这里可以自己用来要具体做什么，统一规定的type：linkageResult（组件联动传结果值）、linkageDemand（组件联动传需求值）、linkageReload（联动组件重新加载）
+     * 、linkageOpenDialog（打开弹窗）、linkageCloseDialog（关闭弹窗）、linkageShowModule（显示组件）、linkageHideModule（隐藏组件）、linkageResetDefaultValue（重置默认值）"
+     *  message:{发送的时候传输的消息对象数据}
+     *  messageKey:"消息数据的key值，代表数据类型是什么，常用于表单交互上，比如通过这个key判断是什么数据"
+     *  isAcross:如果为true则代表发送来源是其他页面的组件，默认为false
+     * } object
+     */
+    receiveBroadcastMessage(object) {
+      if (object.type && object.type == "refresh") {
+        this.refreshTab = true;
+        this.$forceUpdate();
+        this.$nextTick(()=>{
+          this.refreshTab = false;
+        })
+      }
+    },
     changeDotted(item){
       this.activeTab = item.key;
       this.changeCallback(this.activeTab);
