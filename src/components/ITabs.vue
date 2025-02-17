@@ -329,7 +329,6 @@ export default {
      * @param {Number} wrapperHeight 为外层容器的实际高度值
      */
      resizeContentWrapperHeight(wrapperHeight) {
-      debugger
       let moduleHeight =
         this.propData.heightType == "adaptive"
           ? $("#" + this.moduleObject.packageid)
